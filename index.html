@@ -970,7 +970,9 @@ function mobTick(m){
   if(m.dead){if(tickN>=m.respawn){if(m.def.mech){for(const k of m.def.mech)if(k.type==='summon')delete m['s_'+k.kind];m.enraged=false;m.stolen=0}m.dead=false;m.hp=m.def.hp;m.x=m.hx;m.y=m.hy;m.trail=[[m.x,m.y]];m.chasing=false;m.tele=false;m.stun=0}return}
   const d=Math.max(Math.abs(m.x-pl.x),Math.abs(m.y-pl.y));
   if(m.def.prey){
-    if(d<=m.def.fear){let best=null,bd=d;for(const[dx,dy]of D8){const nx=m.x+dx,ny=m.y+dy;if(!walk(M,nx,ny))continue;const dd=Math.hypot(nx-pl.x,ny-pl.y);if(dd>bd+.01){bd=dd;best=[dx,dy]}}if(best)mobStep(m,best[0],best[1])}
+    if(d<=m.def.fear){
+      const flee=()=>{let best=null,bd=-1;for(const[dx,dy]of D8){const nx=m.x+dx,ny=m.y+dy;if(!walk(M,nx,ny)||(nx===pl.x&&ny===pl.y)||M.mobs.some(q=>q!==m&&!q.dead&&q.x===nx&&q.y===ny))continue;if(dx&&dy&&(!walk(M,m.x+dx,m.y)||!walk(M,m.x,m.y+dy)))continue;const dd=Math.hypot(nx-pl.x,ny-pl.y)+Math.random()*.35;if(dd>bd){bd=dd;best=[dx,dy]}}return best};
+      const f1=flee();if(f1&&mobStep(m,f1[0],f1[1])){const t1=m.trail.slice(),f2=flee();if(f2&&mobStep(m,f2[0],f2[1]))m.trail=[t1[0],t1[1],[m.x,m.y]]}}
     else if(Math.random()<.15){const[dx,dy]=D8[ri(0,7)];if(Math.hypot(m.x+dx-m.hx,m.y+dy-m.hy)<=4)mobStep(m,dx,dy)}
     return}
   const homeD=Math.max(Math.abs(m.x-m.hx),Math.abs(m.y-m.hy));
@@ -1027,7 +1029,7 @@ scene.add(hemi,sun,sun.target);
 const plLight=new T.PointLight(0xffb060,0,18,1);scene.add(plLight);
 const torchLights=[0,1,2,3].map(()=>{const l=new T.PointLight(0xff9a44,0,10,1);scene.add(l);return l});
 let CW=1,CH=1,DPR=1,FONT='sans-serif',camDist=15;
-const ENV={marsh:{bg:0xa3bdb2,fogN:13,fogF:36,hemi:.6,sun:.58},indoor:{bg:0x15100a,fogN:40,fogF:90,hemi:.85,sun:0},world:{bg:0x9ccbec,fogN:20,fogF:46,hemi:.62,sun:.78},dark:{bg:0x050403,fogN:12,fogF:30,hemi:.42,sun:0}};
+const ENV={marsh:{bg:0xa3bdb2,fogN:60,fogF:120,hemi:.62,sun:.62},indoor:{bg:0x15100a,fogN:40,fogF:90,hemi:.85,sun:0},world:{bg:0x9ccbec,fogN:60,fogF:120,hemi:.62,sun:.78},dark:{bg:0x050403,fogN:12,fogF:30,hemi:.42,sun:0}};
 function resize(){DPR=Math.min(1.5,window.devicePixelRatio||1);CW=wrapEl.clientWidth||innerWidth;CH=wrapEl.clientHeight||innerHeight;
   renderer.setPixelRatio(DPR);renderer.setSize(CW,CH,false);ov.width=CW*DPR;ov.height=CH*DPR;octx.setTransform(DPR,0,0,DPR,0,0);
   cam.aspect=CW/CH;cam.updateProjectionMatrix();FONT=getComputedStyle(document.body).fontFamily;
@@ -1515,7 +1517,7 @@ function render(now){
   if(M.water){M.water.position.y=-.14+Math.sin(now/1100)*.025;if(M.waterTex){M.waterTex.offset.x=now/60000;M.waterTex.offset.y=Math.sin(now/9000)*.05}if(M.cloudTex){M.cloudTex.offset.x=now/90000;M.cloudTex.offset.y=now/140000}}
   updFlies(now,dt);
   for(const a of M.anim||[]){if(a.puffs)a.puffs.forEach((pf,q)=>{const u=((now/2600+a.t0+q/3)%1);pf.position.y=a.y0+u*1.6;pf.position.x+=0;pf.scale.setScalar(.6+u*1.1);pf.material.opacity=.55*(1-u)});if(a.orb){a.orb.rotation.y=now/600;a.light.intensity=.6+.25*Math.sin(now/260)}if(a.hub)a.hub.rotation.z+=dt*.7;if(a.flame){a.flame.scale.set(1,.85+.25*Math.sin(now/90),1);a.light.intensity=.8+.25*Math.sin(now/110)}}
-  if(M.chunks)for(const c of M.chunks){const vis=Math.hypot(c.cx-focus.x,c.cz-focus.z)<30;for(const mm of c.meshes)mm.visible=vis}
+  if(M.chunks)for(const c of M.chunks){const vis=Math.hypot(c.cx-focus.x,c.cz-focus.z)<44;for(const mm of c.meshes)mm.visible=vis}
   for(let i=beams.length-1;i>=0;i--){const b=beams[i],a=(now-b.t)/6000;if(a>1){scene.remove(b.mesh);beams.splice(i,1);continue}b.mesh.material.opacity=.6*(1-a)*(.8+.2*Math.sin(now/120));b.mesh.visible=true}
   if(!focusInit){focus.set(pp.x+.5,py,pp.y+.5);focusInit=true}
   const tx=pp.x+.5,tz=pp.y+.5;focus.x+=(tx-focus.x)*Math.min(1,dt*9);focus.z+=(tz-focus.z)*Math.min(1,dt*9);focus.y+=(py-focus.y)*Math.min(1,dt*5);
