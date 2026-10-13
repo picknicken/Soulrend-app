@@ -1675,7 +1675,10 @@ function bagQuests(){
   return nqrows+row('Rat Problem',rat)+row("Mara's Brew",herb)+row('The Hollow Knight',hk)+row('Bandit Trouble',rook);
 }
 function bagCodex(){const k=S.kills,r=(n,v)=>'<div class="row"><span>'+n+'</span><b class="n">'+v+'</b></div>';return r('Cave rats',k.rat||0)+r('Tunnel rats',k.tunnel||0)+r('The Gnawking',k.gnaw||0)+r("Gnawking's tooth",S.tooth?'found':'—')+r('Wolves',k.wolf||0)+r('Bandits',k.bandit||0)+r('Rook the Cutpurse',k.rook||0)+r('Skeletons',k.skeleton||0)+r('Restless knights',k.knight||0)+r('Sir Aldric',k.aldric||0)}
-function bagSave(){return'<div class="mute">Progress is stored in this browser.</div>'+(confirmReset?'<p>Erase everything?</p><button class="danger" data-a="reset-yes">Yes, erase</button> <button data-a="reset-no">Cancel</button>':'<p><button class="danger" data-a="reset-ask">Reset game</button></p>')}
+function saveIO(a){const box=document.getElementById('saveBox'),msg=document.getElementById('saveMsg');if(!box)return;
+  if(a==='export'){save();const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));box.value=code;box.focus();box.select();let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code);ok=true}}catch(e){}msg.textContent=ok?'Code copied. Paste it into the app on your other device.':'Select all and copy the code above.'}
+  else{try{const raw=box.value.trim();if(!raw)throw 0;const j=JSON.parse(decodeURIComponent(escape(atob(raw))));if(!j||!j.xp||!j.inv)throw 0;localStorage.setItem(KEY,JSON.stringify(j));msg.textContent='Imported. Reloading...';setTimeout(()=>location.reload(),400)}catch(e){msg.textContent='That code is not valid.'}}}
+function bagSave(){return'<div class="mute">Progress is stored on this device and in this browser. Use a save code to move it to another browser or to the installed app.</div><p><button data-a="export">Export save code</button></p><textarea id="saveBox" rows="4" spellcheck="false" placeholder="Save code appears here. To import, paste a code here and press Import." style="width:100%;box-sizing:border-box;background:#120e0a;color:#f1e6c8;border:1px solid #5f5038;border-radius:8px;padding:8px;font:12px monospace"></textarea><p><button data-a="import">Import save code</button> <span id="saveMsg" class="mute"></span></p>'+(confirmReset?'<p>Erase everything?</p><button class="danger" data-a="reset-yes">Yes, erase</button> <button data-a="reset-no">Cancel</button>':'<p><button class="danger" data-a="reset-ask">Reset game</button></p>')}
 function panelHtml(){
   const tabs=[['items','Items'],['skills','Skills'],['quests','Quests'],['codex','Codex'],['save','Save']];
   const body={items:bagItems,skills:bagSkills,quests:bagQuests,codex:bagCodex,save:bagSave}[bagTab]();
@@ -1684,6 +1687,7 @@ function panelHtml(){
 function openPanel(){const p=$('panel');p.innerHTML=panelHtml();p.hidden=false}
 $('panel').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.a==='export'||d.a==='import'){saveIO(d.a);return}
   if(d.tab){bagTab=d.tab;bagSel=null;confirmReset=false}
   else if(d.item)bagSel={id:d.item};
   else if(d.slot)bagSel={slot:d.slot};
