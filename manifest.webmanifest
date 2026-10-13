@@ -1,13 +1,13 @@
 {
-  "name": "Ashen Delve",
-  "short_name": "Ashen Delve",
+  "name": "Soulrend",
+  "short_name": "Soulrend",
   "description": "A solo fantasy adventure: delve, craft, build and explore.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#14110c",
-  "theme_color": "#14110c",
+  "background_color": "#050406",
+  "theme_color": "#050406",
   "icons": [
     {
       "src": "icons/icon-192.png",
