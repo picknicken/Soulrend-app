@@ -145,7 +145,7 @@ body{background:#14110c}
 #xpfeed{position:absolute;left:50%;top:128px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none}
 #xpfeed div{font:700 15px var(--font-b);color:#ffe58a;padding:3px 12px;border-radius:12px;background:rgba(20,16,10,.7);border:1px solid rgba(201,162,74,.5);animation:xpf 2.2s ease-out forwards;text-shadow:0 1px 2px #000}
 @keyframes xpf{0%{opacity:0;transform:translateY(8px)}10%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0;transform:translateY(-14px)}}
-#quick button[hidden]{display:none}#hud{z-index:1}#panel,#craft,#mapPanel,#dlg,#loot{z-index:5}#xpfeed{z-index:2}#flash{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,#fff,#b58bff);opacity:0}#flash.go{animation:tflash .8s ease-out}@keyframes tflash{0%{opacity:.95}100%{opacity:0}}#focus{position:absolute;z-index:3;pointer-events:auto;min-height:48px;padding:0 18px;border-radius:24px;border:3px solid #ffe58a;background:radial-gradient(circle at 35% 30%,#8a6a2a,#4a3510);color:#fff3cc;font:700 16px var(--font-b);animation:fpulse .5s ease-in-out infinite alternate;box-shadow:0 0 18px rgba(255,229,138,.7)}@keyframes fpulse{from{transform:scale(1)}to{transform:scale(1.1)}}.tele{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}.tele button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 10px!important;min-height:52px!important;text-align:left}.tele button small{font:500 12px var(--font-b);color:var(--ink2)}.tele button:disabled{opacity:.45}#night{position:absolute;inset:0;pointer-events:none;background:#1a2a60;mix-blend-mode:multiply;opacity:0}#clock{position:absolute;left:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:2;pointer-events:none;font:700 13px var(--font-b);padding:3px 10px 3px 24px;border-radius:12px;background:rgba(20,16,10,.7);border:1px solid rgba(201,162,74,.5);color:#ffe58a}#clock::before{content:"";position:absolute;left:7px;top:50%;width:11px;height:11px;margin-top:-5.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6b8,#f2b830)}#clock.n{color:#b8c8f0}#clock.n::before{background:radial-gradient(circle at 65% 35%,#f4f8ff,#8aa0d0)}#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 55%,rgba(10,6,0,.38) 100%)}
+#quick button[hidden]{display:none}#hud{z-index:1}#panel,#craft,#mapPanel,#dlg,#loot{z-index:5}#xpfeed{z-index:2}#flash{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,#fff,#b58bff);opacity:0}#flash.go{animation:tflash .8s ease-out}@keyframes tflash{0%{opacity:.95}100%{opacity:0}}#focus{position:absolute;z-index:3;pointer-events:auto;min-height:48px;padding:0 18px;border-radius:24px;border:3px solid #ffe58a;background:radial-gradient(circle at 35% 30%,#8a6a2a,#4a3510);color:#fff3cc;font:700 16px var(--font-b);animation:fpulse .5s ease-in-out infinite alternate;box-shadow:0 0 18px rgba(255,229,138,.7)}@keyframes fpulse{from{transform:scale(1)}to{transform:scale(1.1)}}.tele{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}.tele button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 10px!important;min-height:52px!important;text-align:left}.tele button small{font:500 12px var(--font-b);color:var(--ink2)}.tele button:disabled{opacity:.45}#night{position:absolute;inset:0;pointer-events:none;background:#1a2a60;mix-blend-mode:multiply;opacity:0}#clock{position:absolute;left:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:2;pointer-events:none;font:700 13px var(--font-b);padding:3px 10px 3px 24px;border-radius:12px;background:rgba(20,16,10,.7);border:1px solid rgba(201,162,74,.5);color:#ffe58a}#clock::before{content:"";position:absolute;left:7px;top:50%;width:11px;height:11px;margin-top:-5.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6b8,#f2b830)}#clock.n{color:#b8c8f0}#clock.n::before{background:radial-gradient(circle at 65% 35%,#f4f8ff,#8aa0d0)}#tutchip{margin-top:6px;margin-left:6px;display:inline-block;font:700 13px var(--font-b);padding:3px 10px;border-radius:12px;background:rgba(80,56,12,.85);border:1px solid #c9a24a;color:#ffe58a;pointer-events:auto}#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 55%,rgba(10,6,0,.38) 100%)}
 
 /* ---- portrait and landscape, safe areas (notch, home bar) ---- */
 #hud{padding-top:calc(10px + env(safe-area-inset-top,0px));padding-left:calc(12px + env(safe-area-inset-left,0px));padding-right:calc(12px + env(safe-area-inset-right,0px))}
@@ -178,6 +178,7 @@ body{background:#14110c}
     <div id="top"><div id="hp"><i></i><b></b></div><div id="lvl"></div><div id="coins">0</div><button id="mapBtn">Map</button><button id="bag">Bag</button></div>
     <div id="hint"></div>
     <div id="zone"></div>
+    <div id="tutchip" hidden></div>
     <div id="tele" hidden>Heavy blow! Guard now!</div>
     <div id="quick">
       <button id="qSpell" hidden><svg viewBox="0 0 24 24"><path d="M12 2 L14.5 9.5 L22 12 L14.5 14.5 L12 22 L9.5 14.5 L2 12 L9.5 9.5Z" fill="#b58bff" stroke="#1a1510" stroke-width="1.2"/></svg><span class="lb">Auto</span><small></small></button>
@@ -356,28 +357,29 @@ const DROPS=[['raw_meat',4],['herb',6],['copper_ore',5],['iron_ore',14]];
 const MOBS={
   wisp:{n:'Veil wisp',art:'wraith',hp:36,acc:44,def:30,max:7,spd:4,coins:[8,20],drops:[['ectoplasm',2],['sigil_ore',5],['spark_rune',3],['frost_rune',6],['gale_rune',14],['herb',6]],uniques:[['veil_hood',45],['veil_orb',55],['veil_staff',90]],aggro:6,leash:14,sz:.9},
   golem:{n:'Rune golem',art:'golem',hp:80,acc:42,def:52,max:10,spd:5,coins:[12,30],drops:[['sigil_ore',3],['ectoplasm',3],['iron_bar',10],['gale_rune',9],['void_rune',30]],uniques:[['veil_robe',50],['veil_staff',80],['void_tome',140]],aggro:4,leash:11,sz:1.3},
-  veyra:{n:'Veyra, the Hollow Archmage',art:'veyra',hp:320,acc:66,def:54,max:13,spd:5,heavy:[32,44],heavyEvery:3,boss:true,mech:[{type:'orb',every:5,range:6,dmg:[9,14]},{type:'aoe',every:9,delay:3,r:1.6,dmg:[16,26]},{type:'summon',kind:'wisp',n:3,at:.5}],coins:[300,500],drops:[],loot:{always:[['void_rune',10,20]],rolls:4,main:[['gale_rune',8,16,3],['frost_rune',10,20,3],['sigil_ore',4,8,3],['potion',2,4,3],['steel_bar',2,4,2]]},uniques:[['veyra_staff',12],['arcane_robe',8],['arcane_hat',8],['void_tome',10]],sz:1.15,respawn:100},
+  veyra:{n:'Veyra, the Hollow Archmage',art:'veyra',hp:520,acc:66,def:54,max:13,spd:5,heavy:[32,44],heavyEvery:3,boss:true,mech:[{type:'orb',every:5,range:6,dmg:[9,14]},{type:'aoe',every:9,delay:3,r:1.6,dmg:[16,26]},{type:'summon',kind:'wisp',n:3,at:.5}],coins:[300,500],drops:[],loot:{always:[['void_rune',10,20]],rolls:4,main:[['gale_rune',8,16,3],['frost_rune',10,20,3],['sigil_ore',4,8,3],['potion',2,4,3],['steel_bar',2,4,2]]},uniques:[['veyra_staff',12],['arcane_robe',8],['arcane_hat',8],['void_tome',10]],sz:1.15,respawn:100},
   toad:{n:'Bog toad',art:'rat',hp:14,acc:24,def:12,max:3,spd:4,coins:[2,7],drops:[['raw_meat',3],['marsh_hide',3]],aggro:3,leash:10,col:'#5a8a3a',sz:.62},
   hound:{n:'Marsh hound',art:'wolf',hp:36,acc:38,def:26,max:6,spd:4,coins:[5,14],drops:[['wolf_pelt',2],['marsh_hide',2],['raw_meat',2]],uniques:[['marsh_buckler',60],['fenhunter_vest',130]],aggro:5,leash:14,col:'#5d7468',sz:.66},
   lurker:{n:'Bog lurker',art:'lurker',hp:50,acc:44,def:36,max:8,spd:4,coins:[10,26],drops:[['mythril_ore',10],['herb',5],['potion',9],['steel_bar',24]],uniques:[['marsh_vest',45],['marsh_hood',45],['warden_helm',100],['fenhunter_hood',120],['warden_shield',130]],aggro:5,leash:13,sz:1.0},
-  drowned:{n:'The Drowned King',art:'drowned',hp:260,acc:62,def:56,max:12,spd:5,heavy:[30,42],heavyEvery:3,boss:true,mech:[{type:'aoe',every:8,delay:3,r:2,dmg:[16,26]},{type:'summon',kind:'lurker',n:2,at:.55}],coins:[200,400],drops:[],loot:{always:[['mythril_bar',1,2]],rolls:4,main:[['mythril_ore',3,6,3],['steel_bar',2,4,3],['potion',2,4,3],['cooked_fish',4,8,3],['sigil_ore',3,6,2]]},uniques:[['mist_staff',12],['drowned_crown',10],['drowned_plate',9],['drowned_shield',9],['drowned_trident',10],['fen_longbow',10],['fenhunter_hood',14],['warden_plate',14]],sz:1.15,respawn:90},
+  drowned:{n:'The Drowned King',art:'drowned',hp:480,acc:62,def:56,max:12,spd:5,heavy:[30,42],heavyEvery:3,boss:true,mech:[{type:'aoe',every:8,delay:3,r:2,dmg:[16,26]},{type:'summon',kind:'lurker',n:2,at:.55}],coins:[200,400],drops:[],loot:{always:[['mythril_bar',1,2]],rolls:4,main:[['mythril_ore',3,6,3],['steel_bar',2,4,3],['potion',2,4,3],['cooked_fish',4,8,3],['sigil_ore',3,6,2]]},uniques:[['mist_staff',12],['drowned_crown',10],['drowned_plate',9],['drowned_shield',9],['drowned_trident',10],['fen_longbow',10],['fenhunter_hood',14],['warden_plate',14]],sz:1.15,respawn:90},
   rat:{n:'Cave rat',art:'rat',hp:10,acc:20,def:8,max:3,spd:4,coins:[1,4],drops:DROPS,aggro:3,leash:12,col:'#8a7a6a',sz:.5},
   tunnel:{n:'Tunnel rat',art:'rat',hp:18,acc:28,def:16,max:4,spd:4,coins:[3,8],drops:[['raw_meat',3],['herb',5],['copper_ore',4],['iron_ore',9]],aggro:4,leash:14,col:'#5d5249',sz:.58},
-  gnaw:{n:'The Gnawking',art:'rat',hp:90,acc:40,def:30,max:7,spd:5,heavy:[18,26],boss:true,mech:[{type:'summon',kind:'rat',n:2,at:.66},{type:'summon',kind:'tunnel',n:1,at:.33}],coins:[40,80],drops:[],loot:{always:[['gnaw_hide',1,1]],rolls:3,main:[['iron_ore',3,6,3],['iron_bar',1,2,2],['copper_bar',2,4,2],['potion',1,2,3],['cooked_meat',3,6,3],['herb',3,6,2]]},uniques:[['tooth',16],['gnaw_dagger',10]],aggro:6,leash:18,col:'#6b4a3a',sz:1.0,respawn:150},
+  gnaw:{n:'The Gnawking',art:'rat',hp:115,acc:40,def:30,max:7,spd:5,heavy:[18,26],boss:true,mech:[{type:'summon',kind:'rat',n:2,at:.66},{type:'summon',kind:'tunnel',n:1,at:.33}],coins:[40,80],drops:[],loot:{always:[['gnaw_hide',1,1]],rolls:3,main:[['iron_ore',3,6,3],['iron_bar',1,2,2],['copper_bar',2,4,2],['potion',1,2,3],['cooked_meat',3,6,3],['herb',3,6,2]]},uniques:[['tooth',16],['gnaw_dagger',10]],aggro:6,leash:18,col:'#6b4a3a',sz:1.0,respawn:150},
   wolf:{n:'Wolf',art:'wolf',hp:24,acc:32,def:20,max:5,spd:4,coins:[3,9],drops:[['wolf_pelt',2],['raw_meat',2]],aggro:5,leash:14,col:'#8d9096',sz:.62},
   bandit:{n:'Bandit',art:'bandit',hp:40,acc:38,def:32,max:6,spd:4,coins:[8,22],drops:[['iron_ore',6],['potion',9],['raw_meat',8],['iron_bar',16]],aggro:5,leash:13,sz:1.0},
-  rook:{n:'Rook the Cutpurse',art:'rook',hp:140,acc:50,def:44,max:9,spd:5,heavy:[22,30],heavyEvery:4,boss:true,mech:[{type:'steal',every:4},{type:'summon',kind:'bandit',n:2,at:.5}],coins:[60,120],drops:[],loot:{always:[],rolls:3,main:[['iron_bar',2,3,3],['potion',1,3,3],['cooked_meat',3,6,3],['iron_ore',3,6,2],['copper_bar',2,4,2]]},uniques:[['rook_leathers',8]],aggro:6,leash:16,sz:1.12,respawn:170},
+  rook:{n:'Rook the Cutpurse',art:'rook',hp:150,acc:50,def:44,max:9,spd:5,heavy:[22,30],heavyEvery:4,boss:true,mech:[{type:'steal',every:4},{type:'summon',kind:'bandit',n:2,at:.5}],coins:[60,120],drops:[],loot:{always:[],rolls:3,main:[['iron_bar',2,3,3],['potion',1,3,3],['cooked_meat',3,6,3],['iron_ore',3,6,2],['copper_bar',2,4,2]]},uniques:[['rook_leathers',8]],aggro:6,leash:16,sz:1.12,respawn:170},
   skeleton:{n:'Skeleton',art:'skeleton',hp:28,acc:34,def:22,max:5,spd:4,coins:[4,12],drops:[['iron_ore',8],['herb',6],['raw_meat',9]],aggro:4,leash:12,sz:.92},
   knight:{n:'Restless knight',art:'knight',hp:50,acc:42,def:40,max:8,spd:5,coins:[10,25],drops:[['iron_ore',6],['herb',5],['knight_plate',28]],aggro:4,leash:12,sz:1.0,respawn:70},
-  aldric:{n:'Sir Aldric the Hollow',art:'aldric',hp:180,acc:55,def:50,max:10,spd:5,heavy:[26,36],heavyEvery:3,boss:true,mech:[{type:'drain',every:3},{type:'aoe',every:10,delay:3,r:1.6,dmg:[14,22]},{type:'summon',kind:'skeleton',n:2,at:.5}],coins:[120,220],drops:[],loot:{always:[],rolls:4,main:[['iron_bar',2,4,3],['potion',2,3,3],['cooked_meat',4,8,3],['herb',4,8,2],['iron_ore',4,8,2]]},uniques:[['hollow_blade',8],['knight_plate',6]],aggro:6,leash:20,sz:1.35,respawn:200},
+  aldric:{n:'Sir Aldric the Hollow',art:'aldric',hp:230,acc:55,def:50,max:10,spd:5,heavy:[26,36],heavyEvery:3,boss:true,mech:[{type:'drain',every:3},{type:'aoe',every:10,delay:3,r:1.6,dmg:[14,22]},{type:'summon',kind:'skeleton',n:2,at:.5}],coins:[120,220],drops:[],loot:{always:[],rolls:4,main:[['iron_bar',2,4,3],['potion',2,3,3],['cooked_meat',4,8,3],['herb',4,8,2],['iron_ore',4,8,2]]},uniques:[['hollow_blade',8],['knight_plate',6]],aggro:6,leash:20,sz:1.35,respawn:200},
   rabbit:{n:'Rabbit',art:'rabbit',hp:3,prey:true,lv:1,xp:8,meat:1,fear:3,col:'#e8e2d4',sz:.36},
   fox:{n:'Fox',art:'fox',hp:5,prey:true,lv:6,xp:18,meat:2,fear:4,col:'#d9792f',sz:.46}
 };
-const fresh=()=>({home:{built:{}},bank:{},xp:{combat:0,mining:0,hunting:0,alchemy:0,smithing:0,woodcutting:0,fishing:0,ranged:0,crafting:0,sigilcraft:0,magic:0,construction:0},inv:{cooked_meat:3,potion:1},eq:{weapon:null,armour:null,helm:null,shield:null,pickaxe:'rusty_pickaxe'},coins:0,kills:{},won:0,won2:0,quest:0,q:{rat:0,herb:0,rook:0},qb:{},track:null,tooth:false,spell:'auto',nq:{},nqb:{},pet:null});
+const fresh=()=>({home:{built:{}},bank:{},xp:{combat:0,mining:0,hunting:0,alchemy:0,smithing:0,woodcutting:0,fishing:0,ranged:0,crafting:0,sigilcraft:0,magic:0,construction:0},inv:{cooked_meat:3,potion:1},eq:{weapon:null,armour:null,helm:null,shield:null,pickaxe:'rusty_pickaxe'},coins:0,kills:{},won:0,won2:0,quest:0,q:{rat:0,herb:0,rook:0},qb:{},track:null,tooth:false,spell:'auto',nq:{},nqb:{},pet:null,tut:{s:0,done:false}});
 let S=fresh();
 const KEY='ashen-delve-world-v1';
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-function load(){try{const j=localStorage.getItem(KEY);if(j){const o=JSON.parse(j),f=fresh(),dx=f.xp;S=Object.assign(f,o);S.xp=Object.assign(dx,o.xp);S.eq=Object.assign({weapon:null,armour:null,helm:null,shield:null,pickaxe:'rusty_pickaxe'},o.eq);S.inv=o.inv||f.inv;S.q=Object.assign({rat:0,herb:0,rook:0},o.q);S.qb=o.qb||{};S.home=Object.assign({built:{}},o.home);S.home.built=S.home.built||{};S.bank=o.bank||{};S.nq=o.nq||{};S.nqb=o.nqb||{}}}catch(e){}
+function load(){try{const j=localStorage.getItem(KEY);if(j){const o=JSON.parse(j),f=fresh(),dx=f.xp;S=Object.assign(f,o);S.xp=Object.assign(dx,o.xp);S.eq=Object.assign({weapon:null,armour:null,helm:null,shield:null,pickaxe:'rusty_pickaxe'},o.eq);S.inv=o.inv||f.inv;S.q=Object.assign({rat:0,herb:0,rook:0},o.q);S.qb=o.qb||{};S.home=Object.assign({built:{}},o.home);S.home.built=S.home.built||{};S.bank=o.bank||{};S.nq=o.nq||{};S.nqb=o.nqb||{};S.tut=o.tut||{s:0,done:Object.values(o.xp||{}).some(v=>v>0)}}}catch(e){}
+  if(!S.tut)S.tut={s:0,done:false};
   S.xp=S.xp||{};for(const k of SKILLS){const v=Number(S.xp[k]);S.xp[k]=isFinite(v)&&v>0?v:0}S.kills=S.kills||{}}
 
 /* =============== world generation =============== */
@@ -754,13 +756,43 @@ document.getElementById('dlg').addEventListener('pointerdown',e=>{e.stopPropagat
 /* =============== combat =============== */
 function hurt(dmg){pl.hp-=dmg;float(pl.x,pl.y,String(dmg),'#ff7a66',-1);if(pl.hp<=0)die()}
 function die(){
-  say('You died. Supplies and some coins were lost.');
-  delete S.inv.cooked_meat;delete S.inv.potion;S.coins=Math.floor(S.coins*.8);
+  say('You died. You lost half your food and potions and 10% of your coins.');
+  for(const id of['cooked_meat','cooked_fish','potion'])if(S.inv[id]){S.inv[id]=Math.floor(S.inv[id]/2);if(!S.inv[id])delete S.inv[id]}S.coins=Math.floor(S.coins*.9);
   M=WORLD;pl.x=WORLD.spawn.x;pl.y=WORLD.spawn.y;pl.trail=[[pl.x,pl.y]];pl.hp=pstats().hp;pl.target=null;pl.work=null;pl.engaged=null;dlg=null;showDlg();
   for(const mp of[WORLD,DUN,CRYPT,HOME,MARSH])for(const m of mp.mobs)m.chasing=false;save();updateRoute();
 }
-function doEat(id){id=id||(hasItem('cooked_fish',1)&&(!hasItem('cooked_meat',1)||pl.hp+10>pstats().hp)?'cooked_fish':'cooked_meat');if(!hasItem(id,1)||pl.hp>=pstats().hp||pl.eatCd>0)return;giveItem(id,-1);const h=HEAL[id];pl.hp=Math.min(pstats().hp,pl.hp+h);pl.pcd+=2;pl.eatCd=3;float(pl.x,pl.y,'+'+h,'#8fe08f',-1)}
-function doPot(){if(!hasItem('potion',1)||pl.hp>=pstats().hp||pl.eatCd>0)return;giveItem('potion',-1);pl.hp=Math.min(pstats().hp,pl.hp+20);pl.pcd+=2;pl.eatCd=3;float(pl.x,pl.y,'+20','#8fe08f',-1)}
+const tutStart={x:pl.x,y:pl.y};
+const TUT=[
+ {id:'walk',text:'Welcome! Tap the ground to walk. Drag to turn the view, pinch to zoom.',done:()=>M===WORLD&&Math.hypot(pl.x-tutStart.x,pl.y-tutStart.y)>=4},
+ {id:'bag',text:'Tap the Bag button to see your items, gear and skills. Close it again afterwards.',done:()=>!!S.tut.bag},
+ {id:'rabbit',text:'Catch a rabbit for food. Tap a rabbit in the grass.',done:()=>hasItem('raw_meat',1)||S.xp.hunting>0||hasItem('cooked_meat',4)},
+ {id:'home',text:'Go to your house, west of the square. Tap its door to walk inside.',done:()=>!!S.tut.home},
+ {id:'cook',text:'Cook the meat on the hearth, the fire inside your house.',done:()=>S.xp.alchemy>0},
+ {id:'mine',text:'Mine 4 copper ore. Tap the orange rocks outside the village. It takes a while, that is normal.',done:()=>(S.inv.copper_ore||0)>=4||(S.inv.copper_bar||0)>=2||owns('copper_sword')||!!S.eq.weapon},
+ {id:'smelt',text:'Smelt 2 copper bars at the furnace in your house. Tap the furnace, then pick the bar.',done:()=>(S.inv.copper_bar||0)>=2||owns('copper_sword')||!!S.eq.weapon},
+ {id:'forge',text:'Forge a copper sword at the anvil in your house.',done:()=>owns('copper_sword')||!!S.eq.weapon},
+ {id:'equip',text:'Equip the sword: open the Bag, tap the sword, press Equip.',done:()=>!!S.eq.weapon},
+ {id:'fight',text:'Time to fight! Walk to the cave in the north and slay a cave rat. Use Eat when hurt.',done:()=>((S.kills.rat||0)+(S.kills.tunnel||0))>=1},
+ {id:'quest',text:'Well done. Speak to Farmer Hal in the village to start your first quest.',done:()=>(S.q.rat||0)>=1}];
+function tutMark(){if(S.tut.done)return null;const st=TUT[S.tut.s];if(!st)return null;const id=st.id,W_=WORLD,find=(mp,k)=>{const e=(mp.objs||[]).find(q=>q.o.k===k);return e?{x:e.x,y:e.y}:null};
+  const mk=(pos,label,kind)=>pos&&{kind:kind||'goal',x:pos.x,y:pos.y,label:'Tutorial: '+label,key:'tut'};
+  const door=()=>find(W_,'home'),nearest=pred=>{let b=null,bd=1e9;for(const m of M.mobs)if(!m.dead&&pred(m)){const d=Math.hypot(m.x-pl.x,m.y-pl.y);if(d<bd){bd=d;b=m}}return b&&{x:b.x,y:b.y}};
+  if(id==='rabbit')return M===W_?mk(nearest(m=>m.kind==='rabbit'),'catch a rabbit'):null;
+  if(id==='home')return M===W_?mk(door(),'your house'):null;
+  if(id==='cook')return M===HOME?mk(find(HOME,'fire'),'the hearth'):M===W_?mk(door(),'your house'):null;
+  if(id==='smelt')return M===HOME?mk(find(HOME,'furnace'),'the furnace'):M===W_?mk(door(),'your house'):null;
+  if(id==='forge')return M===HOME?mk(find(HOME,'anvil'),'the anvil'):M===W_?mk(door(),'your house'):null;
+  if(id==='mine'){if(M!==W_)return M===HOME?mk(find(HOME,'stairs'),'leave the house'):null;let b=null,bd=1e9;for(const e of W_.objs||[])if(e.o.k==='copper'){const d=Math.hypot(e.x-pl.x,e.y-pl.y);if(d<bd){bd=d;b=e}}return mk(b,'copper rocks')}
+  if(id==='fight'){if(M===W_)return mk(find(W_,'portal'),'the cave');if(M===DUN)return mk(nearest(m=>m.kind==='rat'||m.kind==='tunnel'),'slay a cave rat');return M===HOME?mk(find(HOME,'stairs'),'leave the house'):null}
+  if(id==='quest'){const n=W_.npcs.find(q=>q.role==='farmer');return M===W_&&n?mk(n,'Farmer Hal','give'):null}
+  return null}
+let tutLast=-1;
+function tutUpdate(){if(S.tut.done)return;let ch=false;
+  while(!S.tut.done){const st=TUT[S.tut.s];if(st&&st.done()){S.tut.s++;ch=true;if(S.tut.s>=TUT.length){S.tut.done=true;S.coins+=150;giveItem('potion',2);say('Tutorial complete! 150 coins and 2 potions. Good luck, adventurer.');save();return}}else break}
+  if(ch){say('Step done! Next: '+TUT[S.tut.s].text);if(tutMark())S.track='tut';updateRoute();save()}
+  else if(tutLast!==S.tut.s){tutLast=S.tut.s;if(tutMark()&&!S.track)S.track='tut'}}
+function doEat(id){id=id||(hasItem('cooked_fish',1)&&(!hasItem('cooked_meat',1)||pl.hp+10>pstats().hp)?'cooked_fish':'cooked_meat');if(!hasItem(id,1)||pl.hp>=pstats().hp||pl.eatCd>0)return;giveItem(id,-1);const h=Math.max(HEAL[id],Math.round(pstats().hp*(id==='cooked_fish'?.14:.12)));pl.hp=Math.min(pstats().hp,pl.hp+h);pl.pcd+=2;pl.eatCd=3;float(pl.x,pl.y,'+'+h,'#8fe08f',-1)}
+function doPot(){if(!hasItem('potion',1)||pl.hp>=pstats().hp||pl.eatCd>0)return;giveItem('potion',-1);{const h=Math.max(20,Math.round(pstats().hp*.25));pl.hp=Math.min(pstats().hp,pl.hp+h);float(pl.x,pl.y,'+'+h,'#8fe08f',-1)}pl.pcd+=2;pl.eatCd=3}
 function doGuard(){if(pl.guardCd>0)return;pl.guard=3;pl.guardCd=5}
 function doSpec(){if(pl.energy>=50||pl.special)pl.special=!pl.special}
 const engagedActive=()=>pl.engaged&&!pl.engaged.dead&&tickN-pl.engagedT<=8;
@@ -782,9 +814,11 @@ function attackMob(m){
   else if(Math.random()<P.acc/(P.acc+m.def.def)*(P.rng&&!rg?.4:1))dmg=ri(1,rg?P.max+(sp?sp.bonus:0):!P.rng?P.max:1);
   pl.pcd=P.spd;pl.swingT=performance.now();
   float(m.x,m.y,dmg?String(dmg):'0',dmg?'#fff':'#9aa',-1);
-  if(dmg){m.hp-=dmg;if(rg){addXp(P.mag?'magic':'ranged',dmg*4);addXp('combat',dmg);if(sp)float(m.x,m.y,sp.n,'#cfe8ff',-1.6)}else addXp('combat',dmg*4)}
+  if(dmg){m.hp-=dmg;if(rg){addXp(P.mag?'magic':'ranged',dmg*6);addXp('combat',Math.round(dmg*1.5));if(sp)float(m.x,m.y,sp.n,'#cfe8ff',-1.6)}else addXp('combat',dmg*6)}
   if(m.hp<=0)killMob(m);
 }
+const MOBLV={rat:2,tunnel:4,toad:5,wolf:6,bandit:9,gnaw:10,hound:12,skeleton:14,rook:14,wisp:16,lurker:18,knight:20,aldric:22,golem:24,drowned:30,veyra:34};
+for(const k in MOBLV)if(MOBS[k])MOBS[k].lv=MOBLV[k];
 const GEM_ODDS=[['sapphire',100],['emerald',200],['ruby',450],['diamond',1100]];
 const PETDROP={tunnel:['pet_rat',900],gnaw:['pet_gnaw',40],toad:['pet_toad',1200],hound:['pet_hound',1000],wisp:['pet_wisp',900],golem:['pet_golem',800],lurker:['pet_toad',1500],drowned:['pet_drowned',40],veyra:['pet_veyra',40],aldric:['pet_aldric',40]};
 function rollLoot(def,kind){
@@ -879,7 +913,7 @@ function playerTick(){
     else if(--pl.work.left<=0){const w=pl.work;pl.work=null;finishWork(w)}
   }
 }
-function enterDungeon(k){hazards.length=0;if(k==='home')camDist=Math.max(camDist,19);M=k==='crypt'?CRYPT:k==='home'?HOME:k==='marsh'?MARSH:DUN;pl.x=M.spawn.x;pl.y=M.spawn.y;pl.face='up';pl.trail=[[pl.x,pl.y]];pl.target=null;pl.work=null;say(k==='marsh'?'Mistfen. A grey wet land. Mirewatch lies along the path to the north-east.':k==='home'?'Home sweet home. Furnace, anvil, workbench, altar and your chest are here.':M.name+'. Recommended Combat '+M.rec+'.');updateRoute()}
+function enterDungeon(k){if(k==='home')S.tut.home=true;hazards.length=0;if(k==='home')camDist=Math.max(camDist,19);M=k==='crypt'?CRYPT:k==='home'?HOME:k==='marsh'?MARSH:DUN;pl.x=M.spawn.x;pl.y=M.spawn.y;pl.face='up';pl.trail=[[pl.x,pl.y]];pl.target=null;pl.work=null;say(k==='marsh'?'Mistfen. A grey wet land. Mirewatch lies along the path to the north-east.':k==='home'?'Home sweet home. Furnace, anvil, workbench, altar and your chest are here.':M.name+'. Recommended Combat '+M.rec+'.');updateRoute()}
 function exitDungeon(){hazards.length=0;const from=M;M=WORLD;pl.x=from.ret.x;pl.y=from.ret.y;pl.face='down';pl.trail=[[pl.x,pl.y]];pl.target=null;pl.work=null;save();updateRoute()}
 function mobStep(m,dx,dy){const nx=m.x+dx,ny=m.y+dy;if(!walk(M,nx,ny))return false;if(dx&&dy&&(!walk(M,m.x+dx,m.y)||!walk(M,m.x,m.y+dy)))return false;m.x=nx;m.y=ny;m.face=faceOf(dx,dy);if(dx)m.fx=dx>0?1:-1;return true}
 function mobTick(m){
@@ -1478,7 +1512,7 @@ function drawOverlay(now,dt){
   for(const m of M.mobs){if(m.dead||m.def.prey)continue;if(!(m.hp<m.def.hp||m.chasing||m.def.boss&&Math.hypot(m.x-pl.x,m.y-pl.y)<9))continue;const sc=m.def.art==='rat'?(m.def.sz>.9?1.3:.55):(m.def.sz||1);
     const gp=m._g.position,p=proj(gp.x,gp.y+(m.def.art==='rat'?.9*sc+.3:2.15*(m.def.sz||1)*FS+.1),gp.z);if(!p)continue;const bw=Math.max(40,44*(m.def.sz||1));
     octx.fillStyle='rgba(0,0,0,.65)';octx.fillRect(p[0]-bw/2,p[1]-5,bw,6);octx.fillStyle='#d9604b';octx.fillRect(p[0]-bw/2,p[1]-5,bw*Math.max(0,m.hp)/m.def.hp,6);
-    if(m.def.boss){octx.fillStyle='#fff';octx.fillText(m.def.n,p[0],p[1]-10)}}
+    {const lv=m.def.lv||1,diff=lvlOf(S.xp.combat)-lv;octx.fillStyle=diff>=5?'#8fe08f':diff>=-2?'#ffe58a':'#ff8a76';octx.fillText((m.def.boss?m.def.n+'  ':'')+'Lv '+lv,p[0],p[1]-10)}}
   octx.font='700 16px '+FONT;octx.lineWidth=3;
   for(let i=floaters.length-1;i>=0;i--){const f=floaters[i];f.age+=dt;if(f.age>1.3){floaters.splice(i,1);continue}
     const p=proj(f.x+.5,hAt(M,f.x+.5,f.y+.5)+1.3+(-f.dy)*.3,f.y+.5);if(!p)continue;const y=p[1]-f.age*34;
@@ -1528,6 +1562,7 @@ function tap(cx,cy){
 const $=id=>document.getElementById(id);
 function hint(){
   const c=lvlOf(S.xp.combat);
+  if(!S.tut.done&&TUT[S.tut.s])return TUT[S.tut.s].text;
   {const w=ITEMS[S.eq.weapon];if(w&&w.magic&&!pickSpell())return 'Out of runes! Buy them at Lyra\'s Arcana or carve them at the altar in your house.';if(w&&w.ranged&&!hasItem('arrows',1))return 'Out of arrows! Buy more at Torvald\'s Armoury or craft them at your workbench.'}
   if(M===HOME){const lv=lvlOf(S.xp.construction),nb=HOME.slots.filter(o=>!o.built).length;return nb?'Your house. Craft at the stations, store things in the chest, and build furniture at the glowing rings (Construction '+lv+').':'Your house is fully furnished. Rest in the bed to heal.'}
   if(M===MARSH)return S.nq.bog===2&&S.nq.king!==2?'The Drowned King waits in the sunken chapel at the north-east. Bring food and guard his heavy blow.':'Mistfen. Follow the path to Mirewatch. Mythril veins need Mining 15. Bog lurkers hit hard.';
@@ -1552,9 +1587,11 @@ function updateHud(){
   {const nf=(S.inv.cooked_meat||0)+(S.inv.cooked_fish||0);$('qEat').querySelector('small').textContent=nf;$('qEat').disabled=!nf}
   $('qPot').querySelector('small').textContent=S.inv.potion||0;$('coins').textContent=S.coins.toLocaleString('en-US');$('qPot').disabled=!S.inv.potion;
   {const w=ITEMS[S.eq.weapon],q=$('qSpell');q.hidden=!(w&&w.magic);if(!q.hidden){const sp=pickSpell(),c=SPELLS.find(x=>x.id===S.spell)||sp;q.querySelector('.lb').textContent=S.spell==='auto'||!c?'Auto':c.n.split(' ')[0];q.querySelector('small').textContent=c?(S.inv[c.rune]||0):0;q.classList.toggle('alert',!sp)}}
+  tutUpdate();{const tc=$('tutchip');if(S.tut.done){tc.hidden=true}else{tc.hidden=false;tc.textContent=(tutSkip?'Tap again to skip tutorial':'Tutorial '+(S.tut.s+1)+'/'+TUT.length+' · Skip')}}
   $('qSpec').classList.toggle('on',pl.special);$('qSpec').disabled=pl.energy<50&&!pl.special;
   const tele=M.mobs.some(m=>m.tele&&!m.dead);$('tele').hidden=!tele;$('qGuard').classList.toggle('alert',tele);$('qGuard').disabled=pl.guardCd>0;
 }
+let tutSkip=false;$('tutchip').onclick=()=>{if(!tutSkip){tutSkip=true;setTimeout(()=>{tutSkip=false;updateHud()},3000);updateHud()}else{S.tut.done=true;tutSkip=false;if(S.track==='tut'){S.track=null;updateRoute()}save();updateHud();say('Tutorial skipped. You can read about the world in the Bag.')}};
 $('focus').onclick=takeFocus;$('qSpell').onclick=()=>{S.spell=SPELL_CYCLE[(SPELL_CYCLE.indexOf(S.spell)+1)%SPELL_CYCLE.length];const c=SPELLS.find(x=>x.id===S.spell);if(c&&lvlOf(S.xp.magic)<c.lv)say(c.n+' needs Magic '+c.lv+'. A weaker spell is used until then.');else say('Spell: '+(c?c.n:'best available'));updateHud();save()};
 $('qEat').onclick=()=>{doEat();updateHud()};$('qPot').onclick=()=>{doPot();updateHud()};$('qGuard').onclick=()=>{doGuard();updateHud()};$('qSpec').onclick=()=>{doSpec();updateHud()};
 function onLoot(m,loot,coins){
@@ -1684,7 +1721,7 @@ function panelHtml(){
   const body={items:bagItems,skills:bagSkills,quests:bagQuests,codex:bagCodex,save:bagSave}[bagTab]();
   return'<div class="in"><div class="row" style="border:0"><h1>Bag</h1><button data-a="close">Close</button></div><div class="tabs">'+tabs.map(([id,n])=>'<button data-tab="'+id+'" class="'+(bagTab===id?'on':'')+'">'+n+'</button>').join('')+'</div>'+body+'</div>';
 }
-function openPanel(){const p=$('panel');p.innerHTML=panelHtml();p.hidden=false}
+function openPanel(){S.tut.bag=true;const p=$('panel');p.innerHTML=panelHtml();p.hidden=false}
 $('panel').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset;
   if(d.a==='export'||d.a==='import'){saveIO(d.a);return}
@@ -1719,13 +1756,15 @@ function questMarks(){
   else if(S.quest===1){if(!hasItem('signet',1))add('goal',W_.cryptExit.x,W_.cryptExit.y,'The Hollow Knight: defeat Sir Aldric in the crypts');else add('turn',ed.x,ed.y,'The Hollow Knight: bring the signet to Sir Edric')}
   else if(S.q.rook===0)add('give',ed.x,ed.y,'Bandit Trouble: speak to Sir Edric');
   else if(S.q.rook===1){if(prog('rook')<1)add('goal',W_.camp.x,W_.camp.y,'Bandit Trouble: defeat Rook');else add('turn',ed.x,ed.y,'Bandit Trouble: report to Sir Edric')}
+  {const tm=tutMark();if(tm&&M===WORLD)out.push(tm)}
   for(const q of NQ){const npc=W_.npcs.find(n=>n.role===q.role);if(!npc||q.req&&S.nq[q.req]!==2)continue;const st=S.nq[q.id]||0;if(st===0)out.push({kind:'give',x:npc.x,y:npc.y,label:q.name+': speak to '+npc.name,key:'nq_'+q.id});else if(st===1&&nqProg(q)>=q.need.n)out.push({kind:'turn',x:npc.x,y:npc.y,label:q.name+': report to '+npc.name,key:'nq_'+q.id})}
   for(const q of out)if(!q.key)q.key=q.label.startsWith('Rat')?'rat':q.label.startsWith('Mara')?'herb':q.label.startsWith('The Hollow')?'hollow':'rook';
   return out;
 }
 let routePts=[],routeGoal=null,routeKey=0;
 function dungeonMarks(){
-  const out=[],qm=questMarks(),st=(M.objs||[]).find(e=>e.o.k==='stairs'),exit=q=>st&&out.push({kind:'exit',x:st.x,y:st.y,label:q.label+' (leave the dungeon)',key:q.key,exit:true});
+  const out=[],qm=questMarks().filter(q=>q.key!=='tut'),st=(M.objs||[]).find(e=>e.o.k==='stairs'),exit=q=>st&&out.push({kind:'exit',x:st.x,y:st.y,label:q.label+' (leave the dungeon)',key:q.key,exit:true});
+  {const tm=tutMark();if(tm&&M!==WORLD)out.push(tm)}
   for(const q of qm){
     if(q.key==='hollow'&&q.kind==='goal'&&M===CRYPT){const bo=CRYPT.mobs.find(m=>m.kind==='aldric');out.push({kind:'goal',x:bo.dead?bo.hx:bo.x,y:bo.dead?bo.hy:bo.y,label:q.label,key:q.key})}
     else if(q.key==='rat'&&q.kind==='goal'&&M===DUN){let best=null,bd=1e9;for(const m of M.mobs)if(!m.dead&&m.kind==='rat'){const d=Math.hypot(m.x-pl.x,m.y-pl.y);if(d<bd){bd=d;best=m}}
@@ -1812,7 +1851,7 @@ $('mapPanel').addEventListener('pointerdown',e=>e.stopPropagation());
 /* =============== boot =============== */
 load();applyHome();
 pl.hp=pstats().hp;resize();updateHud();updateRoute();
-window.__game={S:()=>S,hazards,rollLoot,setPitch:v=>{pitch=T.MathUtils.degToRad(v)},openShop,treeObj,nearestTree,doEat,shots,pl,tick,get M(){return M},WORLD,DUN,CRYPT,HOME,MARSH,openBank,tickN:()=>tickN,pstats,giveItem,addXp,enterDungeon,talk,get dlg(){return dlg},cam,scene,renderer,setYaw:v=>{yaw=v},setDist:v=>{camDist=v},getDist:()=>camDist,getYaw:()=>yaw,DBG};
+window.__game={S:()=>S,xpAt:xpFor,hazards,rollLoot,setPitch:v=>{pitch=T.MathUtils.degToRad(v)},openShop,treeObj,nearestTree,doEat,shots,pl,tick,get M(){return M},WORLD,DUN,CRYPT,HOME,MARSH,openBank,tickN:()=>tickN,pstats,giveItem,addXp,enterDungeon,talk,get dlg(){return dlg},cam,scene,renderer,setYaw:v=>{yaw=v},setDist:v=>{camDist=v},getDist:()=>camDist,getYaw:()=>yaw,DBG};
 requestAnimationFrame(t=>{lastTick=t;lastNow=t;frame(t)});
 })();
 </script>

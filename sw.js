@@ -1,5 +1,5 @@
 /* Ashen Delve service worker: offline play. Bump by rebuilding (version changes with content). */
-const VERSION = 'e048e65559';
+const VERSION = '2fd5f8ed2e';
 const CORE = ['./', 'index.html', 'three.min.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION && k !== 'fonts').map(k => caches.delete(k)))).then(() => self.clients.claim())); });
