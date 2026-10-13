@@ -219,6 +219,7 @@ const ITEMS={
   copper_armour:{n:'Copper armour',slot:'armour',def:8,req:0,tier:'copper'},
   iron_armour:{n:'Iron armour',slot:'armour',def:18,req:10,tier:'iron'},
   knight_plate:{n:"Knight's plate",slot:'armour',def:32,req:20,tier:'plate'},
+  gnaw_fang:{n:'Gnawking fang',part:true,note:'A boss part.'},hollow_shard:{n:'Hollow blade shard',part:true,note:'A boss part.'},drowned_scale:{n:'Drowned scale',part:true,note:'A boss part.'},trident_head:{n:'Trident head',part:true,note:'A boss part.'},veyra_crystal:{n:'Veyra crystal',part:true,note:'A boss part.'},arcane_cloth:{n:'Arcane cloth',part:true,note:'A boss part.'},
   gnaw_dagger:{n:'Gnawfang dagger',slot:'weapon',acc:20,dmg:6,req:12,spd:3,col:'#d8d2bf',tier:'fang',note:'fast'},
   rook_leathers:{n:"Rook's leathers",slot:'armour',def:24,req:14,tier:'leather'},
   wolf_pelt:{n:'Wolf pelt',note:'sells well'},
@@ -290,6 +291,18 @@ for(const[ti,t]of TIERS.entries()){
     RECIPES.anvil.push({id:t.id+'_pickaxe',kind:'forge',lv:t.sm+0,xp:2*(12+ti*10),t:4,in:{[t.bar]:2}})}
 }
 RECIPES.anvil.sort((a,b)=>a.lv-b.lv);
+RECIPES.anvil.push(
+ {id:'gnaw_dagger',kind:'forge',lv:12,xp:90,t:4,in:{gnaw_fang:1,iron_bar:2}},
+ {id:'hollow_blade',kind:'forge',lv:18,xp:160,t:5,in:{hollow_shard:1,iron_bar:3}},
+ {id:'drowned_trident',kind:'forge',lv:30,xp:260,t:6,in:{trident_head:1,mythril_bar:2,drowned_scale:2}},
+ {id:'drowned_plate',kind:'forge',lv:30,xp:320,t:6,in:{drowned_scale:8,mythril_bar:3}},
+ {id:'drowned_shield',kind:'forge',lv:29,xp:230,t:5,in:{drowned_scale:5,mythril_bar:2}});
+RECIPES.anvil.sort((a,b)=>a.lv-b.lv);
+RECIPES.bench.push(
+ {id:'arcane_robe',kind:'craft',skill:'crafting',lv:25,xp:220,t:6,in:{arcane_cloth:6,ectoplasm:4}},
+ {id:'arcane_hat',kind:'craft',skill:'crafting',lv:25,xp:120,t:5,in:{arcane_cloth:3,ectoplasm:2}},
+ {id:'void_tome',kind:'craft',skill:'crafting',lv:30,xp:240,t:6,in:{arcane_cloth:4,sigil_ore:3}},
+ {id:'veyra_staff',kind:'craft',skill:'crafting',lv:30,xp:400,t:8,in:{veyra_crystal:1,storm_staff:1,void_rune:3}});
 const TF={copper:1,iron:1.3,steel:1.8,mythril:3},GEARVAL=it=>Math.round(((it.acc||0)+(it.dmg||0)*5+(it.def||0)*4+(it.speed?(5-it.speed)*10:0))*1.6*(TF[it.tier]||1)+20);
 for(const id of Object.keys(ITEMS)){const it=ITEMS[id];if(it.slot&&it.tier&&['copper','iron','steel','mythril'].includes(it.tier)&&SELL[id]===undefined)SELL[id]=Math.round(GEARVAL(it)*.35)}
 const BUY=[['cooked_meat',9],['cooked_fish',12],['potion',32],['arrows',2],['spark_rune',5],['copper_bar',18]];
@@ -358,20 +371,20 @@ const DROPS=[['raw_meat',4],['herb',6],['copper_ore',5],['iron_ore',14]];
 const MOBS={
   wisp:{n:'Veil wisp',art:'wraith',hp:36,acc:44,def:30,max:7,spd:4,coins:[8,20],drops:[['ectoplasm',2],['sigil_ore',5],['spark_rune',3],['frost_rune',6],['gale_rune',14],['herb',6]],uniques:[['veil_hood',45],['veil_orb',55],['veil_staff',90]],aggro:6,leash:14,sz:.9},
   golem:{n:'Rune golem',art:'golem',hp:80,acc:42,def:52,max:10,spd:5,coins:[12,30],drops:[['sigil_ore',3],['ectoplasm',3],['iron_bar',10],['gale_rune',9],['void_rune',30]],uniques:[['veil_robe',50],['veil_staff',80],['void_tome',140]],aggro:4,leash:11,sz:1.3},
-  veyra:{n:'Veyra, the Hollow Archmage',art:'veyra',hp:520,acc:66,def:54,max:13,spd:5,heavy:[32,44],heavyEvery:3,boss:true,mech:[{type:'orb',every:5,range:6,dmg:[9,14]},{type:'aoe',every:9,delay:3,r:1.6,dmg:[16,26]},{type:'summon',kind:'wisp',n:3,at:.5}],coins:[300,500],drops:[],loot:{always:[['void_rune',10,20]],rolls:4,main:[['gale_rune',8,16,3],['frost_rune',10,20,3],['sigil_ore',4,8,3],['potion',2,4,3],['steel_bar',2,4,2]]},uniques:[['veyra_staff',12],['arcane_robe',8],['arcane_hat',8],['void_tome',10]],sz:1.15,respawn:100},
+  veyra:{n:'Veyra, the Hollow Archmage',art:'veyra',hp:520,acc:66,def:54,max:13,spd:5,heavy:[32,44],heavyEvery:3,boss:true,mech:[{type:'orb',every:5,range:6,dmg:[9,14]},{type:'aoe',every:9,delay:3,r:1.6,dmg:[16,26]},{type:'summon',kind:'wisp',n:3,at:.5}],coins:[300,500],drops:[],loot:{always:[['void_rune',10,20],['arcane_cloth',3,5]],rolls:4,main:[['gale_rune',8,16,3],['frost_rune',10,20,3],['sigil_ore',4,8,3],['potion',2,4,3],['steel_bar',2,4,2]]},uniques:[['veyra_crystal',12]],sz:1.15,respawn:100},
   toad:{n:'Bog toad',art:'rat',hp:14,acc:24,def:12,max:3,spd:4,coins:[2,7],drops:[['raw_meat',3],['marsh_hide',3]],aggro:3,leash:10,col:'#5a8a3a',sz:.62},
   hound:{n:'Marsh hound',art:'wolf',hp:36,acc:38,def:26,max:6,spd:4,coins:[5,14],drops:[['wolf_pelt',2],['marsh_hide',2],['raw_meat',2]],uniques:[['marsh_buckler',60],['fenhunter_vest',130]],aggro:5,leash:14,col:'#5d7468',sz:.66},
   lurker:{n:'Bog lurker',art:'lurker',hp:50,acc:44,def:36,max:8,spd:4,coins:[10,26],drops:[['mythril_ore',10],['herb',5],['potion',9],['steel_bar',24]],uniques:[['marsh_vest',45],['marsh_hood',45],['warden_helm',100],['fenhunter_hood',120],['warden_shield',130]],aggro:5,leash:13,sz:1.0},
-  drowned:{n:'The Drowned King',art:'drowned',hp:480,acc:62,def:56,max:12,spd:5,heavy:[30,42],heavyEvery:3,boss:true,mech:[{type:'aoe',every:8,delay:3,r:2,dmg:[16,26]},{type:'summon',kind:'lurker',n:2,at:.55}],coins:[200,400],drops:[],loot:{always:[['mythril_bar',1,2]],rolls:4,main:[['mythril_ore',3,6,3],['steel_bar',2,4,3],['potion',2,4,3],['cooked_fish',4,8,3],['sigil_ore',3,6,2]]},uniques:[['mist_staff',12],['drowned_crown',10],['drowned_plate',9],['drowned_shield',9],['drowned_trident',10],['fen_longbow',10],['fenhunter_hood',14],['warden_plate',14]],sz:1.15,respawn:90},
+  drowned:{n:'The Drowned King',art:'drowned',hp:480,acc:62,def:56,max:12,spd:5,heavy:[30,42],heavyEvery:3,boss:true,mech:[{type:'aoe',every:8,delay:3,r:2,dmg:[16,26]},{type:'summon',kind:'lurker',n:2,at:.55}],coins:[200,400],drops:[],loot:{always:[['mythril_bar',1,2],['drowned_scale',2,3]],rolls:4,main:[['mythril_ore',3,6,3],['steel_bar',2,4,3],['potion',2,4,3],['cooked_fish',4,8,3],['sigil_ore',3,6,2]]},uniques:[['mist_staff',12],['drowned_crown',10],['trident_head',9],['fen_longbow',10],['fenhunter_hood',14],['warden_plate',14]],sz:1.15,respawn:90},
   rat:{n:'Cave rat',art:'rat',hp:10,acc:20,def:8,max:3,spd:4,coins:[1,4],drops:DROPS,aggro:3,leash:12,col:'#8a7a6a',sz:.5},
   tunnel:{n:'Tunnel rat',art:'rat',hp:18,acc:28,def:16,max:4,spd:4,coins:[3,8],drops:[['raw_meat',3],['herb',5],['copper_ore',4],['iron_ore',9]],aggro:4,leash:14,col:'#5d5249',sz:.58},
-  gnaw:{n:'The Gnawking',art:'rat',hp:115,acc:40,def:30,max:7,spd:5,heavy:[18,26],boss:true,mech:[{type:'summon',kind:'rat',n:2,at:.66},{type:'summon',kind:'tunnel',n:1,at:.33}],coins:[40,80],drops:[],loot:{always:[['gnaw_hide',1,1]],rolls:3,main:[['iron_ore',3,6,3],['iron_bar',1,2,2],['copper_bar',2,4,2],['potion',1,2,3],['cooked_meat',3,6,3],['herb',3,6,2]]},uniques:[['tooth',16],['gnaw_dagger',10]],aggro:6,leash:18,col:'#6b4a3a',sz:1.0,respawn:150},
+  gnaw:{n:'The Gnawking',art:'rat',hp:115,acc:40,def:30,max:7,spd:5,heavy:[18,26],boss:true,mech:[{type:'summon',kind:'rat',n:2,at:.66},{type:'summon',kind:'tunnel',n:1,at:.33}],coins:[40,80],drops:[],loot:{always:[['gnaw_hide',1,1]],rolls:3,main:[['iron_ore',3,6,3],['iron_bar',1,2,2],['copper_bar',2,4,2],['potion',1,2,3],['cooked_meat',3,6,3],['herb',3,6,2]]},uniques:[['tooth',16],['gnaw_fang',10]],aggro:6,leash:18,col:'#6b4a3a',sz:1.0,respawn:150},
   wolf:{n:'Wolf',art:'wolf',hp:24,acc:32,def:20,max:5,spd:4,coins:[3,9],drops:[['wolf_pelt',2],['raw_meat',2]],aggro:5,leash:14,col:'#8d9096',sz:.62},
   bandit:{n:'Bandit',art:'bandit',hp:40,acc:38,def:32,max:6,spd:4,coins:[8,22],drops:[['iron_ore',6],['potion',9],['raw_meat',8],['iron_bar',16]],aggro:5,leash:13,sz:1.0},
   rook:{n:'Rook the Cutpurse',art:'rook',hp:150,acc:50,def:44,max:9,spd:5,heavy:[22,30],heavyEvery:4,boss:true,mech:[{type:'steal',every:4},{type:'summon',kind:'bandit',n:2,at:.5}],coins:[60,120],drops:[],loot:{always:[],rolls:3,main:[['iron_bar',2,3,3],['potion',1,3,3],['cooked_meat',3,6,3],['iron_ore',3,6,2],['copper_bar',2,4,2]]},uniques:[['rook_leathers',8]],aggro:6,leash:16,sz:1.12,respawn:170},
   skeleton:{n:'Skeleton',art:'skeleton',hp:28,acc:34,def:22,max:5,spd:4,coins:[4,12],drops:[['iron_ore',8],['herb',6],['raw_meat',9]],aggro:4,leash:12,sz:.92},
   knight:{n:'Restless knight',art:'knight',hp:50,acc:42,def:40,max:8,spd:5,coins:[10,25],drops:[['iron_ore',6],['herb',5],['knight_plate',28]],aggro:4,leash:12,sz:1.0,respawn:70},
-  aldric:{n:'Sir Aldric the Hollow',art:'aldric',hp:230,acc:55,def:50,max:10,spd:5,heavy:[26,36],heavyEvery:3,boss:true,mech:[{type:'drain',every:3},{type:'aoe',every:10,delay:3,r:1.6,dmg:[14,22]},{type:'summon',kind:'skeleton',n:2,at:.5}],coins:[120,220],drops:[],loot:{always:[],rolls:4,main:[['iron_bar',2,4,3],['potion',2,3,3],['cooked_meat',4,8,3],['herb',4,8,2],['iron_ore',4,8,2]]},uniques:[['hollow_blade',8],['knight_plate',6]],aggro:6,leash:20,sz:1.35,respawn:200},
+  aldric:{n:'Sir Aldric the Hollow',art:'aldric',hp:230,acc:55,def:50,max:10,spd:5,heavy:[26,36],heavyEvery:3,boss:true,mech:[{type:'drain',every:3},{type:'aoe',every:10,delay:3,r:1.6,dmg:[14,22]},{type:'summon',kind:'skeleton',n:2,at:.5}],coins:[120,220],drops:[],loot:{always:[],rolls:4,main:[['iron_bar',2,4,3],['potion',2,3,3],['cooked_meat',4,8,3],['herb',4,8,2],['iron_ore',4,8,2]]},uniques:[['hollow_shard',8],['knight_plate',6]],aggro:6,leash:20,sz:1.35,respawn:200},
   rabbit:{n:'Rabbit',art:'rabbit',hp:3,prey:true,lv:1,xp:8,meat:1,fear:3,col:'#e8e2d4',sz:.36},
   fox:{n:'Fox',art:'fox',hp:5,prey:true,lv:6,xp:18,meat:2,fear:4,col:'#d9792f',sz:.46}
 };
@@ -673,7 +686,7 @@ function say(t){const el=document.getElementById('msg');el.textContent=t;el.hidd
 const hasItem=(id,n)=>(S.inv[id]||0)>=n;
 const owns=id=>(S.inv[id]||0)>0||S.eq.weapon===id||S.eq.armour===id;
 const canAfford=r=>Object.entries(r.in).every(([k,v])=>hasItem(k,v));
-const NEED={copper:1,iron:8,sigil:4,mythril:15},MXP={copper:12,iron:26,sigil:34,mythril:58};
+const NEED={copper:1,iron:8,sigil:4,mythril:15},MXP={copper:3,iron:6,sigil:8,mythril:12};
 function startWork(o){
   const al=lvlOf(S.xp.alchemy),mn=lvlOf(S.xp.mining);
   switch(o.k){
@@ -723,7 +736,7 @@ function _finishWork(w){
       if(!hasItem('raw_fish',1)&&!hasItem('raw_meat',1))pl.target=null;break}
     case'brew':if(hasItem('herb',2)){giveItem('herb',-2);giveItem('potion',1);addXp('alchemy',15);float(pl.x,pl.y,'+1 Potion','#fff',-.7)}break;
     case'catch':{const m=w.m;if(m.dead||cheb(pl,m)>1)break;
-      if(Math.random()<clamp(.5+.03*(lvlOf(S.xp.hunting)-m.def.lv),.5,.95)){m.dead=true;m.respawn=tickN+45;giveItem('raw_meat',m.def.meat);addXp('hunting',m.def.xp);float(pl.x,pl.y,'+'+m.def.meat+' Raw meat','#fff',-.7);{const hd=m.kind==='rabbit'?1:m.kind==='fox'?2:0;if(hd){giveItem('hide',hd);float(pl.x,pl.y,'+'+hd+' Hide','#fff',-1.2)}}pl.target=null}
+      if(Math.random()<clamp(.5+.03*(lvlOf(S.xp.hunting)-m.def.lv),.5,.95)){m.dead=true;m.respawn=tickN+45;giveItem('raw_meat',m.def.meat);addXp('hunting',m.def.xp*4);float(pl.x,pl.y,'+'+m.def.meat+' Raw meat','#fff',-.7);{const hd=m.kind==='rabbit'?1:m.kind==='fox'?2:0;if(hd){giveItem('hide',hd);float(pl.x,pl.y,'+'+hd+' Hide','#fff',-1.2)}}pl.target=null}
       else float(pl.x,pl.y,'It slips away','#aaa',-.7);break}
   }
 }
@@ -823,6 +836,14 @@ const engagedActive=()=>pl.engaged&&!pl.engaged.dead&&tickN-pl.engagedT<=8;
 const canEngage=m=>m.add||isMulti(M,pl.x,pl.y)||!engagedActive()||pl.engaged===m;
 function engage(m){pl.engaged=m;pl.engagedT=tickN}
 const SPELLS=[{id:'void',n:'Void Blast',rune:'void_rune',lv:25,bonus:13,col:0xb06aff},{id:'gale',n:'Gale Strike',rune:'gale_rune',lv:15,bonus:8,col:0xb8ffd8},{id:'frost',n:'Frost Lance',rune:'frost_rune',lv:8,bonus:5,col:0x8fd8ff},{id:'spark',n:'Spark Bolt',rune:'spark_rune',lv:1,bonus:1,col:0xffc23a}];
+const SPELL_ICON={
+ spark:'<path d="M17 2 L7 18 H14 L11 30 L25 12 H17Z" fill="#ffc23a" stroke="#6a4a08" stroke-width="1.4" stroke-linejoin="round"/>',
+ frost:'<path d="M16 2 V30 M4 9 L28 23 M28 9 L4 23" stroke="#bfeaff" stroke-width="3" stroke-linecap="round"/><path d="M16 2 V30 M4 9 L28 23 M28 9 L4 23" stroke="#3a8ac0" stroke-width="1" stroke-linecap="round"/><circle cx="16" cy="16" r="3.4" fill="#e8f8ff" stroke="#3a8ac0"/>',
+ gale:'<path d="M4 11 H20 C26 11 26 4 20 4 M4 17 H25 C31 17 31 24 25 24 M4 23 H14 C18 23 18 28 14 28" fill="none" stroke="#7fe0b0" stroke-width="3" stroke-linecap="round"/><path d="M4 11 H20 C26 11 26 4 20 4 M4 17 H25 C31 17 31 24 25 24 M4 23 H14 C18 23 18 28 14 28" fill="none" stroke="#1d6a4a" stroke-width=".9" stroke-linecap="round"/>',
+ void:'<circle cx="16" cy="16" r="12" fill="#2a1450" stroke="#a070f0" stroke-width="2"/><path d="M16 5 C26 8 26 22 16 20 C10 19 11 13 16 14" fill="none" stroke="#c9a6ff" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="16" r="2.4" fill="#fff"/>',
+ auto:'<path d="M16 3 L19 12 L29 16 L19 20 L16 29 L13 20 L3 16 L13 12Z" fill="#b58bff" stroke="#3a2060" stroke-width="1.3"/>',
+ tele:'<ellipse cx="16" cy="19" rx="11" ry="5" fill="none" stroke="#b58bff" stroke-width="2.4"/><path d="M16 4 V20 M10 10 L16 4 L22 10" fill="none" stroke="#e8d8ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>'};
+const spellSvg=(id,cls)=>'<svg class="'+(cls||'ic')+'" viewBox="0 0 32 32" aria-hidden="true">'+(SPELL_ICON[id]||SPELL_ICON.auto)+'</svg>';
 const SPELL_CYCLE=['auto','spark','frost','gale','void'];
 const pickSpell=()=>{const ml=lvlOf(S.xp.magic),ok=sp=>ml>=sp.lv&&hasItem(sp.rune,1);const c=SPELLS.find(sp=>sp.id===S.spell);if(c&&ok(c))return c;return SPELLS.find(ok)||null};
 const canShoot=()=>{const w=ITEMS[S.eq.weapon];return !!w&&(w.ranged?hasItem('arrows',1):w.magic?!!pickSpell():false)};
@@ -843,6 +864,9 @@ function attackMob(m){
 }
 const MOBLV={rat:2,tunnel:4,toad:5,wolf:6,bandit:9,gnaw:10,hound:12,skeleton:14,rook:14,wisp:16,lurker:18,knight:20,aldric:22,golem:24,drowned:30,veyra:34};
 for(const k in MOBLV)if(MOBS[k])MOBS[k].lv=MOBLV[k];
+const STATION={furnace:'Furnace',anvil:'Anvil',bench:'Workbench',altar:'Sigil altar'};
+function usedIn(id){const out=[];for(const st of Object.keys(RECIPES))for(const r of RECIPES[st])if(r.in&&r.in[id])out.push({st,r});
+  return out.map(({st,r})=>ITEMS[r.id].n+': '+Object.entries(r.in).map(([k,v])=>v+' '+ITEMS[k].n).join(' + ')+' at the '+STATION[st]+' ('+SKN[r.skill||'smithing']+' '+r.lv+')')}
 const GEM_ODDS=[['sapphire',100],['emerald',200],['ruby',450],['diamond',1100]];
 const PETDROP={tunnel:['pet_rat',900],gnaw:['pet_gnaw',40],toad:['pet_toad',1200],hound:['pet_hound',1000],wisp:['pet_wisp',900],golem:['pet_golem',800],lurker:['pet_toad',1500],drowned:['pet_drowned',40],veyra:['pet_veyra',40],aldric:['pet_aldric',40]};
 function rollLoot(def,kind){
@@ -1610,7 +1634,7 @@ function updateHud(){
   $('zone').style.display=M.indoor?'none':'';const mz=isMulti(M,pl.x,pl.y);$('zone').textContent=mz?'Multi-combat: enemies attack together':'Single-combat: one enemy at a time';$('zone').className=mz?'multi':'';
   {const nf=(S.inv.cooked_meat||0)+(S.inv.cooked_fish||0);$('qEat').querySelector('small').textContent=nf;$('qEat').disabled=!nf}
   $('qPot').querySelector('small').textContent=S.inv.potion||0;$('coins').textContent=S.coins.toLocaleString('en-US');$('qPot').disabled=!S.inv.potion;
-  {const w=ITEMS[S.eq.weapon],q=$('qSpell');q.hidden=!(w&&w.magic);if(!q.hidden){const sp=pickSpell(),c=SPELLS.find(x=>x.id===S.spell)||sp;q.querySelector('.lb').textContent=S.spell==='auto'||!c?'Auto':c.n.split(' ')[0];q.querySelector('small').textContent=c?(S.inv[c.rune]||0):0;q.classList.toggle('alert',!sp)}}
+  {const w=ITEMS[S.eq.weapon],q=$('qSpell');q.hidden=!(w&&w.magic);if(!q.hidden){const sp=pickSpell(),c=SPELLS.find(x=>x.id===S.spell)||sp;q.querySelector('.lb').textContent=S.spell==='auto'||!c?'Auto':c.n.split(' ')[0];{const sv=q.querySelector('svg'),ic=S.spell==='auto'?(sp?sp.id:'auto'):S.spell;if(sv&&sv.dataset.i!==ic){sv.dataset.i=ic;sv.innerHTML=SPELL_ICON[ic]||SPELL_ICON.auto;sv.setAttribute('viewBox','0 0 32 32')}}q.querySelector('small').textContent=c?(S.inv[c.rune]||0):0;q.classList.toggle('alert',!sp)}}
   tutUpdate();{const tc=$('tutchip');if(S.tut.done){tc.hidden=true}else{tc.hidden=false;tc.textContent=(tutSkip?'Tap again to skip tutorial':'Tutorial '+(S.tut.s+1)+'/'+TUT.length+' · Skip')}}
   $('qSpec').classList.toggle('on',pl.special);$('qSpec').disabled=pl.energy<50&&!pl.special;
   const tele=M.mobs.some(m=>m.tele&&!m.dead);$('tele').hidden=!tele;$('qGuard').classList.toggle('alert',tele);$('qGuard').disabled=pl.guardCd>0;
@@ -1620,7 +1644,7 @@ $('focus').onclick=takeFocus;$('qSpell').onclick=()=>{S.spell=SPELL_CYCLE[(SPELL
 $('qEat').onclick=()=>{doEat();updateHud()};$('qPot').onclick=()=>{doPot();updateHud()};$('qGuard').onclick=()=>{doGuard();updateHud()};$('qSpec').onclick=()=>{doSpec();updateHud()};
 function onLoot(m,loot,coins){
   const el=document.getElementById('loot');
-  el.innerHTML='<h3>'+m.def.n+'</h3>'+'<div class="li"><span>Coins</span><b class="n">'+coins+'</b></div>'+loot.map(l=>'<div class="li'+(l.rare?' rare':'')+'"><span>'+ITEMS[l.id].n+(l.rare?' (rare drop!)':'')+'</span><b class="n">×'+l.n+'</b></div>').join('')+'<small>Tap to close</small>';
+  el.innerHTML='<h3>'+m.def.n+'</h3>'+'<div class="li"><span>Coins</span><b class="n">'+coins+'</b></div>'+loot.map(l=>'<div class="li'+(l.rare?' rare':'')+'"><span>'+ITEMS[l.id].n+(l.rare?' (rare drop!)':'')+(ITEMS[l.id].part?'<small style="display:block;font-weight:400;color:var(--ink2)">'+(usedIn(l.id).slice(0,2).join('<br>'))+'</small>':'')+'</span><b class="n">×'+l.n+'</b></div>').join('')+'<small>Tap to close</small>';
   el.hidden=false;
 }
 document.getElementById('loot').addEventListener('pointerdown',e=>{e.stopPropagation();e.currentTarget.hidden=true});
@@ -1716,7 +1740,8 @@ function itemSheet(){
   const id=bagSel.id,it=ITEMS[id];if(!it||!S.inv[id])return'<div class="act mute">Tap an item to use it.</div>';
   const btns=[];if(it.slot)btns.push('<button data-a="equip">Equip</button>');if(HEAL[id])btns.push('<button data-a="eat">Eat</button>');if(id==='potion')btns.push('<button data-a="drink">Drink</button>');if(it.pet)btns.push('<button data-a="pet">'+(S.pet===id?'Following':'Follow me')+'</button>');
   if(id!=='signet'){btns.push('<button data-a="drop1">Drop 1</button>');if(S.inv[id]>1)btns.push('<button data-a="dropall">Drop all</button>')}
-  return'<div class="act"><b>'+it.n+'</b> <span class="mute n">×'+S.inv[id]+'</span><div class="mute">'+(itemStat(it)||'Crafting material')+'</div><div class="btns">'+btns.join('')+'</div></div>';
+  const ui=(!it.slot&&!it.pet)?usedIn(id):[];
+  return'<div class="act"><b>'+it.n+'</b> <span class="mute n">×'+S.inv[id]+'</span><div class="mute">'+(itemStat(it)||'Crafting material')+'</div>'+(ui.length?'<div class="mute" style="margin-top:4px"><b>Used in:</b><br>'+ui.slice(0,4).join('<br>')+(ui.length>4?'<br>and more...':'')+'</div>':'')+'<div class="btns">'+btns.join('')+'</div></div>';
 }
 function bagItems(){
   const P=pstats(),ids=invOrder();
@@ -1744,8 +1769,8 @@ function bagSpells(){
   const status=w&&w.magic?'Staff equipped: <b>'+w.n+'</b>. Attack a monster to cast.':staffInBag?'You carry a staff (<b>'+ITEMS[staffInBag].n+'</b>). Open Items, tap it and press Equip.':"You have no staff. Visit Lyra's Arcana in the village: she gives you one for her first quest, or sells an Apprentice staff for 100 coins.";
   return'<div class="act"><b>Magic '+ml+'</b><div class="mute" style="margin-top:4px">'+status+'</div></div>'+
   '<div class="mute" style="margin:10px 0 4px">How it works: equip a staff, keep runes in your pack, attack a monster. You cast from up to 5 tiles away and each cast uses one rune. The Spell button (bottom right, with a staff) chooses the spell.</div>'+
-  '<h2>Spells</h2><div class="row" style="border:0;padding:2px 0"><span>Auto: best spell you have runes for</span><button data-spell="auto" class="'+(S.spell==='auto'?'on':'')+'">'+(S.spell==='auto'?'Selected':'Use')+'</button></div>'+
-  SPELLS.slice().reverse().map(sp=>{const lock=ml<sp.lv,n=S.inv[sp.rune]||0;return'<div class="row"><div style="flex:1"><b>'+sp.n+'</b><div class="mute">Magic '+sp.lv+' · +'+sp.bonus+' damage · '+ITEMS[sp.rune].n+' ×'+n+'</div></div><button data-spell="'+sp.id+'" '+(lock?'disabled':'')+'>'+(lock?'Magic '+sp.lv:S.spell===sp.id?'Selected':'Use')+'</button></div>'}).join('')+
+  '<h2>Spells</h2><div class="row" style="border:0;padding:2px 0">'+spellSvg('auto')+'<span style="flex:1;margin-left:10px">Auto: best spell you have runes for</span><button data-spell="auto" class="'+(S.spell==='auto'?'on':'')+'">'+(S.spell==='auto'?'Selected':'Use')+'</button></div>'+
+  SPELLS.slice().reverse().map(sp=>{const lock=ml<sp.lv,n=S.inv[sp.rune]||0;return'<div class="row">'+spellSvg(sp.id)+'<div style="flex:1;margin-left:10px"><b>'+sp.n+'</b><div class="mute">Magic '+sp.lv+' · +'+sp.bonus+' damage · '+ITEMS[sp.rune].n+' ×'+n+'</div></div><button data-spell="'+sp.id+'" '+(lock?'disabled':'')+'>'+(lock?'Magic '+sp.lv:S.spell===sp.id?'Selected':'Use')+'</button></div>'}).join('')+
   '<h2>Teleports</h2>'+teleHtml()}
 function bagSave(){return'<div class="mute">Progress is stored on this device and in this browser. Use a save code to move it to another browser or to the installed app.</div><p><button data-a="export">Export save code</button></p><textarea id="saveBox" rows="4" spellcheck="false" placeholder="Save code appears here. To import, paste a code here and press Import." style="width:100%;box-sizing:border-box;background:#120e0a;color:#f1e6c8;border:1px solid #5f5038;border-radius:8px;padding:8px;font:12px monospace"></textarea><p><button data-a="import">Import save code</button> <span id="saveMsg" class="mute"></span></p>'+(confirmReset?'<p>Erase everything?</p><button class="danger" data-a="reset-yes">Yes, erase</button> <button data-a="reset-no">Cancel</button>':'<p><button class="danger" data-a="reset-ask">Reset game</button></p>')}
 function panelHtml(){
@@ -1829,7 +1854,7 @@ function castTele(id){const t=TELES.find(q=>q.id===id);if(!t)return;
   if(id==='home')enterDungeon('home');else if(id==='village')goTo(WORLD,WORLD.spawn.x,WORLD.spawn.y+1);else if(id==='mirewatch')goTo(MARSH,38,27);else goTo(MARSH,19,50);
   const f=document.getElementById('flash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}
   $('mapPanel').hidden=true;$('panel').hidden=true;say('You teleport '+t.note+'.');save();updateHud()}
-const teleHtml=()=>'<div class="mute" style="margin-top:12px">Teleports <small>(Magic, no staff needed)</small></div><div class="tele">'+TELES.map(t=>{const lock=lvlOf(S.xp.magic)<t.lv,ok=Object.entries(t.in).every(([k,v])=>hasItem(k,v));return'<button data-tele="'+t.id+'" '+(lock||!ok?'disabled':'')+'><b>'+t.n+'</b><small>'+(lock?'Needs Magic '+t.lv:Object.entries(t.in).map(([k,v])=>v+' '+ITEMS[k].n.replace(' rune','')).join(', '))+'</small></button>'}).join('')+'</div>';
+const teleHtml=()=>'<div class="mute" style="margin-top:12px">Teleports <small>(Magic, no staff needed)</small></div><div class="tele">'+TELES.map(t=>{const lock=lvlOf(S.xp.magic)<t.lv,ok=Object.entries(t.in).every(([k,v])=>hasItem(k,v));return'<button data-tele="'+t.id+'" '+(lock||!ok?'disabled':'')+'><b style="display:flex;align-items:center;gap:6px">'+spellSvg('tele')+t.n+'</b><small>'+(lock?'Needs Magic '+t.lv:Object.entries(t.in).map(([k,v])=>v+' '+ITEMS[k].n.replace(' rune','')).join(', '))+'</small></button>'}).join('')+'</div>';
 function openMap(fresh){
   if(fresh===true){const ti=marks().findIndex(q=>q.key===S.track);mapSel=ti>=0?ti:0}
   const el=$('mapPanel'),Mp=M,size=Math.floor(Math.min(wrapEl.clientWidth-32,wrapEl.clientHeight-190,560)),px=size*2;
@@ -1885,7 +1910,7 @@ $('mapPanel').addEventListener('pointerdown',e=>e.stopPropagation());
 /* =============== boot =============== */
 load();applyHome();
 pl.hp=pstats().hp;resize();updateHud();updateRoute();
-window.__game={S:()=>S,xpAt:xpFor,hazards,rollLoot,setPitch:v=>{pitch=T.MathUtils.degToRad(v)},openShop,treeObj,nearestTree,doEat,shots,pl,tick,get M(){return M},WORLD,DUN,CRYPT,HOME,MARSH,openBank,tickN:()=>tickN,pstats,giveItem,addXp,enterDungeon,talk,get dlg(){return dlg},cam,scene,renderer,setYaw:v=>{yaw=v},setDist:v=>{camDist=v},getDist:()=>camDist,getYaw:()=>yaw,DBG};
+window.__game={S:()=>S,data:()=>JSON.parse(JSON.stringify({ITEMS,RECIPES,SHOPS,MOBS,NQ,BUILDS,SPELLS,TELES,SELL,SKN,SKILLS})),xpAt:xpFor,hazards,rollLoot,setPitch:v=>{pitch=T.MathUtils.degToRad(v)},openShop,treeObj,nearestTree,doEat,shots,pl,tick,get M(){return M},WORLD,DUN,CRYPT,HOME,MARSH,openBank,tickN:()=>tickN,pstats,giveItem,addXp,enterDungeon,talk,get dlg(){return dlg},cam,scene,renderer,setYaw:v=>{yaw=v},setDist:v=>{camDist=v},getDist:()=>camDist,getYaw:()=>yaw,DBG};
 requestAnimationFrame(t=>{lastTick=t;lastNow=t;frame(t)});
 })();
 </script>
