@@ -135,7 +135,7 @@ body{background:#14110c}
 #panel .tabs button.on{background:linear-gradient(#8a6a2a,#5a431a);color:#fff3cc;border-color:var(--stone3)}
 #panel .cell{border:2px solid #14100a;border-radius:6px;background:radial-gradient(circle at 50% 40%,#3a3125,#1c1711);box-shadow:inset 0 0 8px rgba(0,0,0,.7)}
 #panel .cell.sel{border-color:var(--amber);box-shadow:inset 0 0 8px rgba(0,0,0,.7),0 0 10px rgba(233,184,87,.7)}
-#panel .act{background:rgba(0,0,0,.28);border:1px solid #5f5038;border-radius:8px}
+#craft .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:6px 0}#craft button.cell{position:relative;aspect-ratio:1;min-height:0;padding:0;border:2px solid #14100a;border-radius:6px;background:radial-gradient(circle at 50% 40%,#3a3125,#1c1711);display:grid;place-items:center;box-shadow:inset 0 0 8px rgba(0,0,0,.7)}#craft .cell.empty{aspect-ratio:1;border:2px solid #14100a;border-radius:6px;background:radial-gradient(circle at 50% 40%,#3a3125,#1c1711);opacity:.35}#craft button.cell.sel{border-color:var(--amber);box-shadow:inset 0 0 8px rgba(0,0,0,.7),0 0 10px rgba(233,184,87,.7)}#craft .cell .ic{width:72%;height:72%}#craft .cell em{position:absolute;right:3px;bottom:1px;font:700 11px var(--font-b);font-style:normal;color:#ffe58a;text-shadow:0 1px 2px #000}#craft .act{margin:8px 0;padding:10px 12px;border:1px solid #5f5038;border-radius:8px;background:rgba(0,0,0,.28)}#panel .act{background:rgba(0,0,0,.28);border:1px solid #5f5038;border-radius:8px}
 #panel .row,.row{border-bottom:1px solid rgba(201,162,74,.22)}
 .bar{background:#120e0a;border:1px solid #4a3d28;height:10px;border-radius:5px}.bar i{background:linear-gradient(#f2cb6a,#b8862a)}
 #dlg{background:linear-gradient(#3a3126,#251f17);border:3px solid var(--gold);border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.6),inset 0 0 0 2px #14100a}
@@ -1878,13 +1878,23 @@ function renderBuild(){
   const cost=Object.entries(b.in).map(([id,n])=>'<span class="'+(hasItem(id,n)?'ok':'no')+'">'+n+' '+ITEMS[id].n+' ('+(S.inv[id]||0)+')</span>').join(', ');
   el.innerHTML='<div class="top"><h3>Build <span class="mute n">Construction '+lv+'</span></h3><button data-x="close">Close</button></div><div class="rc'+(lock?' lock':'')+'"><div class="tx"><b>'+b.n+'</b><small>'+b.note+'</small><small>'+(lock?'Needs Construction '+b.lv:cost+' · '+b.xp+' xp')+'</small></div><div class="btns"><button data-build="1" '+(lock||!afford?'disabled':'')+'>Build</button></div></div>';
 }
-function openBank(){craftSt={k:'bank'};renderCraft();document.getElementById('craft').hidden=false}
+function openBank(){bankSel=null;craftSt={k:'bank'};renderCraft();document.getElementById('craft').hidden=false}
+const BANK_SLOTS=120;let bankSel=null;
+const rankId=id=>{const it=ITEMS[id];return it.slot?0:it.pet?1:/_ore$/.test(id)?3:/_bar$/.test(id)?4:id==='cooked_meat'||id==='potion'||id==='raw_meat'?2:5};
+const sortIds=ids=>ids.slice().sort((a,b)=>rankId(a)-rankId(b)||ITEMS[a].n.localeCompare(ITEMS[b].n));
 function renderBank(){
-  const el=document.getElementById('craft'),bk=Object.keys(S.bank).filter(id=>S.bank[id]>0),inv=Object.keys(S.inv);
-  const row=(id,n,a,l1,l2)=>'<div class="rc">'+icon(id)+'<div class="tx"><b>'+ITEMS[id].n+' <span class="mute n">×'+n+'</span></b></div><div class="btns"><button data-'+a+'="'+id+':1">'+l1+'</button><button data-'+a+'="'+id+':all">'+l2+'</button></div></div>';
-  el.innerHTML='<div class="top"><h3>Chest <span class="mute n">'+bk.reduce((t,i)=>t+S.bank[i],0)+' items</span></h3><button data-x="close">Close</button></div><div class="mute">Stored safely at home. It survives death.</div>'+
-  '<div class="mute" style="margin-top:8px">In chest</div>'+(bk.length?bk.map(id=>row(id,S.bank[id],'wd','Take 1','Take all')).join(''):'<div class="mute" style="padding:8px 0">The chest is empty.</div>')+
-  '<div class="mute" style="margin-top:12px">Backpack <button data-depall="1" style="margin-left:8px;min-height:36px">Deposit all</button></div>'+(inv.length?inv.map(id=>row(id,S.inv[id],'dep','Store 1','Store all')).join(''):'<div class="mute" style="padding:8px 0">Your backpack is empty.</div>');
+  const el=document.getElementById('craft'),bk=sortIds(Object.keys(S.bank).filter(id=>S.bank[id]>0)),inv=sortIds(Object.keys(S.inv));
+  const cell=(id,n,side)=>'<button class="cell'+(bankSel&&bankSel.side===side&&bankSel.id===id?' sel':'')+'" data-bk="'+side+':'+id+'" title="'+ITEMS[id].n+'">'+icon(id)+(n>1?'<em>'+n+'</em>':'')+'</button>';
+  const empties=(used,min)=>{const total=Math.max(min,Math.ceil((used+1)/6)*6);return Array(Math.max(0,total-used)).fill('<div class="cell empty"></div>').join('')};
+  let sheet='<div class="act mute">Tap an item in the chest to take it out, or tap an item in your backpack to store it.</div>';
+  if(bankSel){const id=bankSel.id,have=(bankSel.side==='bank'?S.bank:S.inv)[id]||0,it=ITEMS[id];
+    if(have>0){const take=bankSel.side==='bank',ui=(!it.slot&&!it.pet)?usedIn(id):[];
+      sheet='<div class="act"><b>'+it.n+'</b> <span class="mute n">×'+have+(take?' in chest':' in backpack')+'</span><div class="mute">'+(itemStat(it)||'Crafting material')+'</div>'+(ui.length?'<div class="mute" style="margin-top:4px">'+ui.slice(0,2).join('<br>')+'</div>':'')+
+        '<div class="btns" style="margin-top:8px"><button data-bka="1">'+(take?'Take':'Store')+' 1</button>'+(have>10?'<button data-bka="10">'+(take?'Take':'Store')+' 10</button>':'')+(have>1?'<button data-bka="all">'+(take?'Take':'Store')+' all</button>':'')+'</div></div>'}
+    else bankSel=null}
+  el.innerHTML='<div class="top"><h3>Chest <span class="mute n">'+bk.length+' / '+BANK_SLOTS+' slots</span></h3><button data-x="close">Close</button></div>'+sheet+
+  '<div class="mute" style="margin-top:8px">In chest</div><div class="grid">'+bk.map(id=>cell(id,S.bank[id],'bank')).join('')+empties(bk.length,24)+'</div>'+
+  '<div class="mute" style="margin-top:10px">Backpack <button data-depall="1" style="margin-left:8px;min-height:34px">Store all</button></div><div class="grid">'+inv.map(id=>cell(id,S.inv[id],'inv')).join('')+empties(inv.length,12)+'</div>';
 }
 function renderCraft(){
   if(craftSt.k==='shop')return renderShop();if(craftSt.k==='slot')return renderBuild();if(craftSt.k==='bank')return renderBank();
@@ -1899,8 +1909,11 @@ document.getElementById('craft').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b||b.disabled)return;
   if(b.dataset.x==='close'){closeCraft();return}
   if(b.dataset.build){const T0=craftSt,o=T0.o,r=Object.assign({kind:'build',skill:'construction',id:o.id,o},BUILDS[o.id]);closeCraft();pl.target={type:'obj',o,x:T0.x,y:T0.y,recipe:r,remaining:1};pl.work=null;return}
-  if(b.dataset.dep||b.dataset.wd){const a=b.dataset.dep?'dep':'wd',[id,n]=b.dataset[a].split(':'),from=a==='dep'?S.inv:S.bank,to=a==='dep'?S.bank:S.inv,have=from[id]||0,nn=n==='all'?have:Math.min(Number(n),have);if(nn>0){from[id]=have-nn;if(from[id]<=0)delete from[id];to[id]=(to[id]||0)+nn;save()}renderBank();updateHud();return}
-  if(b.dataset.depall){for(const id of Object.keys(S.inv)){S.bank[id]=(S.bank[id]||0)+S.inv[id];delete S.inv[id]}save();renderBank();updateHud();return}
+  if(b.dataset.bk){const[side,id]=b.dataset.bk.split(':');bankSel={side,id};renderBank();return}
+  if(b.dataset.bka&&bankSel){const take=bankSel.side==='bank',from=take?S.bank:S.inv,to=take?S.inv:S.bank,id=bankSel.id,have=from[id]||0,nn=b.dataset.bka==='all'?have:Math.min(Number(b.dataset.bka),have);
+    if(!take&&!to[id]&&Object.keys(S.bank).length>=BANK_SLOTS){say('The chest is full.');return}
+    if(nn>0){from[id]=have-nn;if(from[id]<=0)delete from[id];to[id]=(to[id]||0)+nn;sfx('click');save()}renderBank();updateHud();return}
+  if(b.dataset.depall){let full=false;for(const id of Object.keys(S.inv)){if(!S.bank[id]&&Object.keys(S.bank).length>=BANK_SLOTS){full=true;continue}S.bank[id]=(S.bank[id]||0)+S.inv[id];delete S.inv[id]}if(full)say('The chest is full.');save();renderBank();updateHud();return}
   if(b.dataset.buy){const[id,n]=b.dataset.buy.split(':'),nn=Number(n),pr=SHOPS[craftSt.shop||'store'].buy.find(x=>x[0]===id)[1]*nn;if(S.coins>=pr){sfx('coin');S.coins-=pr;giveItem(id,nn);say('Bought '+nn+' '+ITEMS[id].n);if((ITEMS[id].magic||ITEMS[id].ranged)&&hasItem(id,1)&&S.eq.weapon!==id)equipItem(id)}else say('Not enough coins.');renderShop();updateHud();save();return}
   if(b.dataset.sell){const[id,n]=b.dataset.sell.split(':'),have=S.inv[id]||0,nn=n==='all'?have:Math.min(Number(n),have);if(nn>0){giveItem(id,-nn);{const g=Math.round(SELL[id]*(SHOPS[craftSt.shop||'store'].mul||1))*nn;sfx('coin');S.coins+=g;say('Sold '+nn+' '+ITEMS[id].n+' for '+g+' coins')}}renderShop();updateHud();save();return}
   if(b.dataset.r){const[i,n]=b.dataset.r.split(':').map(Number),r=RECIPES[craftSt.k][i],T=craftSt;
