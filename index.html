@@ -330,10 +330,11 @@ NQ.push(
  {id:'wisps',name:'Quiet the Wisps',role:'archmage',req:'attune',lines:['Veil wisps drift out of the sanctum and bother the pilgrims. Dispel eight of them.'],need:{kill:'wisp',n:8},remind:'Dispel eight Veil wisps around the spire.',done:['The air is clearer. Take this staff, you have earned it.'],reward:{coins:800,xp:['magic',3000],items:[['storm_staff',1]]}},
  {id:'archmage',name:'The Hollow Archmage',role:'archmage',req:'wisps',lines:['Veyra was my master. The void took her, and now she haunts the sanctum north of here.','Free her. Bring void runes and food. Her heavy spell is slow, so guard.'],need:{kill:'veyra',n:1},remind:'Veyra waits in the sanctum, north of the spire.',done:['She is at peace. You have done a great thing.','Take these void runes. Use them wisely.'],reward:{coins:2000,xp:['magic',6000],items:[['void_rune',40]]}},
  {id:'delivery',name:'Rune Delivery',role:'spirekeeper',lines:['Lume, quartermaster. The acolytes burn through spark runes. Bring me twenty and I will pay in Gale runes.'],need:{item:'spark_rune',n:20},remind:'Twenty spark runes. Carve them at the altar.',done:['Just in time. Here are your Gale runes.'],reward:{coins:450,xp:['sigilcraft',800],items:[['gale_rune',15]]}});
-const nqProg=q=>q.need.item?Math.min(q.need.n,S.inv[q.need.item]||0):Math.min(q.need.n,(S.kills[q.need.kill]||0)-(S.nqb[q.id]||0));
+NQ.unshift({id:'spark',name:'First Spark',role:'arcanist',give:[['apprentice_staff',1],['spark_rune',12]],lines:['Lyra, arcanist. Magic is simple: a staff, some runes and a target.','Take this apprentice staff and twelve spark runes. Equip the staff in your Bag. A Spell button then appears at the bottom right.','Attack any monster and you cast from up to five tiles away. Reach Magic 3 and come back to me.'],need:{level:'magic',n:3},remind:'Reach Magic level 3. Equip the staff (Bag, Items) and attack a monster. Each cast uses one rune.',done:['You cast like a natural! Here are more runes.','Next, try the altar in your house: it turns sigilstone into runes.'],reward:{coins:150,xp:['sigilcraft',300],items:[['spark_rune',15]]}});
+const nqProg=q=>q.need.level?Math.min(q.need.n,lvlOf(S.xp[q.need.level])):q.need.item?Math.min(q.need.n,S.inv[q.need.item]||0):Math.min(q.need.n,(S.kills[q.need.kill]||0)-(S.nqb[q.id]||0));
 const pendingNQ=role=>NQ.find(q=>q.role===role&&(S.nq[q.id]||0)<2&&(!q.req||S.nq[q.req]===2));
 function nqDialog(q){const st=S.nq[q.id]||0;
-  if(st===0)return{lines:q.lines,end:()=>{S.nq[q.id]=1;S.nqb[q.id]=q.need.kill?(S.kills[q.need.kill]||0):0;say('Quest started: '+q.name);save()}};
+  if(st===0)return{lines:q.lines,end:()=>{S.nq[q.id]=1;S.nqb[q.id]=q.need.kill?(S.kills[q.need.kill]||0):0;for(const[id,n]of q.give||[])giveItem(id,n);if(q.give&&!S.eq.weapon&&ITEMS[q.give[0][0]].slot)equipItem(q.give[0][0]);say('Quest started: '+q.name);save()}};
   if(nqProg(q)>=q.need.n)return{lines:q.done,end:()=>{if(q.need.item)giveItem(q.need.item,-q.need.n);const r=q.reward;S.coins+=r.coins;addXp(r.xp[0],r.xp[1]);for(const[id,n]of r.items)giveItem(id,n);S.nq[q.id]=2;say('Quest complete: '+q.name);save()}};
   return{lines:[q.remind+' ('+nqProg(q)+'/'+q.need.n+')']}}
 const isGear=id=>!!(ITEMS[id]&&ITEMS[id].slot);
@@ -396,6 +397,11 @@ const walk=(M,x,y)=>x>=0&&y>=0&&x<M.W&&y<M.H&&!M.block[y*M.W+x];
 /* combat zones: single-way by default; a zone listed in M.zones is multi-way (every aggressive enemy can attack at once) */
 function isMulti(Mp,x,y){for(const z of Mp.zones||[]){if(z.r!==undefined?Math.hypot(x-z.cx,y-z.cy)<=z.r:(x>=z.x0&&x<=z.x1&&y>=z.y0&&y<=z.y1))return true}return false}
 
+function markKeepOut(M){const W=M.W;M.keepOut=new Set();
+  for(const p of M.props)if(['house','store','armory','arcane','home','hall'].includes(p.k)){const dx=p.x+Math.floor(p.w/2),fy=p.y+p.d;for(let x=dx-1;x<=dx+1;x++)for(let y=fy;y<=fy+1;y++)if(x>=0&&y>=0&&x<W&&y<M.H)M.keepOut.add(y*W+x)}
+  for(const n of M.npcs){const i=n.y*W+n.x;if(!M.keepOut.has(i))continue;M.block[i]=0;let done=false;
+    for(let r=1;r<=5&&!done;r++)for(let dy=-r;dy<=r&&!done;dy++)for(let dx=-r;dx<=r&&!done;dx++){const x=n.x+dx,y=n.y+dy,j=y*W+x;if(x<1||y<1||x>=W-1||y>=M.H-1||M.keepOut.has(j)||M.block[j]||M.obj[j]||M.t[j]===0)continue;n.x=n.hx=x;n.y=n.hy=y;n.trail=[[x,y]];M.block[j]=1;done=true}
+    if(!done)M.block[i]=1}}
 function genWorld(){
   const W=96,H=96,M=newMap(W,H,'world',false),cx=48,cy=48;
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){
@@ -406,25 +412,36 @@ function genWorld(){
     if(t===3&&hash(x,y,5)<.55){M.tree[i]=1+Math.floor(hash(x,y,6)*3);M.block[i]=1}
   }
   const clear=(x,y,t)=>{const i=y*W+x;M.t[i]=t;M.block[i]=0;M.tree[i]=0;M.wall[i]=0;M.obj[i]=null};
-  for(let dy=-8;dy<=8;dy++)for(let dx=-8;dx<=8;dx++){const d=Math.hypot(dx,dy);if(d<=7.5)clear(cx+dx,cy+dy,d<=3.5?5:2)}
   const put=(x,y,k)=>{const i=y*W+x;M.obj[i]={k,dep:0};M.block[i]=1};
-  M.spawn={x:cx,y:cy+2};
   const flatten=(fx,fy,r)=>{for(let y=Math.floor(fy-r);y<=fy+r;y++)for(let x=Math.floor(fx-r);x<=fx+r;x++)if(x>=0&&y>=0&&x<W&&y<H&&Math.hypot(x-fx,y-fy)<=r)M.flat[y*W+x]=1};
   const foot=(x0,y0,w,d)=>{for(let y=y0;y<y0+d;y++)for(let x=x0;x<x0+w;x++){clear(x,y,2);M.block[y*W+x]=1;M.flat[y*W+x]=1}};
   const prop=(k,x,y,w,d,o)=>{if(w)foot(x,y,w,d);M.props.push(Object.assign({k,x,y,w:w||1,d:d||1},o||{}))};
-  flatten(cx,cy,8.5);
-  prop('home',cx-8,cy,3,3,{wall:'#d3c19d',roof:'#4f7a5a'});M.obj[(cy+2)*W+cx-7]={k:'home',dep:0};M.homeExit={x:cx-7,y:cy+3};prop('store',cx+5,cy,3,3,{wall:'#d6c294',roof:'#7a3b33'});
-  prop('arcane',cx+5,cy-6,3,3,{wall:'#bdb7c9',roof:'#4a4a8f'});prop('armory',cx-8,cy-6,3,3,{wall:'#b9b2a2',roof:'#5b5f66'});
-  prop('well',cx-4,cy+3,1,1);prop('sign',cx+3,cy+4,1,1);prop('stall',cx-7,cy+4,2,1);prop('windmill',cx+9,cy+6,3,3);
-  for(const[lx,ly]of[[-3,5],[3,2],[0,-5]])prop('lamp',cx+lx,cy+ly,0,0);
-  prop('bench2',cx-2,cy+6,1,1);prop('board',cx+3,cy-1,1,1);prop('hay',cx-9,cy+4,1,1);prop('hay',cx-9,cy+5,1,1);prop('barrel',cx+8,cy+3,1,1);prop('barrel',cx+8,cy+4,1,1);prop('crate',cx+4,cy+3,1,1);prop('banner',cx-4,cy-5,1,1,{col:'#5b7aa8'});prop('banner',cx+2,cy-6,1,1,{col:'#8f2a33'});
-  M.npcs.push({x:cx+6,y:cy+3,name:'Brida',role:'shop',dir:'down',trail:[[cx+6,cy+3]]},{x:cx-7,y:cy-3,name:'Torvald',role:'armourer',dir:'down',trail:[[cx-7,cy-3]]},{x:cx+5,y:cy-3,name:'Lyra',role:'arcanist',dir:'down',trail:[[cx+5,cy-3]]},{x:cx+1,y:cy+5,name:'Old Finn',role:'fisher',dir:'down',trail:[[cx+1,cy+5]]},{x:cx-6,y:cy+3,name:'Farmer Hal',role:'farmer',dir:'right',trail:[[cx-6,cy+3]]},{x:cx+6,y:cy-3,name:'Mara',role:'herbalist',dir:'left',trail:[[cx+6,cy-3]]});
+  // --- Greywatch village: a plaza ringed by a north row of buildings, a main street and a farm corner
+  for(let dy=-14;dy<=14;dy++)for(let dx=-14;dx<=14;dx++){const d=Math.hypot(dx,dy*1.05);if(d<=12.8)clear(cx+dx,cy+dy,2)}
+  flatten(cx,cy,13.5);
+  const px0=cx,py0=cy-1;
+  for(let dy=-6;dy<=6;dy++)for(let dx=-6;dx<=6;dx++)if(Math.hypot(dx,dy)<=4.6)clear(px0+dx,py0+dy,8);
+  for(let x=cx-13;x<=cx+13;x++)for(let w=1;w<=2;w++)clear(x,cy+w,5);
+  for(let y=cy-8;y<=cy-5;y++)for(const dx of[-5,2,7,-11])clear(cx+dx,y,5);
+  M.spawn={x:cx,y:cy+3};
+  prop('armory',cx-12,cy-10,3,3,{wall:'#b9b2a2',roof:'#5b5f66'});
+  prop('home',cx-6,cy-10,3,3,{wall:'#d3c19d',roof:'#4f7a5a'});M.obj[(cy-8)*W+cx-5]={k:'home',dep:0};M.homeExit={x:cx-5,y:cy-7};
+  prop('arcane',cx+1,cy-10,3,3,{wall:'#bdb7c9',roof:'#4a4a8f'});
+  prop('store',cx+6,cy-10,3,3,{wall:'#d6c294',roof:'#7a3b33'});
+  prop('well',px0,py0,1,1);
+  prop('windmill',cx+8,cy+5,3,3);prop('stall',cx-9,cy+5,2,1);prop('stall',cx+2,cy+5,2,1);
+  prop('board',cx-3,cy-5,1,1);prop('bench2',cx-4,cy+3,1,1);prop('bench2',cx+4,cy+3,1,1);
+  for(const[lx,ly]of[[-8,-6],[-2,-6],[5,-6],[-6,3],[6,3],[0,-3]])if(!(lx===0&&ly===-3))prop('lamp',cx+lx,cy+ly,0,0);
+  prop('hay',cx+11,cy+5,1,1);prop('hay',cx+11,cy+6,1,1);prop('barrel',cx+10,cy-6,1,1);prop('crate',cx+10,cy-5,1,1);
+  prop('banner',cx-9,cy-6,1,1,{col:'#5b7aa8'});prop('banner',cx+10,cy+2,1,1,{col:'#8f2a33'});prop('banner',cx-12,cy+2,1,1,{col:'#8f2a33'});
+  M.npcs.push({x:cx+10,y:cy-7,name:'Brida',role:'shop',dir:'down',trail:[[cx+10,cy-7]]},{x:cx-10,y:cy-6,name:'Torvald',role:'armourer',dir:'down',trail:[[cx-10,cy-6]]},{x:cx+4,y:cy-6,name:'Lyra',role:'arcanist',dir:'down',trail:[[cx+4,cy-6]]},
+    {x:cx+4,y:cy+4,name:'Old Finn',role:'fisher',dir:'down',trail:[[cx+4,cy+4]]},{x:cx+7,y:cy+7,name:'Farmer Hal',role:'farmer',dir:'right',trail:[[cx+7,cy+7]]},{x:cx-3,y:cy-2,name:'Mara',role:'herbalist',dir:'right',trail:[[cx-3,cy-2]]});
   for(const n of M.npcs)M.block[n.y*W+n.x]=1;
   // --- Bandit camp in the west with a road from the village ---
   const bx0=cx-28,by0=cy+7;
   for(let dy=-9;dy<=9;dy++)for(let dx=-9;dx<=9;dx++){const d=Math.hypot(dx,dy);if(d<=8.6)clear(bx0+dx,by0+dy,d<=3.6?5:2)}
   flatten(bx0,by0,9);
-  for(let x=bx0+5;x<=cx-8;x++)for(let w=0;w<2;w++)clear(x,cy+1+w,5);
+  for(let x=bx0+5;x<=cx-12;x++)for(let w=0;w<2;w++)clear(x,cy+1+w,5);
   for(let y=cy+1;y<=by0;y++)for(let w=0;w<2;w++)clear(bx0+5+w,y,5);
   prop('tent',bx0-5,by0-5,3,3,{col:'#7a5a3a'});prop('tent',bx0+4,by0-6,3,3,{col:'#6a4a3a'});prop('tent',bx0-1,by0-8,3,3,{col:'#5a4a3a'});
   prop('campfire',bx0,by0,1,1);prop('crate',bx0+3,by0+3,1,1);prop('crate',bx0+4,by0+3,1,1);prop('barrel',bx0-4,by0+3,1,1);prop('barrel',bx0-5,by0+2,1,1);
@@ -458,8 +475,8 @@ function genWorld(){
   const grass=i=>M.t[i]===2||M.t[i]===3;
   const quarry=(centers,dmin,dmax,count,kind)=>scatter(centers,dmin,dmax,grass,9).forEach(c=>{let placed=0,t=0;while(placed<count&&t++<80){const x=c.x+gi(-3,3),y=c.y+gi(-3,3),i=y*W+x;
     if(x<2||y<2||x>=W-2||y>=H-2||!walk(M,x,y)||!reach[i]||M.obj[i]||!grass(i)||Math.hypot(x-cx,y-cy)<dmin-2)continue;put(x,y,kind);placed++}});
-  quarry(3,8,22,6,'copper');quarry(3,26,44,5,'iron');quarry(4,12,42,4,'sigil');
-  scatter(20,5,34,grass,2).forEach(p=>{M.obj[p.y*W+p.x]={k:'herb',dep:0}});
+  quarry(3,16,30,6,'copper');quarry(3,26,44,5,'iron');quarry(4,12,42,4,'sigil');
+  scatter(22,15,38,grass,2).forEach(p=>{M.obj[p.y*W+p.x]={k:'herb',dep:0}});
   let cave=scatter(60,24,38,grass,1).filter(p=>Math.hypot(p.x-kx,p.y-ky)>14).sort((a,b)=>a.y-b.y)[0]||scatter(60,14,50,grass,1)[0];
   {const mg=scatter(80,18,44,i=>M.t[i]===2,1).filter(p=>Math.hypot(p.x-cave.x,p.y-cave.y)>14&&Math.hypot(p.x-kx,p.y-ky)>16&&Math.hypot(p.x-bx0,p.y-by0)>14).sort((a,b)=>b.y-a.y)[0]||scatter(80,14,50,grass,1)[0];
    put(mg.x,mg.y,'marsh');M.marsh=mg;M.marshExit=[[0,-1],[1,0],[-1,0],[0,1],[1,1],[-1,-1]].map(([dx,dy])=>({x:mg.x+dx,y:mg.y+dy})).find(q=>walk(M,q.x,q.y))||M.spawn}
@@ -472,8 +489,9 @@ function genWorld(){
   {const wl=scatter(7,16,44,i=>M.t[i]===3,5);(wl.length>3?wl:scatter(7,16,44,grass,5)).forEach(p=>M.mobs.push(mkMob('wolf',p.x,p.y)))}
   {const c=[];for(let y=2;y<H-2;y++)for(let x=2;x<W-2;x++){const i=y*W+x;if(M.t[i]!==0||M.obj[i])continue;if([[1,0],[-1,0],[0,1],[0,-1]].some(([a,b])=>walk(M,x+a,y+b)&&M.t[(y+b)*W+x+a]!==0)&&hash(x,y,77)<.12)c.push({x,y,d:Math.hypot(x-M.spawn.x,y-M.spawn.y)})}
    c.sort((a,b)=>a.d-b.d);const ch=[];for(const q of c){if(ch.length>=8||q.d>48)break;if(ch.every(z=>Math.hypot(z.x-q.x,z.y-q.y)>5))ch.push(q)}ch.forEach(q=>{const i=q.y*W+q.x;M.obj[i]={k:'fish',dep:0};M.block[i]=1})}
-  scatter(16,6,34,i=>M.t[i]===2,3).forEach(p=>M.mobs.push(mkMob('rabbit',p.x,p.y)));
+  scatter(16,14,36,i=>M.t[i]===2,3).forEach(p=>M.mobs.push(mkMob('rabbit',p.x,p.y)));
   const fx=scatter(8,14,44,i=>M.t[i]===3,3);(fx.length?fx:scatter(8,14,44,grass,4)).forEach(p=>M.mobs.push(mkMob('fox',p.x,p.y)));
+  markKeepOut(M);
   return M;
 }
 function carveRooms(M,rects){for(const[x0,y0,x1,y1]of rects)for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){M.t[y*M.W+x]=6;M.block[y*M.W+x]=0}}
@@ -586,6 +604,7 @@ function genMarsh(){
   [[ax-7,ay+4],[ax+7,ay-5],[ax-2,ay-9],[ax+6,ay+7]].forEach(([x,y])=>{if(walk(M,x,y))M.mobs.push(mkMob('golem',x,y))});
   [[sx-3,sy+2],[sx+3,sy+2],[sx,sy+4]].forEach(([x,y])=>M.mobs.push(mkMob('wisp',x,y)));M.mobs.push(mkMob('veyra',sx,sy-1));
   M.zones=[{x0:cx2-8,y0:cy2-7,x1:cx2+8,y1:cy2+7},{cx:sx,cy:sy,r:8}];M.chapel={x:cx2,y:cy2};
+  markKeepOut(M);
   return M;
 }
 function genHome(){
@@ -773,7 +792,10 @@ const TUT=[
  {id:'forge',text:'Forge a copper sword at the anvil in your house.',done:()=>owns('copper_sword')||!!S.eq.weapon},
  {id:'equip',text:'Equip the sword: open the Bag, tap the sword, press Equip.',done:()=>!!S.eq.weapon},
  {id:'fight',text:'Time to fight! Walk to the cave in the north and slay a cave rat. Use Eat when hurt.',done:()=>((S.kills.rat||0)+(S.kills.tunnel||0))>=1},
- {id:'quest',text:'Well done. Speak to Farmer Hal in the village to start your first quest.',done:()=>(S.q.rat||0)>=1}];
+ {id:'quest',text:'Well done. Speak to Farmer Hal in the village to start your first quest.',done:()=>(S.q.rat||0)>=1},
+ {id:'lyra',text:'Learn magic. Visit Lyra at the Arcana, the purple house north of the square.',done:()=>(S.nq.spark||0)>=1},
+ {id:'staff',text:'Equip the apprentice staff: Bag, Items, tap the staff, press Equip. A Spell button appears.',done:()=>{const w=ITEMS[S.eq.weapon];return !!(w&&w.magic)}},
+ {id:'cast',text:'Cast a spell: attack any monster. Spells fire from five tiles away and use runes.',done:()=>S.xp.magic>0}];
 function tutMark(){if(S.tut.done)return null;const st=TUT[S.tut.s];if(!st)return null;const id=st.id,W_=WORLD,find=(mp,k)=>{const e=(mp.objs||[]).find(q=>q.o.k===k);return e?{x:e.x,y:e.y}:null};
   const mk=(pos,label,kind)=>pos&&{kind:kind||'goal',x:pos.x,y:pos.y,label:'Tutorial: '+label,key:'tut'};
   const door=()=>find(W_,'home'),nearest=pred=>{let b=null,bd=1e9;for(const m of M.mobs)if(!m.dead&&pred(m)){const d=Math.hypot(m.x-pl.x,m.y-pl.y);if(d<bd){bd=d;b=m}}return b&&{x:b.x,y:b.y}};
@@ -785,6 +807,8 @@ function tutMark(){if(S.tut.done)return null;const st=TUT[S.tut.s];if(!st)return
   if(id==='mine'){if(M!==W_)return M===HOME?mk(find(HOME,'stairs'),'leave the house'):null;let b=null,bd=1e9;for(const e of W_.objs||[])if(e.o.k==='copper'){const d=Math.hypot(e.x-pl.x,e.y-pl.y);if(d<bd){bd=d;b=e}}return mk(b,'copper rocks')}
   if(id==='fight'){if(M===W_)return mk(find(W_,'portal'),'the cave');if(M===DUN)return mk(nearest(m=>m.kind==='rat'||m.kind==='tunnel'),'slay a cave rat');return M===HOME?mk(find(HOME,'stairs'),'leave the house'):null}
   if(id==='quest'){const n=W_.npcs.find(q=>q.role==='farmer');return M===W_&&n?mk(n,'Farmer Hal','give'):null}
+  if(id==='lyra'){const n=W_.npcs.find(q=>q.role==='arcanist');return M===W_&&n?mk(n,'Lyra','give'):null}
+  if(id==='cast')return M===W_?mk(nearest(m=>m.def.hp>0&&!m.def.prey&&m.kind!=='rabbit'),'a monster'):null
   return null}
 let tutLast=-1;
 function tutUpdate(){if(S.tut.done)return;let ch=false;
@@ -954,7 +978,7 @@ function npcTick(){const night=isNight();
     if(n.hidden||!n.wander||(dlg&&dlg.n===n)||(pl.target&&pl.target.type==='npc'&&pl.target.n===n))continue;
     if(Math.random()>.16)continue;
     const dirs=[[1,0,'right'],[-1,0,'left'],[0,1,'down'],[0,-1,'up']],d=dirs[Math.floor(Math.random()*4)],nx=n.x+d[0],ny=n.y+d[1];
-    if(Math.hypot(nx-n.hx,ny-n.hy)>n.wander||!walk(M,nx,ny)||(nx===pl.x&&ny===pl.y)||M.mobs.some(m=>!m.dead&&m.x===nx&&m.y===ny))continue;
+    if(Math.hypot(nx-n.hx,ny-n.hy)>n.wander||!walk(M,nx,ny)||(M.keepOut&&M.keepOut.has(ny*M.W+nx))||(nx===pl.x&&ny===pl.y)||M.mobs.some(m=>!m.dead&&m.x===nx&&m.y===ny))continue;
     M.block[n.y*M.W+n.x]=0;M.block[ny*M.W+nx]=1;n.px=n.x;n.py=n.y;n.x=nx;n.y=ny;n.dir=d[2];n.mt=performance.now();n.trail=[[n.x,n.y]]}}
 function tickTrees(){for(const mp of[WORLD,MARSH]){const f=mp.felled;if(!f||!f.length)continue;for(let k=f.length-1;k>=0;k--){const o=f[k];if(tickN>=o.dep){f.splice(k,1);o.logs=0;showTree(o.i,true,mp)}}}}
 function tick(){
@@ -1708,23 +1732,33 @@ function bagQuests(){
   const rat=['Not started. Speak to Farmer Hal in the village.','Slay cave rats: '+Math.min(5,prog('rat'))+' / 5','Complete'][S.q.rat];
   const herb=['Not started. Speak to Mara in the village.','Bring 8 herbs: '+Math.min(8,S.inv.herb||0)+' / 8','Complete'][S.q.herb];
   const rook=S.quest<2?'Locked. Finish The Hollow Knight first.':['Not started. Speak to Sir Edric.','Defeat Rook the Cutpurse at the bandit camp.','Complete'][S.q.rook];
-  const nqrows=NQ.map(q=>{const st=S.nq[q.id]||0;if(q.req&&S.nq[q.req]!==2)return'';return row(q.name,st===0?'Not started. Speak to '+ROLEN[q.role]+'.':st===1?(q.need.item?'Bring '+q.need.n+' '+ITEMS[q.need.item].n.toLowerCase()+': ':'Slay '+q.need.n+' '+MOBS[q.need.kill].n.toLowerCase()+': ')+nqProg(q)+' / '+q.need.n:'Complete')}).join('');
+  const nqrows=NQ.map(q=>{const st=S.nq[q.id]||0;if(q.req&&S.nq[q.req]!==2)return'';return row(q.name,st===0?'Not started. Speak to '+ROLEN[q.role]+'.':st===1?(q.need.level?'Reach '+SKN[q.need.level]+' '+q.need.n+': ':q.need.item?'Bring '+q.need.n+' '+ITEMS[q.need.item].n.toLowerCase()+': ':'Slay '+q.need.n+' '+MOBS[q.need.kill].n.toLowerCase()+': ')+nqProg(q)+' / '+q.need.n:'Complete')}).join('');
   return nqrows+row('Rat Problem',rat)+row("Mara's Brew",herb)+row('The Hollow Knight',hk)+row('Bandit Trouble',rook);
 }
 function bagCodex(){const k=S.kills,r=(n,v)=>'<div class="row"><span>'+n+'</span><b class="n">'+v+'</b></div>';return r('Cave rats',k.rat||0)+r('Tunnel rats',k.tunnel||0)+r('The Gnawking',k.gnaw||0)+r("Gnawking's tooth",S.tooth?'found':'—')+r('Wolves',k.wolf||0)+r('Bandits',k.bandit||0)+r('Rook the Cutpurse',k.rook||0)+r('Skeletons',k.skeleton||0)+r('Restless knights',k.knight||0)+r('Sir Aldric',k.aldric||0)}
 function saveIO(a){const box=document.getElementById('saveBox'),msg=document.getElementById('saveMsg');if(!box)return;
   if(a==='export'){save();const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));box.value=code;box.focus();box.select();let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code);ok=true}}catch(e){}msg.textContent=ok?'Code copied. Paste it into the app on your other device.':'Select all and copy the code above.'}
   else{try{const raw=box.value.trim();if(!raw)throw 0;const j=JSON.parse(decodeURIComponent(escape(atob(raw))));if(!j||!j.xp||!j.inv)throw 0;localStorage.setItem(KEY,JSON.stringify(j));msg.textContent='Imported. Reloading...';setTimeout(()=>location.reload(),400)}catch(e){msg.textContent='That code is not valid.'}}}
+function bagSpells(){
+  const ml=lvlOf(S.xp.magic),w=ITEMS[S.eq.weapon],staffInBag=Object.keys(S.inv).find(i=>ITEMS[i]&&ITEMS[i].magic);
+  const status=w&&w.magic?'Staff equipped: <b>'+w.n+'</b>. Attack a monster to cast.':staffInBag?'You carry a staff (<b>'+ITEMS[staffInBag].n+'</b>). Open Items, tap it and press Equip.':"You have no staff. Visit Lyra's Arcana in the village: she gives you one for her first quest, or sells an Apprentice staff for 100 coins.";
+  return'<div class="act"><b>Magic '+ml+'</b><div class="mute" style="margin-top:4px">'+status+'</div></div>'+
+  '<div class="mute" style="margin:10px 0 4px">How it works: equip a staff, keep runes in your pack, attack a monster. You cast from up to 5 tiles away and each cast uses one rune. The Spell button (bottom right, with a staff) chooses the spell.</div>'+
+  '<h2>Spells</h2><div class="row" style="border:0;padding:2px 0"><span>Auto: best spell you have runes for</span><button data-spell="auto" class="'+(S.spell==='auto'?'on':'')+'">'+(S.spell==='auto'?'Selected':'Use')+'</button></div>'+
+  SPELLS.slice().reverse().map(sp=>{const lock=ml<sp.lv,n=S.inv[sp.rune]||0;return'<div class="row"><div style="flex:1"><b>'+sp.n+'</b><div class="mute">Magic '+sp.lv+' · +'+sp.bonus+' damage · '+ITEMS[sp.rune].n+' ×'+n+'</div></div><button data-spell="'+sp.id+'" '+(lock?'disabled':'')+'>'+(lock?'Magic '+sp.lv:S.spell===sp.id?'Selected':'Use')+'</button></div>'}).join('')+
+  '<h2>Teleports</h2>'+teleHtml()}
 function bagSave(){return'<div class="mute">Progress is stored on this device and in this browser. Use a save code to move it to another browser or to the installed app.</div><p><button data-a="export">Export save code</button></p><textarea id="saveBox" rows="4" spellcheck="false" placeholder="Save code appears here. To import, paste a code here and press Import." style="width:100%;box-sizing:border-box;background:#120e0a;color:#f1e6c8;border:1px solid #5f5038;border-radius:8px;padding:8px;font:12px monospace"></textarea><p><button data-a="import">Import save code</button> <span id="saveMsg" class="mute"></span></p>'+(confirmReset?'<p>Erase everything?</p><button class="danger" data-a="reset-yes">Yes, erase</button> <button data-a="reset-no">Cancel</button>':'<p><button class="danger" data-a="reset-ask">Reset game</button></p>')}
 function panelHtml(){
-  const tabs=[['items','Items'],['skills','Skills'],['quests','Quests'],['codex','Codex'],['save','Save']];
-  const body={items:bagItems,skills:bagSkills,quests:bagQuests,codex:bagCodex,save:bagSave}[bagTab]();
+  const tabs=[['items','Items'],['skills','Skills'],['spells','Spells'],['quests','Quests'],['codex','Codex'],['save','Save']];
+  const body={items:bagItems,skills:bagSkills,spells:bagSpells,quests:bagQuests,codex:bagCodex,save:bagSave}[bagTab]();
   return'<div class="in"><div class="row" style="border:0"><h1>Bag</h1><button data-a="close">Close</button></div><div class="tabs">'+tabs.map(([id,n])=>'<button data-tab="'+id+'" class="'+(bagTab===id?'on':'')+'">'+n+'</button>').join('')+'</div>'+body+'</div>';
 }
 function openPanel(){S.tut.bag=true;const p=$('panel');p.innerHTML=panelHtml();p.hidden=false}
 $('panel').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset;
   if(d.a==='export'||d.a==='import'){saveIO(d.a);return}
+  if(d.tele){castTele(d.tele);return}
+  if(d.spell){S.spell=d.spell;const c=SPELLS.find(x=>x.id===d.spell);say('Spell: '+(c?c.n:'best available'));save();updateHud();$('panel').innerHTML=panelHtml();return}
   if(d.tab){bagTab=d.tab;bagSel=null;confirmReset=false}
   else if(d.item)bagSel={id:d.item};
   else if(d.slot)bagSel={slot:d.slot};
@@ -1794,7 +1828,7 @@ function castTele(id){const t=TELES.find(q=>q.id===id);if(!t)return;
   for(const[k,v]of Object.entries(t.in))giveItem(k,-v);addXp('magic',20+t.lv*3);
   if(id==='home')enterDungeon('home');else if(id==='village')goTo(WORLD,WORLD.spawn.x,WORLD.spawn.y+1);else if(id==='mirewatch')goTo(MARSH,38,27);else goTo(MARSH,19,50);
   const f=document.getElementById('flash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}
-  $('mapPanel').hidden=true;say('You teleport '+t.note+'.');save();updateHud()}
+  $('mapPanel').hidden=true;$('panel').hidden=true;say('You teleport '+t.note+'.');save();updateHud()}
 const teleHtml=()=>'<div class="mute" style="margin-top:12px">Teleports <small>(Magic, no staff needed)</small></div><div class="tele">'+TELES.map(t=>{const lock=lvlOf(S.xp.magic)<t.lv,ok=Object.entries(t.in).every(([k,v])=>hasItem(k,v));return'<button data-tele="'+t.id+'" '+(lock||!ok?'disabled':'')+'><b>'+t.n+'</b><small>'+(lock?'Needs Magic '+t.lv:Object.entries(t.in).map(([k,v])=>v+' '+ITEMS[k].n.replace(' rune','')).join(', '))+'</small></button>'}).join('')+'</div>';
 function openMap(fresh){
   if(fresh===true){const ti=marks().findIndex(q=>q.key===S.track);mapSel=ti>=0?ti:0}
