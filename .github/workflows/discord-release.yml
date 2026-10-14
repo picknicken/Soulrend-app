@@ -37,6 +37,8 @@ jobs:
       - name: Bericht naar Discord sturen
         if: steps.check.outputs.skip != 'true'
         env:
+          SYD_URL: ${{ secrets.SYD_ANNOUNCE_URL }}
+          SYD_TOKEN: ${{ secrets.SYD_ANNOUNCE_TOKEN }}
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           REPO_NAAM: ${{ github.event.repository.name }}
           TITEL: ${{ github.event.release.name || github.event.release.tag_name || inputs.titel }}
@@ -44,15 +46,17 @@ jobs:
           TEKST: ${{ github.event.release.body || inputs.tekst || github.event.head_commit.message }}
           URL: ${{ github.event.release.html_url || github.event.repository.html_url }}
         run: |
-          if [ -z "$WEBHOOK_URL" ]; then
-            echo "Secret DISCORD_WEBHOOK_URL ontbreekt" >&2
+          if [ -n "$SYD_URL" ] && [ -n "$SYD_TOKEN" ]; then
+            # SYD plaatst het bericht zelf, met zijn eigen naam en plaatje.
+            payload=$(jq -n --arg titel "${TITEL:-$TAG}" --arg tekst "${TEKST:0:3500}" --arg url "$URL" \
+              '{titel: ("🚀 " + $titel), beschrijving: $tekst, url: $url, kleur: "#B58BFF"}')
+            curl -sS --fail -H "Authorization: Bearer $SYD_TOKEN" -H "Content-Type: application/json" -d "$payload" "$SYD_URL"
+          elif [ -n "$WEBHOOK_URL" ]; then
+            # Terugval zolang SYD nog niet is ingesteld: een webhook toont niet de botidentiteit.
+            payload=$(jq -n --arg titel "${TITEL:-$TAG}" --arg tekst "${TEKST:0:3500}" --arg url "$URL" \
+              '{username: "SYD", embeds: [{title: ("🚀 " + $titel), url: $url, description: $tekst, color: 11863295}]}')
+            curl -sS --fail -H "Content-Type: application/json" -d "$payload" "$WEBHOOK_URL"
+          else
+            echo "Geen SYD_ANNOUNCE_URL/SYD_ANNOUNCE_TOKEN en geen DISCORD_WEBHOOK_URL ingesteld" >&2
             exit 1
           fi
-          # Discord staat maximaal 4096 tekens in een embed toe.
-          payload=$(jq -n \
-            --arg naam "$REPO_NAAM" \
-            --arg titel "${TITEL:-$TAG}" \
-            --arg tekst "${TEKST:0:3500}" \
-            --arg url "$URL" \
-            '{username: "SYD", embeds: [{title: ("🚀 " + $titel), url: $url, description: $tekst, color: 5814783}]}')
-          curl -sS --fail -H "Content-Type: application/json" -d "$payload" "$WEBHOOK_URL"
