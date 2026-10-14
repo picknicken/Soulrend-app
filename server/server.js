@@ -62,6 +62,21 @@ setInterval(() => {
 }, 600);
 setInterval(() => { flush(); for (const c of online.values()) { if (c.alive === false) { c.ws.terminate(); continue; } c.alive = false; try { c.ws.ping(); } catch (e) {} } }, 15000);
 
+/* Shared world: the first player on a map simulates its monsters (the "host") and everyone else follows.
+   The server only decides who the host is and relays messages; it does not run game rules. */
+const hosts = {}; // map -> player key
+function reelect(map) {
+  if (!map || map === 'home') return;
+  const here = [...online.entries()].filter(([, c]) => c.pos && c.pos.map === map);
+  let h = hosts[map];
+  if (!h || !here.some(([k]) => k === h)) {
+    here.sort((a, b) => (a[1].mapSince || 0) - (b[1].mapSince || 0));
+    h = here.length ? here[0][0] : null;
+    if (h) hosts[map] = h; else delete hosts[map];
+  }
+  const name = h ? online.get(h).name : null;
+  for (const [, c] of here) send(c.ws, { t: 'host', map, host: name });
+}
 function logMod(c, what) { console.log(`[mod] ${c.name}: ${what}`); }
 
 function applyOffline(acc, op, m) {
@@ -154,8 +169,23 @@ wss.on('connection', ws => {
     switch (m.t) {
       case 'pos':
         if (typeof m.map !== 'string' || m.map.length > 12) return;
+      {
+        const prev = c.pos ? c.pos.map : null;
         c.pos = { map: m.map, x: m.x | 0, y: m.y | 0, face: String(m.face || 'down').slice(0, 6), eq: m.eq && typeof m.eq === 'object' ? m.eq : {} };
+        if (prev !== m.map) { c.mapSince = Date.now(); if (prev) reelect(prev); reelect(m.map); }
+      }
         break;
+      case 'rel': { // relay an event to one player (hits, kill credit, mob attacks)
+        if (!m.ev || typeof m.ev !== 'object') return;
+        const tc = online.get(key(m.to)); if (tc) send(tc.ws, { t: 'rel', from: c.name, ev: m.ev });
+        break;
+      }
+      case 'mc': { // cast an event to everyone else on the same map (monster snapshots)
+        if (!c.pos || c.pos.map !== m.map || !m.ev || typeof m.ev !== 'object') return;
+        const s2 = JSON.stringify({ t: 'mc', from: c.name, map: m.map, ev: m.ev });
+        for (const o of online.values()) if (o !== c && o.pos && o.pos.map === m.map && o.ws.readyState === 1) o.ws.send(s2);
+        break;
+      }
       case 'save':
         if (m.save && typeof m.save === 'object') { acc.save = m.save; touch(); }
         break;
@@ -177,7 +207,7 @@ wss.on('connection', ws => {
     }
   });
   ws.on('close', () => {
-    if (c && online.get(key(c.name)) === c) { online.delete(key(c.name)); broadcast({ t: 'chat', from: 'Server', r: 'sys', text: c.name + ' left.' }); }
+    if (c && online.get(key(c.name)) === c) { online.delete(key(c.name)); if (c.pos) reelect(c.pos.map); broadcast({ t: 'chat', from: 'Server', r: 'sys', text: c.name + ' left.' }); }
   });
   ws.on('error', () => {});
 });

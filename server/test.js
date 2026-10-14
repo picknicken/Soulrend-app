@@ -32,5 +32,18 @@ let fails = 0; const ok = (c, n) => { console.log((c ? 'ok   ' : 'FAIL ') + n); 
   ok(mod.inbox.some(m => m.t === 'mod' && m.op === 'tp' && m.x === 10), 'teleport target position');
   mod.send({ t: 'mod', op: 'view', name: 'Alice' }); await wait(150);
   ok(mod.last('mod').data.inv.logs === 3, 'view inventory from save');
+  // shared world: host election, map cast and relay
+  const h1 = await client(); h1.send({ t: 'register', name: 'Host1', pass: 'pw1234', save: null }); await wait(150);
+  const h2 = await client(); h2.send({ t: 'register', name: 'Host2', pass: 'pw1234', save: null }); await wait(150);
+  h1.send({ t: 'pos', map: 'marsh', x: 1, y: 1, face: 'down', eq: {} }); await wait(150);
+  h2.send({ t: 'pos', map: 'marsh', x: 2, y: 1, face: 'down', eq: {} }); await wait(200);
+  ok(h2.last('host') && h2.last('host').host === 'Host1', 'first player on a map is host');
+  h1.send({ t: 'mc', map: 'marsh', ev: { k: 'mobs', l: [[1, 2, 3]] } }); await wait(150);
+  ok(h2.inbox.some(m => m.t === 'mc' && m.ev.k === 'mobs'), 'map cast reaches others');
+  ok(!h1.inbox.some(m => m.t === 'mc'), 'map cast skips sender');
+  h2.send({ t: 'rel', to: 'Host1', ev: { k: 'hit', id: 4, d: 3 } }); await wait(150);
+  ok(h1.inbox.some(m => m.t === 'rel' && m.from === 'Host2' && m.ev.d === 3), 'relay to one player');
+  h1.ws.close(); await wait(300);
+  ok(h2.last('host') && h2.last('host').host === 'Host2', 'host moves when host leaves');
   srv.kill(); await wait(300); process.exit(fails ? 1 : 0);
 })();
