@@ -195,11 +195,24 @@ body{background:#14110c}
 #panel .eq{grid-template-columns:repeat(6,1fr)!important}
 #panel .skgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 #panel .skc{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 8px;min-height:96px;border-radius:12px;border:1px solid color-mix(in srgb,var(--c) 45%,#000);background:linear-gradient(color-mix(in srgb,var(--c) 14%,#14110d),#14110d);color:var(--ink)}
-#panel .skc .ski{width:34px;height:34px}
+#panel .skc .ski{width:44px;height:44px}
 #panel .skc .skn{font:700 12px var(--font-b);color:var(--ink2)}
 #panel .skc .skl{font:700 20px var(--font-d);line-height:1;color:#f4efe0}
 #panel .skc .bar{width:84%;height:5px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:2px}#panel .skc .bar i{display:block;height:100%}
 #panel .skhead{display:flex;gap:12px;align-items:center;padding:10px;border-radius:12px;background:linear-gradient(color-mix(in srgb,var(--c) 16%,#14110d),#14110d);border:1px solid color-mix(in srgb,var(--c) 45%,#000)}
+#panel .qf{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}#panel .qf button{min-height:38px;padding:0 12px;font-size:14px}#panel .qf button.on{background:linear-gradient(#8a6a2a,#5a431a);color:#fff3cc}
+#panel .qcard{border:1px solid rgba(201,162,74,.35);border-left:5px solid #8a8a8a;border-radius:10px;background:linear-gradient(#1c1710,#14110d);padding:10px 12px;margin:0 0 10px}
+#panel .qcard.ip{border-left-color:#ffd24a}#panel .qcard.rd{border-left-color:#5fd36a}#panel .qcard.av{border-left-color:#7fb2ff}#panel .qcard.dn{border-left-color:#5a8a5a;opacity:.72}#panel .qcard.lk{opacity:.55}
+#panel .qh{display:flex;justify-content:space-between;align-items:center;gap:8px}#panel .qh b{font:700 17px var(--font-d);color:#f4efe0}#panel .qs{font:700 11px var(--font-b);padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.1);color:var(--ink2);white-space:nowrap}
+#panel .qcard.ip .qs{background:#5a431a;color:#ffe08a}#panel .qcard.rd .qs{background:#1f5a2c;color:#b9ffc6}#panel .qcard.av .qs{background:#1f3a66;color:#bcd8ff}
+#panel .qg{color:var(--ink2);font-size:13px;margin:3px 0}#panel .qcard p{margin:6px 0;line-height:1.4;color:var(--ink2)}#panel .qo{margin:6px 0 4px;font-size:14px}
+#panel .qcard .bar{height:7px;border-radius:4px;background:rgba(255,255,255,.14);overflow:hidden}#panel .qcard .bar i{display:block;height:100%;background:linear-gradient(90deg,#c9a24a,#ffd24a)}#panel .qcard.rd .bar i{background:#5fd36a}
+#panel .qrw{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}#panel .qrw span{font-size:12px;padding:3px 8px;border-radius:6px;background:rgba(201,162,74,.16);color:#f2d27a}
+#panel .qa{margin-top:8px}#panel .qa button{min-height:36px;font-size:14px}#panel .qa button.on{color:var(--amber)}
+#panel .cxh{display:flex;justify-content:space-between;align-items:center;margin:14px 0 4px;padding-bottom:3px;border-bottom:1px solid rgba(201,162,74,.35);color:var(--amber)}#panel .cxh b{font:700 17px var(--font-d)}
+#panel .cxr{display:flex;justify-content:space-between;align-items:center;padding:6px 2px;border-bottom:1px solid rgba(255,255,255,.07)}#panel .cxr small{display:block;color:var(--ink2);font-size:12px}#panel .cxr.lk{opacity:.45}
+#panel .cxr em{font-style:normal;font-size:10px;padding:1px 6px;border-radius:5px;margin-left:4px}#panel .cxr em.bs{background:#6a2a22;color:#ffb0a0}#panel .cxr em.pr{background:#2a4a2a;color:#b0e8b0}
+#panel .cxg{display:flex;flex-wrap:wrap;gap:6px;padding:6px 0}#panel .cxc{width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,.07);border:1px solid rgba(201,162,74,.3);display:flex;align-items:center;justify-content:center}#panel .cxc svg{width:30px;height:30px}#panel .cxc.miss{opacity:.28;filter:grayscale(1) brightness(.6)}
 #panel .skbig{width:52px;height:52px;flex:none}#panel .skhead>div{flex:1}#panel .skhead .bar{height:7px;border-radius:4px;background:rgba(255,255,255,.14);overflow:hidden;margin:5px 0}#panel .skhead .bar i{display:block;height:100%}
 #panel .gd{display:flex;flex-direction:column;gap:4px}
 #panel .gr{display:flex;gap:10px;align-items:flex-start;padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.05)}
@@ -419,7 +432,7 @@ const BUILDS={
 };
 const TRAIN={dummy:'combat',target:'ranged',orb:'magic'};
 const ROOMS={wing1:{x0:18,x1:24,door:[17,6],slots:[['banner_stand',19,2],['armour_stand',22,2],['painting',24,9]],torches:[[18,10],[24,10]],next:{id:'wing2',x:25,y:6}},wing2:{x0:26,x1:32,door:[25,6],slots:[['dummy',29,3],['target',31,6],['orb',29,10]],torches:[[26,2],[32,2],[26,10],[32,10]]}};
-const ROLEN={archmage:'Archmage Eldrin at the Veil Spire',spirekeeper:'Lume at the Veil Spire',dockhand:'Pike at the docks in Mirewatch',innkeeper:'Marta at the Reedcutter Inn in Mirewatch',apothecary:'Sister Veil in Mirewatch',armourer:'Torvald in the village',arcanist:'Lyra in the village',shop:'Brida in the village',fisher:'Old Finn in the village',warden:'Warden Sera in Mirewatch',outfitter:'Gwen in Mirewatch',hermit:'Orla in Mirewatch'};
+const ROLEN={archmage:'Archmage Eldrin at the Veil Spire',spirekeeper:'Lume at the Veil Spire',dockhand:'Pike at the docks in Mirewatch',innkeeper:'Marta at the Reedcutter Inn in Mirewatch',apothecary:'Sister Veil in Mirewatch',armourer:'Torvald in the village',arcanist:'Lyra in the village',shop:'Brida in the village',fisher:'Old Finn in the village',warden:'Warden Sera in Mirewatch',outfitter:'Gwen in Mirewatch',hermit:'Orla in Mirewatch',farmelder:'the farm elder in Kingsmarch',harbourmaster:'the harbourmaster in Kingsmarch',king:'the king in Highcrown'};
 const NQ=[
  {id:'steel',name:'Sharp Steel',role:'armourer',lines:['Steel is iron with sigilstone flux. Smelt me three steel bars at your furnace, one iron bar plus one sigilstone each.','Bring them back and I will make it worth your while.'],need:{item:'steel_bar',n:3},remind:'Three steel bars. Iron bar plus sigilstone at your furnace.',done:['That is steel I can forge with. Well done.'],reward:{coins:300,xp:['smithing',600],items:[['steel_dagger',1]]}},
  {id:'runes',name:'Rune Supply',role:'arcanist',lines:['My sigilstone is running low. Bring me ten and I will share some of my best runes.'],need:{item:'sigil_ore',n:10},remind:'Ten sigilstone. They glow purple in the countryside.',done:['Wonderful! Take these runes with my thanks.'],reward:{coins:400,xp:['sigilcraft',700],items:[['frost_rune',20]]}},
@@ -491,6 +504,7 @@ const LEGACY_KEY='ashen-delve-world-v1';let KEY=LEGACY_KEY;
 function save(){if(typeof NET!=='undefined'&&NET.session){if(!NET.online){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}else NET.saveSoon()}}
 function load(src){try{const j=src!==undefined?src:localStorage.getItem(KEY);if(j){const o=typeof j==='string'?JSON.parse(j):j,f=fresh(),dx=f.xp;S=Object.assign(f,o);S.xp=Object.assign(dx,o.xp);S.eq=Object.assign({weapon:null,armour:null,helm:null,shield:null,pickaxe:'rusty_pickaxe',axe:'rusty_axe'},o.eq);S.inv=o.inv||f.inv;S.q=Object.assign({rat:0,herb:0,rook:0},o.q);S.qb=o.qb||{};S.home=Object.assign({built:{}},o.home);S.home.built=S.home.built||{};S.bank=o.bank||{};S.nq=o.nq||{};S.nqb=o.nqb||{};S.snd=Object.assign({sfx:true,mus:true},o.snd);S.stat=Object.assign({crafts:0,gems:0,tele:0,focus:0,v:{}},o.stat);S.stat.v=S.stat.v||{};S.ach=o.ach||{};S.bounty=o.bounty||{day:'',week:'',list:[],weekly:null};S.tut=o.tut||{s:0,done:Object.values(o.xp||{}).some(v=>v>0)};S.buff=null}}catch(e){}
   if(!S.tut)S.tut={s:0,done:false};
+  if(!S.tut.done&&Object.values(S.xp||{}).some(v=>v>=500)){S.tut.done=true;if(S.track==='tut')S.track=null}
   S.xp=S.xp||{};for(const k of SKILLS){const v=Number(S.xp[k]);S.xp[k]=isFinite(v)&&v>0?v:0}S.kills=S.kills||{}}
 
 /* =============== world generation =============== */
@@ -1142,7 +1156,7 @@ function pstats(){const p=pstats0();const d=bf('dmg'),df=bf('def');if(d)p.max=Ma
 function pstats0(){const c=lvlOf(S.xp.combat),w=ITEMS[S.eq.weapon]||{acc:0,dmg:0},a=ITEMS[S.eq.armour]||{def:0},hm=ITEMS[S.eq.helm]||{def:0},sh=ITEMS[S.eq.shield]||{def:0},mg=w.magic?[a,hm,sh].reduce((t,x)=>({a:t.a+(x.macc||0),d:t.d+(x.mdmg||0)}),{a:0,d:0}):w.ranged?[a,hm,sh].reduce((t,x)=>({a:t.a+(x.racc||0),d:t.d+(x.rdmg||0)}),{a:0,d:0}):{a:0,d:0},L=w.ranged?lvlOf(S.xp.ranged):w.magic?lvlOf(S.xp.magic):c;
   return{c,hp:20+c*4,acc:10+L*2+w.acc+mg.a,max:2+Math.floor(L/3)+w.dmg+mg.d,rng:!!(w.ranged||w.magic),mag:!!w.magic,def:5+Math.round(c*1.5)+a.def+hm.def+sh.def,spd:w.spd||4}}
 pl.hp=pstats().hp;
-function giveItem(id,n){if(n>0&&GEMS.includes(id))stat().gems+=n;S.inv[id]=(S.inv[id]||0)+n;if(S.inv[id]<=0)delete S.inv[id];if(n>0&&ITEMS[id].slot)autoEquip(id);if(n>0&&ITEMS[id].pet&&!S.pet){S.pet=id;say('Your new pet follows you!')}}
+function giveItem(id,n){if(n>0){(S.got||(S.got={}))[id]=1}if(n>0&&GEMS.includes(id))stat().gems+=n;S.inv[id]=(S.inv[id]||0)+n;if(S.inv[id]<=0)delete S.inv[id];if(n>0&&ITEMS[id].slot)autoEquip(id);if(n>0&&ITEMS[id].pet&&!S.pet){S.pet=id;say('Your new pet follows you!')}}
 const reqOf=it=>it.rq?lvlOf(S.xp[it.rq]):it.slot==='pickaxe'?lvlOf(S.xp.mining):it.ranged?lvlOf(S.xp.ranged):it.magic?lvlOf(S.xp.magic):lvlOf(S.xp.combat);
 const gearScore=x=>!x?-1:x.ranged||x.magic?(x.acc||0)+(x.dmg||0)*3-20:(x.slot==='pickaxe'||x.slot==='axe')?(6-x.speed)*10+(x.bonus||0)*10:(x.acc||0)+(x.dmg||0)*3+(x.def||0);
 function autoEquip(id){const it=ITEMS[id];if(it.slot==='weapon'&&S.eq.weapon)return;if(reqOf(it)<it.req)return;const cur=ITEMS[S.eq[it.slot]];
@@ -2758,22 +2772,26 @@ function bagItems(){
 }
 const UNLOCKS={woodcutting:[[1,'Trees (axes from the Armoury and Anvil)'],[20,'Birch (Kingsmarch)'],[42,'Elm'],[68,'Redwood'],[15,'Oak trees'],[30,'Maple, willow trees'],[38,'Cypress'],[45,'Yew'],[35,'Ash trees (Emberwaste)'],[48,'Charwood'],[60,'Emberwood']],fishing:[[45,'Tuna (Saltgate)'],[62,'Sharks'],[1,'Fish shallows'],[12,'Trout'],[25,'Salmon'],[38,'Lobster pots'],[42,'Lava eels'],[50,'Swordfish'],[58,'Voidfin']],mining:[[30,'Coal (Kingsmarch hills)'],[52,'Aurelite'],[1,'Copper'],[4,'Sigilstone'],[8,'Iron'],[15,'Mythril'],[25,'Silver'],[32,'Emberstone'],[40,'Gold']],hunting:[[18,'Pheasants'],[50,'Elk'],[1,'Rabbits'],[6,'Foxes'],[12,'Hares'],[24,'Deer'],[36,'Ash hares'],[46,'Lava geckos']],alchemy:[[1,'Cook meat and fish'],[12,'Cook trout'],[25,'Cook salmon'],[38,'Cook lobster'],[50,'Cook swordfish']],beastbond:[[1,'Cave rat'],[12,'Wolf'],[20,'Bog toad'],[28,'Marsh hound'],[36,'Cinder fox'],[46,'Ash hound'],[56,'Void stalker']],soulbinding:[[1,'Warrior stone'],[12,'Guardian'],[24,'Seeker'],[36,'Phoenix'],[48,'Reaver']],voidpower:[[1,'Ember rifts'],[20,'Voidreach rifts'],[25,'Void gate'],[60,'Max special regen']],construction:[[1,'Rough chairs'],[6,'Tables'],[12,'Bookshelves'],[16,'Oak furniture'],[34,'Willow bench'],[48,'Yew throne'],[62,'Emberwood throne']],smithing:[[50,'Aurelite bars'],[1,'Copper'],[8,'Iron'],[18,'Steel'],[25,'Silver bars'],[28,'Mythril'],[36,'Ember'],[38,'Gold bars']],crafting:[[1,'Leather'],[20,'Silver rings'],[34,'Gold rings'],[35,'Ash and cinder gear'],[50,'Void gear']]};
 function nextUnlock(sk,l){const u=(UNLOCKS[sk]||[]).filter(x=>x[0]>l).sort((a,b)=>a[0]-b[0])[0];return u?' · next: '+u[1]+' ('+u[0]+')':''}
-const SKICON={
- combat:'<path d="M6 6 L22 22 M26 6 L10 22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M4 24 L9 28 M28 24 L23 28 M9 18 L14 23 M23 18 L18 23" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>',
- mining:'<path d="M5 13 Q16 2 27 13" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M16 8 V29" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/>',
- hunting:'<circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="16" cy="16" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M16 2 V9 M16 23 V30 M2 16 H9 M23 16 H30" stroke="currentColor" stroke-width="2.4"/>',
- alchemy:'<path d="M12 3 H20 M14 3 V12 L6 25 Q4 29 9 29 H23 Q28 29 26 25 L18 12 V3" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M9 22 H23 L25 26 Q26 28 23 28 H9 Q6 28 7 26Z" fill="currentColor"/>',
- smithing:'<path d="M4 9 H27 Q27 15 19 16 V21 H23 V27 H8 V21 H13 V16 Q6 15 4 9Z" fill="currentColor"/>',
- woodcutting:'<path d="M9 28 L23 8" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M16 5 Q27 3 28 11 Q22 14 17 12Z" fill="currentColor"/>',
- fishing:'<path d="M2 16 Q13 4 24 16 Q13 28 2 16Z M24 16 L30 9 V23Z" fill="currentColor"/><circle cx="9" cy="14" r="1.7" fill="#000" opacity=".6"/>',
- ranged:'<path d="M9 3 Q29 16 9 29" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M9 3 V29 M4 16 H27 M23 12 L27 16 L23 20" fill="none" stroke="currentColor" stroke-width="2"/>',
- crafting:'<path d="M16 3 L27 12 L22 28 H10 L5 12Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M5 12 H27 M16 3 L12 12 L16 28 L20 12Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
- sigilcraft:'<path d="M9 3 H23 L29 10 V22 L23 29 H9 L3 22 V10Z" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M16 8 L21 16 L16 24 L11 16Z" fill="currentColor"/>',
- magic:'<path d="M16 2 L19.5 12 L30 16 L19.5 20 L16 30 L12.5 20 L2 16 L12.5 12Z" fill="currentColor"/>',
- construction:'<path d="M3 15 L16 4 L29 15" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M7 14 V28 H25 V14" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M13 28 V20 H19 V28" fill="currentColor"/>',
- beastbond:'<ellipse cx="16" cy="21" rx="7" ry="6" fill="currentColor"/><circle cx="6" cy="14" r="3" fill="currentColor"/><circle cx="12" cy="8" r="3" fill="currentColor"/><circle cx="20" cy="8" r="3" fill="currentColor"/><circle cx="26" cy="14" r="3" fill="currentColor"/>',
- soulbinding:'<path d="M16 2 C24 10 26 14 25 20 C24 27 19 30 16 30 C13 30 8 27 7 20 C6 14 8 10 16 2Z" fill="currentColor"/><circle cx="12.5" cy="18" r="2" fill="#000" opacity=".55"/><circle cx="19.5" cy="18" r="2" fill="#000" opacity=".55"/>',
- voidpower:'<path d="M16 4 C26 4 29 15 22 21 C16 26 8 22 9 15 C10 10 16 9 18 13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="17" cy="16" r="2" fill="currentColor"/>'};
+const SKICON=(()=>{
+ const O='#141008',st=(w)=>' stroke="'+O+'" stroke-width="'+(w||1)+'" stroke-linejoin="round"';
+ const sw=r=>'<g transform="rotate('+r+' 16 16)"><path d="M16 1.5 L18.4 5.5 V19 H13.6 V5.5Z" fill="#d3dbe3"'+st()+'/><path d="M16 3 V19" stroke="#8b98a6" stroke-width=".9"/><rect x="10.5" y="19" width="11" height="2.7" rx="1.2" fill="#e8b93a"'+st(.9)+'/><rect x="14.5" y="21.7" width="3" height="5.4" fill="#7b4a22"'+st(.8)+'/><circle cx="16" cy="28.3" r="1.7" fill="#e8b93a"'+st(.8)+'/></g>';
+ return{
+ combat:sw(-38)+sw(38),
+ mining:'<path d="M9 28 L21 10" stroke="'+O+'" stroke-width="5" stroke-linecap="round"/><path d="M9 28 L21 10" stroke="#9a6430" stroke-width="3" stroke-linecap="round"/><path d="M4 12 Q15 1 29 9 L26.5 13 Q17 8 9.5 15.5Z" fill="#c4ced8"'+st()+'/><path d="M7 11.5 Q15 5 25 9.5" fill="none" stroke="#f1f5f8" stroke-width="1.1" stroke-linecap="round"/><path d="M5 27 l2-4 l3 1 l1 4z" fill="#d9722a"'+st(.8)+'/>',
+ hunting:'<path d="M9 14 C6 8 6 4 9 3 M9 8 L5 7 M12.5 12 C11 7 12 4 14 3 M23 14 C26 8 26 4 23 3 M23 8 L27 7 M19.5 12 C21 7 20 4 18 3" fill="none" stroke="#e9d5a8" stroke-width="2" stroke-linecap="round"/><path d="M9 14 C9 11 12 10 16 10 C20 10 23 11 23 14 L19 26 Q16 29 13 26Z" fill="#a8703c"'+st()+'/><path d="M13 20 Q16 24 19 20 L18 25 Q16 27 14 25Z" fill="#e6c8a0"/><ellipse cx="12.4" cy="15.5" rx="1.3" ry="1.5" fill="#140e07"/><ellipse cx="19.6" cy="15.5" rx="1.3" ry="1.5" fill="#140e07"/><ellipse cx="16" cy="24.2" rx="1.6" ry="1.1" fill="#140e07"/>',
+ alchemy:'<path d="M12.5 2.5 H19.5 V12 L27 25 Q28.5 29.5 24 29.5 H8 Q3.5 29.5 5 25 L12.5 12Z" fill="#cfe9f3" fill-opacity=".55"'+st()+'/><path d="M8.8 20 H23.2 L26.5 25.6 Q27.5 28 24 28 H8 Q4.5 28 5.5 25.6Z" fill="#5fd14a"/><path d="M8 22.5 q4 -2 8 0 t8 0" fill="none" stroke="#a8f08a" stroke-width="1"/><rect x="11.5" y="1" width="9" height="4" rx="1.2" fill="#9a6430"'+st(.9)+'/><circle cx="14" cy="24" r="1.4" fill="#d6ffc4"/><circle cx="19.5" cy="22.5" r="1" fill="#d6ffc4"/><path d="M13.6 6 V12" stroke="#fff" stroke-opacity=".7" stroke-width="1.2"/>',
+ smithing:'<path d="M3 8 H25 Q30 8 30 11 Q25 12 22 14 V18 H25 V25 H7 V18 H11 V14 Q6 13 3 8Z" fill="#8a949f"'+st()+'/><path d="M3 8 H25 Q29 8 29.6 10.4 L7 10.4 Q4 10 3 8Z" fill="#d1d9e0"/><rect x="5" y="25" width="22" height="4" rx="1" fill="#4b525a"'+st(.9)+'/><path d="M26 3 l1 3 l3 1 l-3 1 l-1 3 l-1 -3 l-3 -1 l3 -1z" fill="#ffb347"'+st(.5)+'/>',
+ woodcutting:'<ellipse cx="14" cy="26" rx="11" ry="4.2" fill="#6b4220"'+st(.9)+'/><path d="M3 26 V21 Q3 17.5 14 17.5 Q25 17.5 25 21 V26 Q25 29.8 14 29.8 Q3 29.8 3 26Z" fill="#8a5a2b"'+st(.9)+'/><ellipse cx="14" cy="21" rx="11" ry="3.8" fill="#d9b27a"'+st(.9)+'/><ellipse cx="14" cy="21" rx="6" ry="2" fill="none" stroke="#a97a45" stroke-width=".9"/><path d="M11 20 L25 4" stroke="'+O+'" stroke-width="4.6" stroke-linecap="round"/><path d="M11 20 L25 4" stroke="#9a6430" stroke-width="2.6" stroke-linecap="round"/><path d="M18 3.5 Q27.5 0.5 30 8 Q26 12 21 10.8 Q22 7 18 3.5Z" fill="#c4ced8"'+st()+'/><path d="M20 4.5 Q26 2.5 28.5 7" fill="none" stroke="#f1f5f8" stroke-width="1"/>',
+ fishing:'<path d="M2 16 Q10 6.5 21 11 Q24 12.5 25.5 16 Q24 19.5 21 21 Q10 25.5 2 16Z" fill="#4f9fcf"'+st()+'/><path d="M3.5 17 Q12 22 21 19.6 Q24 18.5 25 16.8 Q23 20.5 21 21 Q10 25.5 3.5 17Z" fill="#d4ecf7"/><path d="M25 16 L31 9.5 Q30 16 31 22.5Z" fill="#3b83b0"'+st()+'/><path d="M12 8.5 L15 4 L18 10Z" fill="#3b83b0"'+st(.9)+'/><path d="M13 12 q2 4 0 8 M17 12.5 q1.6 3.5 0 7" fill="none" stroke="#2b6a94" stroke-width=".9"/><circle cx="7.5" cy="14.5" r="1.7" fill="#fff"/><circle cx="7.2" cy="14.6" r=".9" fill="#140e07"/>',
+ ranged:'<path d="M9 2.5 Q30 16 9 29.5" fill="none" stroke="'+O+'" stroke-width="4.4" stroke-linecap="round"/><path d="M9 2.5 Q30 16 9 29.5" fill="none" stroke="#a9692d" stroke-width="2.6" stroke-linecap="round"/><path d="M9 2.5 L9 29.5" stroke="#eadcc0" stroke-width=".9"/><path d="M5 16 H28" stroke="'+O+'" stroke-width="2.4"/><path d="M5 16 H26" stroke="#c9a46a" stroke-width="1.2"/><path d="M29.5 16 L24.5 12.8 V19.2Z" fill="#cfd8e0"'+st(.8)+'/><path d="M5 16 L2 13 M5 16 L2 19 M7.5 16 L4.5 13 M7.5 16 L4.5 19" stroke="#e0584a" stroke-width="1.5" stroke-linecap="round"/>',
+ crafting:'<circle cx="16" cy="19" r="9.5" fill="none" stroke="'+O+'" stroke-width="5.4"/><circle cx="16" cy="19" r="9.5" fill="none" stroke="#e8b93a" stroke-width="3.4"/><path d="M8.5 15 A9.5 9.5 0 0 1 16 9.5" fill="none" stroke="#fff3b0" stroke-width="1.2" stroke-linecap="round"/><path d="M16 1.5 L22 6 L19.5 11 H12.5 L10 6Z" fill="#e0344a"'+st()+'/><path d="M16 1.5 L12.5 11 M16 1.5 L19.5 11 M10 6 H22" fill="none" stroke="#ff9aa6" stroke-width=".8"/>',
+ sigilcraft:'<path d="M10 3 H22 L29 10.5 V21.5 L22 29 H10 L3 21.5 V10.5Z" fill="#7d838c"'+st()+'/><path d="M10 3 H22 L29 10.5 L16 10.5Z" fill="#a3a9b1"/><path d="M16 7.5 V24.5 M10 11.5 L16 16 L22 11.5 M10 20.5 L16 16" fill="none" stroke="#e5d0ff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" opacity=".35"/><path d="M16 7.5 V24.5 M10 11.5 L16 16 L22 11.5 M10 20.5 L16 16" fill="none" stroke="#b66bff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+ magic:'<path d="M9 29 L21 13" stroke="'+O+'" stroke-width="4.6" stroke-linecap="round"/><path d="M9 29 L21 13" stroke="#8a5a2b" stroke-width="2.6" stroke-linecap="round"/><circle cx="21.5" cy="11" r="6.4" fill="#4aa8ff"'+st()+'/><circle cx="21.5" cy="11" r="6.4" fill="#9fe0ff" fill-opacity=".45"/><path d="M18.5 8.5 a4 4 0 0 1 3.5 -2" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><path d="M6 6 l1 2.4 l2.4 1 l-2.4 1 l-1 2.4 l-1 -2.4 l-2.4 -1 l2.4 -1z M27 22 l.8 1.8 l1.8 .8 l-1.8 .8 l-.8 1.8 l-.8 -1.8 l-1.8 -.8 l1.8 -.8z" fill="#ffe27a"'+st(.5)+'/>',
+ construction:'<path d="M2 15 L16 3 L30 15Z" fill="#c4452f"'+st()+'/><path d="M2 15 L16 3 L16 15Z" fill="#e0624a"/><rect x="5" y="15" width="22" height="13.5" fill="#d9b27a"'+st()+'/><path d="M5 20 H27 M5 24.5 H27" stroke="#a97a45" stroke-width=".8"/><path d="M12.5 28.5 V21 Q12.5 18.5 16 18.5 Q19.5 18.5 19.5 21 V28.5Z" fill="#6b4220"'+st(.9)+'/><rect x="21" y="17.5" width="4" height="4" fill="#9fd8f0"'+st(.7)+'/><rect x="21.5" y="4" width="3.4" height="6" fill="#8a5a2b"'+st(.8)+'/>',
+ beastbond:'<ellipse cx="16" cy="21.5" rx="8" ry="6.8" fill="#d9a066"'+st()+'/><ellipse cx="6" cy="14.5" rx="3.1" ry="3.9" fill="#d9a066" transform="rotate(-20 6 14.5)"'+st(.9)+'/><ellipse cx="11.5" cy="8" rx="3.1" ry="4" fill="#d9a066" transform="rotate(-8 11.5 8)"'+st(.9)+'/><ellipse cx="20.5" cy="8" rx="3.1" ry="4" fill="#d9a066" transform="rotate(8 20.5 8)"'+st(.9)+'/><ellipse cx="26" cy="14.5" rx="3.1" ry="3.9" fill="#d9a066" transform="rotate(20 26 14.5)"'+st(.9)+'/><path d="M12.5 21 q3.5 -3 7 0 q1 4 -3.5 5.5 q-4.5 -1.5 -3.5 -5.5z" fill="#8a4f2a"/>',
+ soulbinding:'<path d="M16 1.5 C22 8 27 12 26.5 19 C26 26 21 30.5 16 30.5 C11 30.5 6 26 5.5 19 C5 14 8.5 11 11 8 C12 11 13 11.5 14 11 C14 7.5 15 4.5 16 1.5Z" fill="#6fe3d4"'+st()+'/><path d="M16 9 C20 14 23 16 22.5 20.5 C22 25 19 27 16 27 C13 27 10 25 9.5 20.5 C9.5 17 11.5 15 13 13 C14 15 15 14.6 15.6 14 C15.4 12 15.4 10.5 16 9Z" fill="#c8fff6"/><ellipse cx="12.8" cy="20" rx="1.7" ry="2.5" fill="#103a40"/><ellipse cx="19.2" cy="20" rx="1.7" ry="2.5" fill="#103a40"/><ellipse cx="16" cy="25" rx="1.3" ry="1" fill="#103a40"/>',
+ voidpower:'<circle cx="16" cy="16" r="14" fill="#1b0c33"'+st()+'/><path d="M16 4 C25.5 4 29 14 22.5 20 C17 25 9 21 10 15 C11 10.5 16.5 10 18.5 13.5 C19.5 15.5 17.5 17.5 16 16.5" fill="none" stroke="#a35cff" stroke-width="2.6" stroke-linecap="round"/><path d="M16 7.5 C22 8 24 13 20 16.5" fill="none" stroke="#e1c2ff" stroke-width="1.1" stroke-linecap="round" opacity=".8"/><circle cx="16" cy="16.2" r="2.1" fill="#fff"/><circle cx="6.5" cy="9" r=".9" fill="#d9b8ff"/><circle cx="26" cy="25" r=".9" fill="#d9b8ff"/><circle cx="25" cy="6.5" r=".7" fill="#d9b8ff"/>'};
+})();
 const skillIcon=(sk,cls)=>'<svg class="'+(cls||'ski')+'" viewBox="0 0 32 32" aria-hidden="true" style="color:'+(XPCOL[sk]||'#e8c14a')+'">'+(SKICON[sk]||'')+'</svg>';
 const SKDESC={
  combat:'Fight monsters with sword, bow or staff. Combat level raises your health and defence and unlocks better melee gear. Train on monsters close to your level, and eat before you drop low.',
@@ -2822,16 +2840,54 @@ function bagSkills(){if(skillSel)return skillGuideHtml(skillSel);
   const cards=SKILLS.map(sk=>{const xp=Number(S.xp[sk])||0,l=lvlOf(xp),lo=XPT[l-1],hi=l<MAXLV?XPT[l]:lo+1,pct=l>=MAXLV?100:(xp-lo)/(hi-lo)*100;
     return'<button class="skc" data-sk="'+sk+'" style="--c:'+XPCOL[sk]+'">'+skillIcon(sk)+'<span class="skn">'+SKN[sk]+'</span><span class="skl">'+l+'</span><div class="bar"><i style="width:'+pct+'%;background:'+XPCOL[sk]+'"></i></div></button>'}).join('');
   return'<div class="mute n" style="margin:2px 0 8px">Total level '+totalLv()+' / '+SKILLS.length*MAXLV+' · tap a skill for its guide</div><div class="skgrid">'+cards+'</div>'}
+const REGN={world:'the Overworld',dun:'the Rat Warrens',crypt:'the Keep Crypts',marsh:'Mistfen',ember:'Emberwaste',void:'Voidreach',realm:'Kingsmarch'};
+function npcWhere(role){for(const id in MAPS){const mp=MAPS[id],n=(mp.npcs||[]).find(q=>q.role===role);if(n)return{n:n.name,at:REGN[id]||mp.name||id}}return{n:(ROLEN[role]||role),at:''}}
+const rewTxt=r=>{const o=[];if(r.coins)o.push(r.coins+' coins');if(r.xp)o.push(r.xp[1].toLocaleString('en-US')+' '+SKN[r.xp[0]]+' xp');for(const[id,n]of r.items||[])if(ITEMS[id])o.push((n>1?n+' ':'')+ITEMS[id].n);return o};
+function questLog(){
+  const kills=k=>S.kills[k]||0,prog=k=>kills(k)-(S.qb[k]||0),L=[];
+  const leg=(key,name,role,state,desc,obj,cur,max,reward,req)=>L.push({key,name,giver:npcWhere(role),state,desc,obj,cur,max,rew:rewTxt(reward),req,legacy:true,track:true});
+  leg('rat','Rat Problem','farmer',S.q.rat,'Rats from the warrens are eating the harvest. Thin them out.','Slay cave rats in the Rat Warrens',Math.min(5,Math.max(0,prog('rat'))),5,{coins:150,xp:['combat',600],items:[['cooked_meat',3]]});
+  leg('herb',"Mara's Brew",'herbalist',S.q.herb,'Mara needs herbs for her potions.','Bring herbs to Mara',Math.min(8,S.inv.herb||0),8,{coins:200,xp:['alchemy',400],items:[['potion',2]]});
+  leg('hollow','The Hollow Knight','edric',S.quest,'Sir Aldric still walks the crypts beneath the keep.','Defeat Sir Aldric and bring his signet',hasItem('signet',1)?1:0,1,{coins:500,xp:['combat',1500],items:[]});
+  leg('rook','Bandit Trouble','edric',S.quest<2?-1:S.q.rook,'Rook the Cutpurse leads the bandits at the camp.','Defeat Rook the Cutpurse',Math.min(1,Math.max(0,prog('rook'))),1,{coins:400,xp:['combat',2000],items:[]},'The Hollow Knight');
+  for(const q of NQ){const st=S.nq[q.id]||0,locked=q.req&&S.nq[q.req]!==2,rq=NQ.find(x=>x.id===q.req),cur=nqProg(q),n=q.need;
+    const obj=n.level?'Reach '+SKN[n.level]+' '+n.n:n.item?'Bring '+n.n+' '+ITEMS[n.item].n.toLowerCase():'Slay '+(n.n>1?n.n+' ':'')+MOBS[n.kill].n;
+    L.push({key:'nq_'+q.id,name:q.name,giver:npcWhere(q.role),state:locked?-1:st,desc:q.lines[0],obj,cur:st===2?n.n:cur,max:n.n,rew:rewTxt(q.reward),req:rq?rq.name:'',track:!locked&&(st===0||(st===1&&cur>=n.n))})}
+  return L}
+let qFilter='act',codexTab='beast';
 function bagQuests(){
-  const kills=k=>S.kills[k]||0,prog=k=>kills(k)-(S.qb[k]||0),row=(n,st)=>'<div class="row"><span>'+n+'</span><b>'+st+'</b></div>';
-  const hk=['Not started. Speak to Sir Edric in Greywatch Keep.','Bring the signet of Sir Aldric to Sir Edric.','Complete'][S.quest];
-  const rat=['Not started. Speak to Farmer Hal in the village.','Slay cave rats: '+Math.min(5,prog('rat'))+' / 5','Complete'][S.q.rat];
-  const herb=['Not started. Speak to Mara in the village.','Bring 8 herbs: '+Math.min(8,S.inv.herb||0)+' / 8','Complete'][S.q.herb];
-  const rook=S.quest<2?'Locked. Finish The Hollow Knight first.':['Not started. Speak to Sir Edric.','Defeat Rook the Cutpurse at the bandit camp.','Complete'][S.q.rook];
-  const nqrows=NQ.map(q=>{const st=S.nq[q.id]||0;if(q.req&&S.nq[q.req]!==2)return'';return row(q.name,st===0?'Not started. Speak to '+ROLEN[q.role]+'.':st===1?(q.need.level?'Reach '+SKN[q.need.level]+' '+q.need.n+': ':q.need.item?'Bring '+q.need.n+' '+ITEMS[q.need.item].n.toLowerCase()+': ':'Slay '+q.need.n+' '+MOBS[q.need.kill].n.toLowerCase()+': ')+nqProg(q)+' / '+q.need.n:'Complete')}).join('');
-  return nqrows+row('Rat Problem',rat)+row("Mara's Brew",herb)+row('The Hollow Knight',hk)+row('Bandit Trouble',rook);
-}
-function bagCodex(){const k=S.kills,r=(n,v)=>'<div class="row"><span>'+n+'</span><b class="n">'+v+'</b></div>';return r('Cave rats',k.rat||0)+r('Tunnel rats',k.tunnel||0)+r('The Gnawking',k.gnaw||0)+r("Gnawking's tooth",S.tooth?'found':'—')+r('Wolves',k.wolf||0)+r('Bandits',k.bandit||0)+r('Rook the Cutpurse',k.rook||0)+r('Skeletons',k.skeleton||0)+r('Restless knights',k.knight||0)+r('Sir Aldric',k.aldric||0)}
+  const L=questLog(),cnt={act:0,av:0,done:0,all:L.length};for(const q of L){if(q.state===1)cnt.act++;else if(q.state===0)cnt.av++;else if(q.state===2)cnt.done++}
+  if(!cnt[qFilter])qFilter='all';
+  const sel=L.filter(q=>qFilter==='all'||(qFilter==='act'&&q.state===1)||(qFilter==='av'&&(q.state===0||q.state===-1))||(qFilter==='done'&&q.state===2));
+  sel.sort((a,b)=>{const w=q=>q.state===1?(q.cur>=q.max?0:1):q.state===0?2:q.state===-1?3:4;return w(a)-w(b)});
+  const chips=[['act','Active'],['av','Available'],['done','Done'],['all','All']].map(([k,n])=>'<button data-qf="'+k+'" class="'+(qFilter===k?'on':'')+'">'+n+' <span class="n">'+cnt[k]+'</span></button>').join('');
+  const card=q=>{const ready=q.state===1&&q.cur>=q.max,pct=Math.min(100,q.cur/q.max*100),stt=q.state===2?['Complete','dn']:q.state===-1?['Locked','lk']:q.state===0?['Available','av']:ready?['Hand in','rd']:['In progress','ip'];
+    const where=q.giver.n+(q.giver.at?' · '+q.giver.at:'');
+    return'<div class="qcard '+stt[1]+'"><div class="qh"><b>'+esc(q.name)+'</b><span class="qs">'+stt[0]+'</span></div>'+
+      '<div class="qg">'+(q.state===1&&!ready?'Giver: ':q.state===0||q.state===-1?'Speak to: ':ready?'Report to: ':'')+esc(where)+'</div>'+
+      (q.state===-1?'<div class="qo">Requires: '+esc(q.req)+'</div>':'<p>'+esc(q.desc)+'</p>'+
+      (q.state!==0?'<div class="qo">'+esc(q.obj)+' <b class="n">'+q.cur+' / '+q.max+'</b></div><div class="bar"><i style="width:'+pct+'%"></i></div>':'<div class="qo">'+esc(q.obj)+'</div>'))+
+      '<div class="qrw">'+q.rew.map(t=>'<span>'+esc(t)+'</span>').join('')+'</div>'+
+      (q.track&&q.state!==2?'<div class="qa"><button data-qt="'+q.key+'" class="'+(S.track===q.key?'on':'')+'">'+(S.track===q.key?'Tracking':'Track')+'</button></div>':'')+'</div>'};
+  return'<div class="mute n" style="margin:2px 0 8px">'+cnt.done+' of '+L.length+' quests complete</div><div class="qf">'+chips+'</div>'+(sel.length?sel.map(card).join(''):'<div class="mute" style="padding:14px 4px">Nothing here yet. Speak to the people in the villages and cities to find work.</div>')}
+let MOBREG=null;
+function mobRegions(){if(MOBREG)return MOBREG;MOBREG={};for(const id in REGN){const mp=MAPS[id];if(!mp)continue;for(const m of mp.mobs||[]){(MOBREG[m.kind]=MOBREG[m.kind]||new Set()).add(id)}}return MOBREG}
+function collItems(){const g={};const add=(t,id)=>{if(ITEMS[id]){(g[t]=g[t]||[]);if(!g[t].includes(id))g[t].push(id)}};
+  for(const k in MOBS){const d=MOBS[k];for(const[id]of d.uniques||[])add(d.n,id);if(PETDROP[k])add(d.n,PETDROP[k][0])}
+  for(const[id]of RARES)add('Rare finds',id);for(const[id]of GEM_ODDS)add('Gems',id);add('Gems','soul_shard');return g}
+function bagCodex(){
+  S.got=S.got||{};for(const id in S.inv)S.got[id]=1;for(const id in S.bank)S.got[id]=1;for(const id of Object.values(S.eq))if(id)S.got[id]=1;
+  const reg=mobRegions(),keys=Object.keys(MOBS),kd=k=>S.kills[k]||0,found=keys.filter(k=>kd(k)>0).length;
+  const CG=collItems(),all=[...new Set(Object.values(CG).flat())],have=all.filter(id=>S.got[id]).length;
+  const tabs='<div class="qf"><button data-cx="beast" class="'+(codexTab==='beast'?'on':'')+'">Bestiary <span class="n">'+found+'/'+keys.length+'</span></button><button data-cx="log" class="'+(codexTab==='log'?'on':'')+'">Collection <span class="n">'+have+'/'+all.length+'</span></button></div>';
+  if(codexTab==='log'){
+    return tabs+Object.entries(CG).map(([t,ids])=>{const h=ids.filter(i=>S.got[i]).length;return'<div class="cxh"><b>'+esc(t)+'</b><span class="n">'+h+'/'+ids.length+'</span></div><div class="cxg">'+ids.map(i=>'<span class="cxc'+(S.got[i]?'':' miss')+'" title="'+esc(S.got[i]?ITEMS[i].n:'???')+'">'+icon(i)+'</span>').join('')+'</div>'}).join('')}
+  const groups={};for(const k of keys){const rs=reg[k]?[...reg[k]][0]:'other';(groups[rs]=groups[rs]||[]).push(k)}
+  const order=[...Object.keys(REGN),'other'];let out=tabs;
+  for(const r of order){const ks=groups[r];if(!ks)continue;ks.sort((a,b)=>(MOBS[a].lv||0)-(MOBS[b].lv||0)||(MOBS[a].hp-MOBS[b].hp));
+    out+='<div class="cxh"><b>'+(r==='other'?'Summoned and rare':REGN[r].replace(/^the /,''))+'</b><span class="n">'+ks.filter(k=>kd(k)>0).length+'/'+ks.length+'</span></div>'+ks.map(k=>{const d=MOBS[k],n=kd(k);
+      return n>0?'<div class="cxr"><span><b>'+esc(d.n)+'</b>'+(d.boss?' <em class="bs">BOSS</em>':'')+(d.prey?' <em class="pr">prey</em>':'')+'<small>'+(d.lv?'Lv '+d.lv+' · ':'')+d.hp+' hp'+(d.aggro||d.prey?'':' · passive')+'</small></span><b class="n">'+n+'</b></div>':'<div class="cxr lk"><span><b>???</b><small>Not yet defeated</small></span><b class="n">0</b></div>'}).join('')}
+  return out}
 function saveIO(a){const box=document.getElementById('saveBox'),msg=document.getElementById('saveMsg');if(!box)return;
   if(a==='export'){save();const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));box.value=code;box.focus();box.select();let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code);ok=true}}catch(e){}msg.textContent=ok?'Code copied. Paste it into the app on your other device.':'Select all and copy the code above.'}
   else{try{const raw=box.value.trim();if(!raw)throw 0;const j=JSON.parse(decodeURIComponent(escape(atob(raw))));if(!j||!j.xp||!j.inv)throw 0;if(NET.online){load(j);save();NET.saveNow();msg.textContent='Imported.';setTimeout(()=>location.reload(),600)}else{localStorage.setItem(KEY,JSON.stringify(j));msg.textContent='Imported. Reloading...';setTimeout(()=>location.reload(),400)}}catch(e){msg.textContent='That code is not valid.'}}}
@@ -2867,6 +2923,9 @@ $('panel').addEventListener('click',e=>{
   if(d.a==='sfx'){SND.cfg().sfx=!SND.cfg().sfx;sfx('click');save();$('panel').innerHTML=panelHtml();return}
   if(d.a==='mus'){SND.setMus(!SND.cfg().mus);save();$('panel').innerHTML=panelHtml();return}
   if(d.a==='gfx'){S.gfx=S.gfx==='low'?'auto':'low';applyGfx();save();$('panel').innerHTML=panelHtml();return}
+  if(d.qf){qFilter=d.qf;$('panel').innerHTML=panelHtml();return}
+  if(d.cx){codexTab=d.cx;$('panel').innerHTML=panelHtml();return}
+  if(d.qt){S.track=S.track===d.qt?null:d.qt;updateRoute();save();$('panel').innerHTML=panelHtml();return}
   if(d.sk){skillSel=d.sk;$('panel').innerHTML=panelHtml();return}
   if(d.a==='skback'){skillSel=null;$('panel').innerHTML=panelHtml();return}
   if(d.tele){castTele(d.tele);return}
@@ -2892,6 +2951,7 @@ $('panel').addEventListener('pointerdown',e=>e.stopPropagation());
 $('bag').onclick=openPanel;
 
 /* =============== quest markers =============== */
+function nqMarksIn(mp){const out=[];for(const q of NQ){const npc=(mp.npcs||[]).find(n=>n.role===q.role);if(!npc||q.req&&S.nq[q.req]!==2)continue;const st=S.nq[q.id]||0;if(st===0)out.push({kind:'give',x:npc.x,y:npc.y,label:q.name+': speak to '+npc.name,key:'nq_'+q.id});else if(st===1&&nqProg(q)>=q.need.n)out.push({kind:'turn',x:npc.x,y:npc.y,label:q.name+': report to '+npc.name,key:'nq_'+q.id})}return out}
 function questMarks(){
   const W_=WORLD,out=[],npc=r=>W_.npcs.find(n=>n.role===r),kills=k=>S.kills[k]||0,prog=k=>kills(k)-(S.qb[k]||0);
   const add=(kind,x,y,label)=>out.push({kind,x,y,label}),hal=npc('farmer'),mara=npc('herbalist'),ed=npc('edric');
@@ -2905,7 +2965,7 @@ function questMarks(){
   else if(S.q.rook===0)add('give',ed.x,ed.y,'Bandit Trouble: speak to Sir Edric');
   else if(S.q.rook===1){if(prog('rook')<1)add('goal',W_.camp.x,W_.camp.y,'Bandit Trouble: defeat Rook');else add('turn',ed.x,ed.y,'Bandit Trouble: report to Sir Edric')}
   {const tm=tutMark();if(tm&&M===WORLD)out.push(tm)}
-  for(const q of NQ){const npc=W_.npcs.find(n=>n.role===q.role);if(!npc||q.req&&S.nq[q.req]!==2)continue;const st=S.nq[q.id]||0;if(st===0)out.push({kind:'give',x:npc.x,y:npc.y,label:q.name+': speak to '+npc.name,key:'nq_'+q.id});else if(st===1&&nqProg(q)>=q.need.n)out.push({kind:'turn',x:npc.x,y:npc.y,label:q.name+': report to '+npc.name,key:'nq_'+q.id})}
+  out.push(...nqMarksIn(W_));
   for(const q of out)if(!q.key)q.key=q.label.startsWith('Rat')?'rat':q.label.startsWith('Mara')?'herb':q.label.startsWith('The Hollow')?'hollow':'rook';
   return out;
 }
@@ -2920,10 +2980,10 @@ function dungeonMarks(){
     else exit(q)}
   return out;
 }
-const marks=()=>M===WORLD?questMarks():dungeonMarks();
+const marks=()=>M===WORLD?questMarks():dungeonMarks().concat(nqMarksIn(M));
 function updateRoute(){
   if(!S.track){if(routePts.length||routeGoal){routePts=[];routeGoal=null;routeKey++}return}
-  const q=marks().find(m=>m.key===S.track);if(!q){if(M===WORLD&&!questMarks().find(m=>m.key===S.track)){S.track=null;save()}routePts=[];routeGoal=null;routeKey++;return}
+  const q=marks().find(m=>m.key===S.track);if(!q){if(M===WORLD&&!questMarks().find(m=>m.key===S.track)&&!(/^nq_/.test(S.track)&&(S.nq[S.track.slice(3)]||0)<2)){S.track=null;save()}routePts=[];routeGoal=null;routeKey++;return}
   routeGoal=q;routePts=(bfs(pl.x,pl.y,(x,y)=>Math.hypot(x-q.x,y-q.y)<=1.6)||[]).map(p=>[p[0],p[1]]);routeKey++;
 }
 /* =============== map =============== */
@@ -2969,23 +3029,35 @@ const MAPIC={
  castle:{d:'M3 28 V9 H8 V13 H12 V9 H16 V13 H20 V9 H24 V13 H29 V28Z M13 28 V20 H19 V28Z',c:'#d8d2c0'},
  rock:{d:'M4 25 L8 11 L17 5 L27 12 L26 25Z',c:'#9aa2aa'}};
 for(const k in ORE_C)MAPIC['ore_'+k]={d:MAPIC.rock.d,c:ORE_C[k]};
-function mapIcon(c,kind,x,y,size,ox,oy,sc){const ic=MAPIC[kind];if(!ic)return;const X=ox+(x+.5)*sc,Y=oy+(y+.5)*sc;c.save();c.fillStyle='rgba(8,10,12,.82)';c.beginPath();c.arc(X,Y,size*.64,0,7);c.fill();c.lineWidth=Math.max(1,size/13);c.strokeStyle=ic.c;c.stroke();
+let legSeen=new Set(),legSafe=false,legMulti=false;
+function mapIcon(c,kind,x,y,size,ox,oy,sc){const ic=MAPIC[kind];if(!ic)return;legSeen.add(kind);const X=ox+(x+.5)*sc,Y=oy+(y+.5)*sc;c.save();c.fillStyle='rgba(8,10,12,.82)';c.beginPath();c.arc(X,Y,size*.64,0,7);c.fill();c.lineWidth=Math.max(1,size/13);c.strokeStyle=ic.c;c.stroke();
   c.translate(X-size*.4,Y-size*.4);c.scale(size*.8/32,size*.8/32);const p2=new Path2D(ic.d);c.fillStyle=ic.c;c.fill(p2,'evenodd');c.restore()}
-function legendHtml(){const L=[['shop','Shop'],['anvil','Smithy'],['furnace','Furnace'],['bench','Workbench'],['altar','Altar'],['chest','Bank / chest'],['ore_iron','Mining'],['fish','Fishing'],['dungeon','Dungeon'],['portal','Portal / gate'],['skull','Boss'],['mug','Inn'],['door','Building'],['castle','Castle']];
-  return'<div class="leg" style="margin-top:8px">'+L.map(([k,n])=>'<span><svg viewBox="0 0 32 32" width="18" height="18" style="vertical-align:-4px;margin-right:4px"><path d="'+MAPIC[k].d+'" fill="'+MAPIC[k].c+'" fill-rule="evenodd"/></svg>'+n+'</span>').join('')+'<span><i style="background:rgba(80,220,130,.7);border-radius:3px"></i>Safe zone</span><span><i style="background:rgba(235,70,60,.7);border-radius:3px"></i>Multi-combat zone</span></div>'}
+const LEGN={shop:'Shop',anvil:'Smithy',furnace:'Furnace',bench:'Workbench',altar:'Altar',chest:'Bank / chest',flask:'Alchemist',fish:'Fishing spot',mug:'Inn',scroll:'Bounty board',dungeon:'Dungeon entrance',portal:'Portal / gate',rift:'Void rift',skull:'Boss',door:'Building entrance',magic:'Arcane shop',castle:'Castle'};
+function legendHtml(qm){const svg=(k,n)=>{const ic=MAPIC[k];return'<span><svg viewBox="0 0 32 32" width="18" height="18" style="vertical-align:-4px;margin-right:4px"><path d="'+ic.d+'" fill="'+ic.c+'" fill-rule="evenodd"/></svg>'+n+'</span>'};
+  const dotl=(c,n)=>'<span><i style="background:'+c+'"></i>'+n+'</span>';
+  let h=dotl('#ffd24a','You');
+  for(const k of Object.keys(LEGN))if(legSeen.has(k))h+=svg(k,LEGN[k]);
+  for(const k of legSeen)if(k.startsWith('ore_'))h+=svg(k,k.slice(4)[0].toUpperCase()+k.slice(5)+' vein');
+  if(qm.some(q=>q.kind==='give'))h+=dotl('#f2c744','! Quest available');
+  if(qm.some(q=>q.kind==='turn'))h+=dotl('#5fd36a','? Hand in');
+  if(qm.some(q=>q.kind==='goal'))h+=dotl('#ffd24a','★ Quest goal');
+  if(qm.some(q=>q.kind==='exit'))h+=dotl('#8fd3ff','E Way out');
+  if(legSafe)h+='<span><i style="background:rgba(80,220,130,.7);border-radius:3px"></i>Safe zone</span>';
+  if(legMulti)h+='<span><i style="background:rgba(235,70,60,.7);border-radius:3px"></i>Multi-combat zone</span>';
+  return'<div class="leg" style="margin-top:8px">'+h+'</div>'}
 function openMap(fresh){
   if(fresh===true){const ti=marks().findIndex(q=>q.key===S.track);mapSel=ti>=0?ti:0}
   const el=$('mapPanel'),Mp=M,size=Math.floor(Math.min(wrapEl.clientWidth-32,wrapEl.clientHeight-190,560)),px=size*2;
   el.innerHTML='<div class="in"><div class="row" style="border:0"><h1>'+(Mp===WORLD?'World map':Mp.name)+'</h1><button data-a="close">Close</button></div><canvas id="mapCv" width="'+px+'" height="'+px+'" style="width:'+size+'px;height:'+size+'px;border-radius:10px;display:block;margin:6px auto 0"></canvas>'+
-    '<div class="mute" style="text-align:center;margin-top:8px">Tap the map to walk there. Tap a quest to preview its route. Track a quest to show the route in the world.</div>'+teleHtml()+'<div id="qlist" class="qlist"></div><div class="leg">'+(Mp===WORLD?'<span><i style="background:#ffd24a"></i>You</span><span><i style="background:#d9722a"></i>Copper</span><span><i style="background:#8fb2da"></i>Iron</span><span><i style="background:#e0524a"></i>Danger</span><span><i style="background:#ffffff"></i>Place</span><span><i style="background:#ffd24a"></i>Quest goal</span><span><i style="background:#f2c744"></i>! Quest available</span><span><i style="background:#5fd36a"></i>? Hand in</span>':'<span><i style="background:#ffd24a"></i>You</span><span><i style="background:#ffffff"></i>Stairs</span><span><i style="background:#ffd24a"></i>Quest goal</span><span><i style="background:#8fd3ff"></i>E Way out</span>')+'</div></div>';
+    '<div class="mute" style="text-align:center;margin-top:8px">Tap the map to walk there. Tap a quest to preview its route. Track a quest to show the route in the world.</div>'+teleHtml()+'<div id="qlist" class="qlist"></div><div id="legBox"></div></div>';
   el.hidden=false;
-  el.querySelector('.in').insertAdjacentHTML('beforeend',legendHtml());
+  legSeen=new Set();legSafe=false;legMulti=false;
   const mcv=document.getElementById('mapCv'),c=mcv.getContext('2d'),sc=px/Math.max(Mp.W,Mp.H),ox=(px-Mp.W*sc)/2,oy=(px-Mp.H*sc)/2;
   mcv.addEventListener('click',e=>{const r=mcv.getBoundingClientRect(),tx=Math.floor(((e.clientX-r.left)/r.width*px-ox)/sc),ty=Math.floor(((e.clientY-r.top)/r.height*px-oy)/sc);walkTo(tx,ty)});
   c.fillStyle='#0b1013';c.fillRect(0,0,px,px);
   for(let y=0;y<Mp.H;y++)for(let x=0;x<Mp.W;x++){const i=y*Mp.W+x;let col=(Mp.outdoor&&Mp.pal&&Mp.pal[Mp.t[i]])||MAPC[Mp.t[i]]||'#777';if(Mp.tree[i])col='#2f6a2c';if(Mp.wall[i])col='#6e7075';if(Mp.dark&&Mp.t[i]===7)continue;c.fillStyle=col;c.fillRect(ox+x*sc,oy+y*sc,sc+.6,sc+.6)}
   for(const pr of Mp.props||[])if(pr.w>0&&pr.k!=='lamp'&&pr.k!=='banner'){c.fillStyle=pr.k==='fountain'?'#4a8ab0':pr.k==='dock'?'#7a5a3a':(pr.k==='house'||pr.k==='hall'||pr.k==='store'||pr.k==='armory'||pr.k==='arcane'||pr.k==='home')?(pr.roof||'#8a6a4a'):'#8a6a4a';c.fillRect(ox+pr.x*sc,oy+pr.y*sc,pr.w*sc,pr.d*sc)}
-  if(Mp!==HOME){for(let y=0;y<Mp.H;y++)for(let x=0;x<Mp.W;x++){if(Mp.dark&&Mp.t[y*Mp.W+x]===7)continue;const sf=inSafe(Mp,x,y);if(sf){c.fillStyle='rgba(80,220,130,.22)';c.fillRect(ox+x*sc,oy+y*sc,sc+.6,sc+.6)}else if(isMulti(Mp,x,y)){c.fillStyle='rgba(235,70,60,.30)';c.fillRect(ox+x*sc,oy+y*sc,sc+.6,sc+.6)}}}
+  if(Mp!==HOME){for(let y=0;y<Mp.H;y++)for(let x=0;x<Mp.W;x++){if(Mp.dark&&Mp.t[y*Mp.W+x]===7)continue;const sf=inSafe(Mp,x,y);if(sf){legSafe=true;c.fillStyle='rgba(80,220,130,.22)';c.fillRect(ox+x*sc,oy+y*sc,sc+.6,sc+.6)}else if(isMulti(Mp,x,y)){legMulti=true;c.fillStyle='rgba(235,70,60,.30)';c.fillRect(ox+x*sc,oy+y*sc,sc+.6,sc+.6)}}}
   const dot=(x,y,col,r)=>{c.fillStyle=col;c.beginPath();c.arc(ox+(x+.5)*sc,oy+(y+.5)*sc,r,0,7);c.fill()};
   const label=(x,y,t)=>{c.font='700 '+Math.round(px/38)+'px '+FONT;c.textAlign='center';c.lineWidth=4;c.strokeStyle='rgba(0,0,0,.8)';c.strokeText(t,ox+(x+.5)*sc,oy+(y+.5)*sc-px/60);c.fillStyle='#fff';c.fillText(t,ox+(x+.5)*sc,oy+(y+.5)*sc-px/60)};
   for(const e of Mp.objs||[]){if(e.o.k==='copper')dot(e.x,e.y,'#d9722a',Math.max(2,sc*.6));else if(e.o.k==='iron')dot(e.x,e.y,'#8fb2da',Math.max(2,sc*.6));else if(e.o.k==='sigil')dot(e.x,e.y,'#c08cff',Math.max(2,sc*.6));else if(e.o.k==='mythril')dot(e.x,e.y,'#7fe8f4',Math.max(2,sc*.6));else if(e.o.k==='silver')dot(e.x,e.y,'#e8f0ff',Math.max(2,sc*.6));else if(e.o.k==='gold')dot(e.x,e.y,'#ffd24a',Math.max(2,sc*.6));else if(e.o.k==='ember')dot(e.x,e.y,'#ff7a2a',Math.max(2,sc*.6));else if(e.o.k==='rift')dot(e.x,e.y,'#b58bff',Math.max(2,sc*.5));else if(e.o.k==='wastes')dot(e.x,e.y,'#ff7a2a',Math.max(3,sc*.9));else if(e.o.k==='voidgate')dot(e.x,e.y,'#b58bff',Math.max(3,sc*.9));else if(e.o.k==='marsh')dot(e.x,e.y,'#4ac8b8',Math.max(3,sc*.9));else if(e.o.k==='stairs'){dot(e.x,e.y,'#fff',px/90);label(e.x,e.y,'Stairs')}}
@@ -3015,6 +3087,7 @@ function openMap(fresh){
     const ql=document.getElementById('qlist');if(ql)ql.innerHTML=(qm.length?qm.map((q,i)=>'<div class="qr'+(i===mapSel?' sel':'')+'" data-q="'+i+'"><span>'+(q.kind==='goal'?'★':q.kind==='give'?'!':q.kind==='exit'?'→':'?')+' '+q.label+'</span><span class="qb"><button data-track="'+i+'" class="'+(S.track===q.key?'on':'')+'">'+(S.track===q.key?'Tracking':'Track')+'</button><button data-go="'+i+'">Walk</button></span></div>').join('')+'<div class="mute" style="margin-top:8px">'+routeInfo+'</div>':(Mp===WORLD?'No active quests. Speak to the people in the village.':'No active quests.'))}
   const a={down:Math.PI/2,up:-Math.PI/2,right:0,left:Math.PI}[pl.face]||0,X=ox+(pl.x+.5)*sc,Y=oy+(pl.y+.5)*sc,r=px/45;
   c.save();c.translate(X,Y);c.rotate(a);c.fillStyle='#ffd24a';c.strokeStyle='#000';c.lineWidth=3;c.beginPath();c.moveTo(r,0);c.lineTo(-r*.8,r*.7);c.lineTo(-r*.4,0);c.lineTo(-r*.8,-r*.7);c.closePath();c.stroke();c.fill();c.restore();
+  {const lb=document.getElementById('legBox');if(lb)lb.innerHTML=legendHtml(marks())}
 }
 const POIS=()=>M.poi?M.poi.map(([x,y,t])=>[x,y,t]):M===MARSH?[[M.spawn.x,M.spawn.y,'the gate'],[38,26,'Mirewatch'],[19,47,'the Veil Spire'],[14,33,'the sanctum'],[M.chapel.x,M.chapel.y+5,'the sunken chapel']]:M===WORLD?[[M.marsh.x,M.marsh.y+1,'the path to Mistfen'],[M.ember.x,M.ember.y+1,'the path to Emberwaste'],[M.bridge.x+2,M.bridge.y,'the bridge to Kingsmarch'],[M.spawn.x,M.spawn.y,'the village'],[M.keep.x,M.keep.y+5,'Greywatch Keep'],[M.cave.x,M.cave.y,'the Rat Warrens'],[M.camp.x,M.camp.y,'the bandit camp']]:[];
 function walkTo(tx,ty){
@@ -3107,8 +3180,8 @@ function modMax(){for(const k of SKILLS)S.xp[k]=Math.max(S.xp[k]||0,MAXXP());S.t
 
 
 /* ---- version, patch notes, update banner, inactivity ---- */
-const BUILD='2026-10-15.1',PROTO=1;
-const CHANGES=[{v:'2026-10-15.1',title:'Kingsmarch and more',lines:['KINGSMARCH: a whole new mainland. Walk east over the bridge from the island. Millbrook (farming), Saltgate Harbour and Highcrown, the walled capital with a castle, markets and shops you can walk into.','New training: birch, elm and redwood trees, coal and aurelite ore, tuna and sharks, pheasants and elk, crops to pick, and aurelite gear.','New monsters, three new bosses and rare treasure drops. Friendly animals only fight back if you attack them.','Safe zones and multi-combat areas are now clearly marked in the world and on the map. The map shows shops, smithies, mines, dungeons, bosses and more with icons and a legend.','The Skills tab has icons and a guide for every skill.','Gathering is no longer interrupted by monsters hitting you. Weaker monsters ignore you at high level.','Hunting is easier: game runs slower and you can catch it from two tiles.']},{v:'2026-10-14.2',title:'Soulrend update',lines:['Gems and pearls now have icons in your bag.','Axes: rusty, copper, iron and steel up to ember. Buy them at the Armoury or forge them at the anvil. Better axes chop faster and more often.','Settings tab in your Bag with controls, sound, graphics and log out.','Smoother XP bars.','You are logged out after 30 minutes without activity.','Close buttons in shops stay in view while you scroll.']}];
+const BUILD='2026-10-16.1',PROTO=1;
+const CHANGES=[{v:'2026-10-16.1',title:'Journal, map legend and icons',lines:['Quests tab rebuilt: every quest in the game (also Mistfen and Kingsmarch) with progress bars, rewards, where to find the giver and a Track button. Filter on Active, Available, Done.','Codex rebuilt: a bestiary per region with kill counts and a collection log of rare drops, gems and pets.','The map legend now shows only what is really on the map you are looking at, with the same icons.','New, more realistic and distinct skill icons.','Quest markers now also work in Mistfen and Kingsmarch. The tutorial no longer shows up for experienced characters.']},{v:'2026-10-15.1',title:'Kingsmarch and more',lines:['KINGSMARCH: a whole new mainland. Walk east over the bridge from the island. Millbrook (farming), Saltgate Harbour and Highcrown, the walled capital with a castle, markets and shops you can walk into.','New training: birch, elm and redwood trees, coal and aurelite ore, tuna and sharks, pheasants and elk, crops to pick, and aurelite gear.','New monsters, three new bosses and rare treasure drops. Friendly animals only fight back if you attack them.','Safe zones and multi-combat areas are now clearly marked in the world and on the map. The map shows shops, smithies, mines, dungeons, bosses and more with icons and a legend.','The Skills tab has icons and a guide for every skill.','Gathering is no longer interrupted by monsters hitting you. Weaker monsters ignore you at high level.','Hunting is easier: game runs slower and you can catch it from two tiles.']},{v:'2026-10-14.2',title:'Soulrend update',lines:['Gems and pearls now have icons in your bag.','Axes: rusty, copper, iron and steel up to ember. Buy them at the Armoury or forge them at the anvil. Better axes chop faster and more often.','Settings tab in your Bag with controls, sound, graphics and log out.','Smoother XP bars.','You are logged out after 30 minutes without activity.','Close buttons in shops stay in view while you scroll.']}];
 function showNews(){const last=localStorage.getItem('soulrend-seen');if(last===BUILD)return;try{localStorage.setItem('soulrend-seen',BUILD)}catch(e){}
   if(!last&&!NET.session)return;const c=CHANGES[0];const d=document.createElement('div');d.id='news';d.innerHTML='<div class="in"><h2>'+esc(c.title)+'</h2><ul>'+c.lines.map(l=>'<li>'+esc(l)+'</li>').join('')+'</ul><button>Got it</button></div>';d.querySelector('button').onclick=()=>d.remove();$('wrap').appendChild(d)}
 window.__updateReady=()=>{if($('upd'))return;const b=document.createElement('button');b.id='upd';b.textContent='A new version is ready. Tap to update';b.onclick=()=>{NET.saveNow();save();setTimeout(()=>location.reload(),350)};$('wrap').appendChild(b);chatAdd({r:'sys',text:'A new version is ready. Tap the green bar at the top to update.'})};
