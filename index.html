@@ -193,6 +193,18 @@ body{background:#14110c}
 #craft .top{position:sticky;top:-14px;z-index:3;background:rgba(20,24,30,.99);margin:-14px -16px 6px;padding:14px 16px 8px}
 #panel .in>.row:first-child{position:sticky;top:-14px;z-index:3;background:#0e1316;margin:-14px -16px 6px;padding:14px 16px 8px}
 #panel .eq{grid-template-columns:repeat(6,1fr)!important}
+#panel .skgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#panel .skc{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 8px;min-height:96px;border-radius:12px;border:1px solid color-mix(in srgb,var(--c) 45%,#000);background:linear-gradient(color-mix(in srgb,var(--c) 14%,#14110d),#14110d);color:var(--ink)}
+#panel .skc .ski{width:34px;height:34px}
+#panel .skc .skn{font:700 12px var(--font-b);color:var(--ink2)}
+#panel .skc .skl{font:700 20px var(--font-d);line-height:1;color:#f4efe0}
+#panel .skc .bar{width:84%;height:5px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:2px}#panel .skc .bar i{display:block;height:100%}
+#panel .skhead{display:flex;gap:12px;align-items:center;padding:10px;border-radius:12px;background:linear-gradient(color-mix(in srgb,var(--c) 16%,#14110d),#14110d);border:1px solid color-mix(in srgb,var(--c) 45%,#000)}
+#panel .skbig{width:52px;height:52px;flex:none}#panel .skhead>div{flex:1}#panel .skhead .bar{height:7px;border-radius:4px;background:rgba(255,255,255,.14);overflow:hidden;margin:5px 0}#panel .skhead .bar i{display:block;height:100%}
+#panel .gd{display:flex;flex-direction:column;gap:4px}
+#panel .gr{display:flex;gap:10px;align-items:flex-start;padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.05)}
+#panel .gr.lock{opacity:.5}#panel .gr .gl{flex:none;width:34px;height:26px;border-radius:7px;background:#2a2218;border:1px solid #6a5a3a;text-align:center;font:700 14px/26px var(--font-b);color:#ffe58a}
+#panel .gr .gt b{font-size:15px}#panel .gr .gx{color:#8fe08f;font-size:13px;margin-left:6px}#panel .gr small{display:block;color:var(--ink2);font-size:12.5px;line-height:1.3}
 #tools{display:flex;gap:8px;margin-top:8px}
 #tools button{min-height:34px;padding:0 14px;border-radius:17px;border:1px solid var(--line);background:rgba(0,0,0,.55);color:var(--ink);font:700 14px var(--font-b)}
 #tools button.dot::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#e8a94d;margin-left:6px}
@@ -354,8 +366,9 @@ const TIERS=[
   {id:'iron',n:'Iron',col:'#b4bdc6',pc:'#b9c1c8',acc:14,dmg:4,body:18,helm:6,shield:8,req:10,bar:'iron_bar',sm:8,pick:null},
   {id:'steel',n:'Steel',col:'#d4dbe6',pc:'#d4dbe6',acc:24,dmg:7,body:28,helm:10,shield:13,req:20,bar:'steel_bar',sm:18,pick:{speed:2,bonus:.3,req:18}},
   {id:'mythril',n:'Mythril',col:'#7fd0e8',pc:'#8fe0f4',acc:36,dmg:11,body:40,helm:15,shield:19,req:30,bar:'mythril_bar',sm:28,pick:{speed:1,bonus:.4,req:28}},
-  {id:'ember',n:'Ember',col:'#e0602a',pc:'#f08a4a',acc:48,dmg:16,body:52,helm:21,shield:26,req:40,bar:'ember_bar',sm:36,pick:{speed:1,bonus:.5,req:36}}];
-Object.assign(ITEMS,{steel_bar:{n:'Steel bar'},mythril_ore:{n:'Mythril ore',note:'Pale blue veins in Mistfen (Mining 15). Bog lurkers drop it too.'},mythril_bar:{n:'Mythril bar'},ember_bar:{n:'Ember bar'}});
+  {id:'ember',n:'Ember',col:'#e0602a',pc:'#f08a4a',acc:48,dmg:16,body:52,helm:21,shield:26,req:40,bar:'ember_bar',sm:36,pick:{speed:1,bonus:.5,req:36}},
+  {id:'aurelite',n:'Aurelite',col:'#f0d890',pc:'#f2dc98',acc:60,dmg:21,body:62,helm:25,shield:31,req:50,bar:'aurelite_bar',sm:48,pick:{speed:1,bonus:.55,req:48}}];
+Object.assign(ITEMS,{steel_bar:{n:'Steel bar'},mythril_ore:{n:'Mythril ore',note:'Pale blue veins in Mistfen (Mining 15). Bog lurkers drop it too.'},mythril_bar:{n:'Mythril bar'},ember_bar:{n:'Ember bar'},aurelite_bar:{n:'Aurelite bar'}});
 RECIPES.furnace.push({id:'steel_bar',kind:'smelt',lv:15,xp:34,t:2,in:{iron_bar:1,sigil_ore:1}},{id:'mythril_bar',kind:'smelt',lv:25,xp:60,t:3,in:{mythril_ore:2}});
 for(const[ti,t]of TIERS.entries()){
   const defs=[
@@ -386,8 +399,8 @@ RECIPES.bench.push(
  {id:'arcane_hat',kind:'craft',skill:'crafting',lv:25,xp:120,t:5,in:{arcane_cloth:3,ectoplasm:2}},
  {id:'void_tome',kind:'craft',skill:'crafting',lv:30,xp:240,t:6,in:{arcane_cloth:4,sigil_ore:3}},
  {id:'veyra_staff',kind:'craft',skill:'crafting',lv:30,xp:400,t:8,in:{veyra_crystal:1,storm_staff:1,void_rune:3}});
-const TF={copper:1,iron:1.3,steel:1.8,mythril:3,ember:4.4},GEARVAL=it=>Math.round(((it.acc||0)+(it.dmg||0)*5+(it.def||0)*4+(it.speed?(5-it.speed)*10:0))*1.6*(TF[it.tier]||1)+20);
-for(const id of Object.keys(ITEMS)){const it=ITEMS[id];if(it.slot&&it.tier&&['copper','iron','steel','mythril','ember'].includes(it.tier)&&SELL[id]===undefined)SELL[id]=Math.round(GEARVAL(it)*.35)}
+const TF={copper:1,iron:1.3,steel:1.8,mythril:3,ember:4.4,aurelite:6},GEARVAL=it=>Math.round(((it.acc||0)+(it.dmg||0)*5+(it.def||0)*4+(it.speed?(5-it.speed)*10:0))*1.6*(TF[it.tier]||1)+20);
+for(const id of Object.keys(ITEMS)){const it=ITEMS[id];if(it.slot&&it.tier&&['copper','iron','steel','mythril','ember','aurelite'].includes(it.tier)&&SELL[id]===undefined)SELL[id]=Math.round(GEARVAL(it)*.35)}
 const BUY=[['cooked_meat',9],['cooked_fish',12],['potion',32],['arrows',2],['spark_rune',5],['copper_bar',18]];
 const BUILDS={
   bed:{n:'Bed',lv:1,xp:40,t:4,in:{logs:6,hide:2},note:'Rest here to restore all your health.'},
@@ -878,11 +891,232 @@ Object.assign(MOBS,{
  deer:{n:'Deer',art:'fox',hp:12,prey:true,lv:24,xp:70,meat:4,fear:5,col:'#a8743a',sz:.9,hide:2},
  ashhare:{n:'Ash hare',art:'rabbit',hp:8,prey:true,lv:36,xp:110,meat:3,fear:5,col:'#6a4a3a',sz:.44,hide:2},
  lavagecko:{n:'Lava gecko',art:'rat',hp:14,prey:true,lv:46,xp:150,meat:4,fear:5,col:'#e0502a',sz:.6,hide:3}});
-const WORLD=genWorld(),DUN=genDungeon(),CRYPT=genCrypts(),HOME=genHome(),MARSH=genMarsh(),EMBER=genRegion('ember'),VOID=genRegion('void');
-const ALLM=[WORLD,DUN,CRYPT,HOME,MARSH,EMBER,VOID],OUTM=[WORLD,MARSH,EMBER,VOID];
+
+/* =============== Kingsmarch: the mainland (data) =============== */
+Object.assign(ITEMS,{
+ coal_ore:{n:'Coal',note:'Black seams in the Kingsmarch hills (Mining 30). Needed for aurelite bars.'},aurelite_ore:{n:'Aurelite ore',note:'Pale gold veins deep in the Kingsmarch hills (Mining 52).'},
+ birch_logs:{n:'Birch logs'},elm_logs:{n:'Elm logs'},redwood_logs:{n:'Redwood logs'},
+ raw_tuna:{n:'Raw tuna'},raw_shark:{n:'Raw shark'},cooked_tuna:{n:'Cooked tuna',note:'heals 46'},cooked_shark:{n:'Cooked shark',note:'heals 64'},
+ potato:{n:'Potato',note:'Cook it at a fire for a baked potato.'},cabbage:{n:'Cabbage',note:'Heals a little, raw.'},wheat:{n:'Wheat'},baked_potato:{n:'Baked potato',note:'heals 16'},
+ wool:{n:'Wool'},feather:{n:'Feather'},egg:{n:'Egg'},crab_claw:{n:'Crab claw'},bear_claw:{n:'Bear claw'},briar_thorn:{n:'Briar thorn'},
+ briar_heart:{n:'Briar heart',note:'Still warm and green. From the Briarmother.'},bandit_seal:{n:'Bandit seal',note:'The signet of Garrick, the Bandit King.'},
+ ancient_coin:{n:'Ancient coin',note:'Minted by a kingdom that no longer exists.'},jade_figurine:{n:'Jade figurine'},silver_idol:{n:'Silver idol'},gold_idol:{n:'Gold idol'},royal_signet:{n:'Royal signet',note:'Heavy gold, stamped with a crown.'},
+ coal_dummy:{n:'x'},
+ birch_bow:{n:'Birch bow',slot:'weapon',ranged:true,acc:26,dmg:9,req:24,spd:5,col:'#b8c88a',tier:'bow',note:'needs arrows, range 5'},
+ elm_bow:{n:'Elm bow',slot:'weapon',ranged:true,acc:46,dmg:17,req:44,spd:5,col:'#6a9a4a',tier:'bow',note:'needs arrows, range 5'},
+ redwood_bow:{n:'Redwood bow',slot:'weapon',ranged:true,acc:62,dmg:23,req:64,spd:5,col:'#9a4a2a',tier:'bow',note:'needs arrows, range 5'},
+ briar_hood:{n:'Briar hood',slot:'helm',def:18,req:45,rq:'ranged',racc:15,rdmg:4,col:'#4a7a3a',tier:'briar'},briar_vest:{n:'Briar vest',slot:'armour',def:38,req:45,rq:'ranged',racc:21,rdmg:5,col:'#4a7a3a',tier:'briar'},briar_buckler:{n:'Briar buckler',slot:'shield',def:13,req:45,rq:'ranged',racc:11,rdmg:3,col:'#4a7a3a',tier:'briar'},
+ briar_bow:{n:'Briar bow',slot:'weapon',ranged:true,acc:58,dmg:21,req:45,spd:5,col:'#4a7a3a',tier:'bow',note:'needs arrows, range 5. Hits for extra from the Briarmother.'},
+ tide_hat:{n:'Tidecaller hat',slot:'helm',def:18,req:45,rq:'magic',macc:16,mdmg:4,col:'#2a8a9a',tier:'tide'},tide_robe:{n:'Tidecaller robe',slot:'armour',def:36,req:45,rq:'magic',macc:24,mdmg:7,col:'#2a8a9a',tier:'tide'},
+ tide_staff:{n:'Tidecaller staff',slot:'weapon',magic:true,acc:56,dmg:21,req:45,spd:5,col:'#5ae0d0',tier:'staff',note:'casts spells, range 5'},
+ reef_trident:{n:'Reef trident',slot:'weapon',acc:60,dmg:22,req:45,spd:5,wk:'mace',col:'#5ae0d0',tier:'reef',note:'from the Reef Queen'},
+ garrick_blade:{n:"Garrick's blade",slot:'weapon',acc:64,dmg:23,req:46,wk:'sword',col:'#c8c0b0',tier:'garrick',note:'from the Bandit King'},
+ pet_briar:{n:'Pet: Briar sprout',pet:true,note:'a tiny follower'},pet_garrick:{n:"Pet: Garrick's hound",pet:true,note:'a tiny follower'},pet_reef:{n:'Pet: Reef crab',pet:true,note:'a tiny follower'},
+ birch_table:{n:'Birch table'},elm_dresser:{n:'Elm dresser'},redwood_throne:{n:'Redwood throne'}});
+delete ITEMS.coal_dummy;
+Object.assign(ITEMS.birch_table,{note:'Furniture. Trains Construction, sells well.',furn:'table',col:'#b8c88a'});Object.assign(ITEMS.elm_dresser,{note:'Furniture. Trains Construction, sells well.',furn:'shelf',col:'#6a9a4a'});Object.assign(ITEMS.redwood_throne,{note:'Furniture. Trains Construction, sells well.',furn:'throne',col:'#9a4a2a'});
+Object.assign(SELL,{coal_ore:24,aurelite_ore:90,aurelite_bar:240,birch_logs:16,elm_logs:48,redwood_logs:130,raw_tuna:36,raw_shark:70,cooked_tuna:56,cooked_shark:110,potato:3,cabbage:3,wheat:4,baked_potato:8,wool:6,feather:2,egg:3,crab_claw:14,bear_claw:36,briar_thorn:12,briar_heart:600,bandit_seal:400,ancient_coin:400,jade_figurine:800,silver_idol:1400,gold_idol:3000,royal_signet:6000,
+ birch_bow:300,elm_bow:1100,redwood_bow:2200,briar_hood:420,briar_vest:900,briar_buckler:480,briar_bow:1800,tide_hat:420,tide_robe:900,tide_staff:1700,reef_trident:1800,garrick_blade:1900,birch_table:140,elm_dresser:520,redwood_throne:1200});
+RECIPES.furnace.push({id:'aurelite_bar',kind:'smelt',lv:50,xp:120,t:4,in:{aurelite_ore:1,coal_ore:2}});
+RECIPES.bench.push({id:'birch_bow',kind:'craft',skill:'woodcutting',lv:24,xp:200,t:5,in:{birch_logs:5}},{id:'elm_bow',kind:'craft',skill:'woodcutting',lv:44,xp:420,t:6,in:{elm_logs:5}},{id:'redwood_bow',kind:'craft',skill:'woodcutting',lv:64,xp:760,t:7,in:{redwood_logs:5}},
+ {id:'birch_table',kind:'craft',skill:'construction',lv:26,xp:230,t:4,in:{birch_logs:4}},{id:'elm_dresser',kind:'craft',skill:'construction',lv:46,xp:620,t:5,in:{elm_logs:6}},{id:'redwood_throne',kind:'craft',skill:'construction',lv:68,xp:1900,t:6,in:{redwood_logs:8}});
+Object.assign(FISHSP,{tuna:{n:'Tuna',spot:'Harbour deep water (tuna)',lv:45,xp:100,item:'raw_tuna',col:0xa8c8ff,em:0x4a78d0},shark:{n:'Shark',spot:'Open sea (shark)',lv:62,xp:170,item:'raw_shark',col:0xb8d0e0,em:0x4a6a8a}});
+COOK.unshift(['raw_shark','cooked_shark',62,170],['raw_tuna','cooked_tuna',45,100]);COOK.push(['potato','baked_potato',1,14]);
+TREESPECS.realm=[{n:'Birch',lv:20,xp:48,item:'birch_logs',n0:[3,5],dep:60,col:0xcfe0a0},{n:'Elm',lv:42,xp:102,item:'elm_logs',n0:[3,6],dep:90,col:0x3f7a3a},{n:'Redwood',lv:68,xp:230,item:'redwood_logs',n0:[3,6],dep:130,col:0x9a4a2a}];
+const RARES=[['ancient_coin',170,12],['jade_figurine',340,24],['silver_idol',560,32],['gold_idol',950,42],['royal_signet',1900,44]];
+Object.assign(MOBS,{
+ cow:{n:'Cow',art:'wolf',hp:14,acc:10,def:5,max:2,spd:5,coins:[0,3],drops:[['raw_meat',1],['hide',2],['egg',9]],aggro:0,leash:8,col:'#e8e2d4',sz:.9,lv:2,respawn:30},
+ sheep:{n:'Sheep',art:'wolf',hp:12,acc:10,def:5,max:2,spd:5,coins:[0,3],drops:[['raw_meat',1],['wool',1]],aggro:0,leash:8,col:'#f4f0e6',sz:.72,lv:3,respawn:30},
+ chicken:{n:'Chicken',art:'rabbit',hp:5,acc:6,def:2,max:1,spd:5,coins:[0,2],drops:[['feather',1],['egg',2],['raw_meat',3]],aggro:0,leash:6,col:'#f4f0e6',sz:.3,lv:1,respawn:24},
+ boar:{n:'Wild boar',art:'wolf',hp:34,acc:28,def:18,max:5,spd:4,coins:[2,8],drops:[['raw_meat',1],['hide',2]],aggro:0,leash:10,col:'#6a4a3a',sz:.78,lv:14,tame:0},
+ bull:{n:'Highland bull',art:'wolf',hp:64,acc:40,def:30,max:9,spd:5,coins:[6,16],drops:[['raw_meat',1],['hide',1]],aggro:0,leash:10,col:'#4a3a32',sz:1.1,lv:22},
+ bear:{n:'Brown bear',art:'wolf',hp:96,acc:50,def:38,max:12,spd:5,coins:[10,26],drops:[['hide',1],['raw_meat',1],['bear_claw',3]],aggro:0,leash:12,col:'#5a4030',sz:1.25,lv:28},
+ direwolf:{n:'Dire wolf',art:'wolf',hp:88,acc:56,def:44,max:11,spd:4,coins:[8,22],drops:[['wolf_pelt',1],['raw_meat',1],['potion',14]],uniques:[['aurelite_dagger',300]],aggro:6,leash:15,col:'#4a4e5a',sz:.98,lv:34},
+ thornling:{n:'Thornling',art:'thornling',hp:72,acc:60,def:46,max:11,spd:4,coins:[12,32],drops:[['briar_thorn',2],['herb',4],['potion',16]],uniques:[['briar_hood',180],['briar_buckler',200]],aggro:5,leash:13,sz:.95,lv:40},
+ highwayman:{n:'Highwayman',art:'bandit',hp:80,acc:54,def:40,max:10,spd:4,coins:[20,52],drops:[['steel_bar',12],['potion',9],['coal_ore',6]],uniques:[['aurelite_sword',260],['garrick_blade',700],['aurelite_helm',320]],aggro:6,leash:14,sz:1,lv:32},
+ cutthroat:{n:'Cutthroat',art:'rook',hp:92,acc:60,def:44,max:12,spd:4,coins:[28,64],drops:[['gold_ore',12],['potion',9],['coal_ore',5]],uniques:[['aurelite_dagger',240],['aurelite_shield',320],['garrick_blade',700]],aggro:6,leash:14,sz:1,lv:38},
+ hillogre:{n:'Hill ogre',art:'ogre',hp:170,acc:62,def:72,max:16,spd:5,coins:[30,80],drops:[['coal_ore',3],['aurelite_ore',7],['gold_ore',9],['potion',8]],uniques:[['aurelite_helm',130],['aurelite_shield',140],['aurelite_armour',190],['aurelite_mace',210]],aggro:4,leash:12,sz:1.55,lv:44},
+ sandcrab:{n:'Sand crab',art:'rat',hp:40,acc:34,def:40,max:5,spd:4,coins:[4,12],drops:[['crab_claw',2],['raw_tuna',12]],uniques:[['pearl',60]],aggro:4,leash:9,col:'#e0804a',sz:.74,lv:20},
+ sailor:{n:'Drowned sailor',art:'sailor',hp:78,acc:56,def:42,max:10,spd:4,coins:[16,40],drops:[['pearl',40],['raw_shark',16],['potion',9]],uniques:[['gold_ring',90],['tide_hat',300]],aggro:5,leash:12,sz:1,lv:36},
+ garrick:{n:'Garrick, the Bandit King',art:'garrick',hp:1100,acc:76,def:66,max:16,spd:5,heavy:[34,48],heavyEvery:3,boss:true,mech:[{type:'summon',kind:'highwayman',n:3,at:.6},{type:'steal',every:3},{type:'aoe',every:8,delay:3,r:2,dmg:[20,30]}],coins:[600,900],drops:[],loot:{always:[['bandit_seal',1,1],['gold_bar',1,2]],rolls:4,main:[['coal_ore',4,8,3],['steel_bar',2,5,3],['potion',2,5,3],['aurelite_ore',1,3,2],['cooked_tuna',4,8,2]]},uniques:[['garrick_blade',12],['aurelite_helm',14],['aurelite_armour',16],['aurelite_sword',16],['royal_signet',30]],sz:1.25,respawn:120,lv:48},
+ briarmother:{n:'The Briarmother',art:'briarmother',hp:1250,acc:78,def:70,max:16,spd:5,heavy:[36,50],heavyEvery:3,boss:true,mech:[{type:'summon',kind:'thornling',n:3,at:.65},{type:'drain',every:3},{type:'aoe',every:7,delay:3,r:2.2,dmg:[22,32]},{type:'orb',every:6,range:6,dmg:[12,18]}],coins:[500,800],drops:[],loot:{always:[['briar_heart',1,1],['elm_logs',6,12]],rolls:4,main:[['herb',5,10,3],['potion',2,5,3],['birch_logs',8,16,2],['redwood_logs',2,5,2]]},uniques:[['briar_bow',12],['briar_hood',10],['briar_vest',12],['briar_buckler',12],['gold_idol',40]],sz:1.6,respawn:120,lv:54},
+ reefqueen:{n:'The Reef Queen',art:'reefqueen',hp:1400,acc:82,def:74,max:17,spd:5,heavy:[38,54],heavyEvery:3,boss:true,mech:[{type:'summon',kind:'sandcrab',n:3,at:.6},{type:'orb',every:5,range:6,dmg:[12,20]},{type:'aoe',every:7,delay:3,r:2.2,dmg:[24,36]}],coins:[600,950],drops:[],loot:{always:[['pearl',2,4],['raw_shark',2,4]],rolls:4,main:[['raw_tuna',4,8,3],['potion',3,6,3],['gold_ore',2,5,2],['crab_claw',4,8,2]]},uniques:[['tide_staff',12],['tide_hat',10],['tide_robe',12],['reef_trident',12],['silver_idol',30]],sz:1.3,respawn:130,lv:58},
+ pheasant:{n:'Pheasant',art:'rabbit',hp:4,prey:true,lv:18,xp:44,meat:2,fear:4,col:'#a8743a',sz:.38,hide:0},
+ elk:{n:'Elk',art:'fox',hp:16,prey:true,lv:50,xp:130,meat:5,fear:5,col:'#8a6a4a',sz:1.05,hide:3}});
+SELL.ancient_coin=400;
+/* ---- shops spread over Kingsmarch ---- */
+{const byTier=(t,kinds)=>kinds.map(k=>t+'_'+k).filter(id=>ITEMS[id]),meleeAll=['copper','iron','steel','mythril','ember','aurelite'].flatMap(t=>byTier(t,['dagger','sword','mace','helm','shield','armour'])),
+  price=id=>GEARVAL(ITEMS[id]),mk=(ids,fixed)=>ids.filter(id=>ITEMS[id]).map(id=>[id,fixed&&fixed[id]||0]);
+ Object.assign(SHOPS,{
+  r_armoury:{n:'Royal Armoury',sells:id=>isGear(id)&&!ITEMS[id].ranged&&!ITEMS[id].magic||/_bar$/.test(id),mul:1.15,blurb:'Steel, mythril, ember and aurelite plate for the Crown. I pay well for gear and bars.',buy:mk(meleeAll.filter(id=>!/^(copper|iron)_/.test(id)||/_(sword|armour)$/.test(id)))},
+  r_miners:{n:"Miners' Guild",sells:id=>/_ore$|_bar$|^coal/.test(id)||ITEMS[id]&&ITEMS[id].slot==='pickaxe',mul:1.4,blurb:'Pickaxes, and the best price in the kingdom for ore and bars.',buy:mk(['copper_pickaxe','iron_pickaxe','steel_pickaxe','mythril_pickaxe','ember_pickaxe','aurelite_pickaxe','copper_bar','iron_bar','coal_ore'])},
+  r_lumber:{n:'Millbrook Lumberyard',sells:id=>/(^|_)logs$/.test(id)||ITEMS[id]&&ITEMS[id].slot==='axe',mul:1.4,blurb:'Axes for every woodsman. I buy all logs at a fair price, more than anyone.',buy:mk(['copper_axe','iron_axe','steel_axe','mythril_axe','ember_axe','aurelite_axe'])},
+  r_bowyer:{n:'Wren the Bowyer',sells:id=>ITEMS[id]&&(ITEMS[id].ranged||ITEMS[id].rq==='ranged')||/^arrows$|hide$|pelt$|feather/.test(id),mul:1.15,blurb:'Bows, arrows and leather. Bring me hides and feathers.',buy:mk(['shortbow','longbow','oak_longbow','willow_bow','birch_bow','maple_bow','arrows','leather_armour','hard_leather','marsh_hood','marsh_vest','fenhunter_hood','fenhunter_vest'],{arrows:2})},
+  r_arcane:{n:'Highcrown Arcana',sells:id=>/_rune$|_staff$|_robe$|_hat$|_hood$|^sigil_ore$|^ectoplasm$|^arcane_cloth$/.test(id)||ITEMS[id]&&ITEMS[id].magic,mul:1.15,blurb:'Runes, staves and robes from the royal mages.',buy:mk(['spark_rune','frost_rune','gale_rune','void_rune','ember_rune','apprentice_staff','storm_staff','apprentice_hat','apprentice_robe','veil_hood'],{spark_rune:5,frost_rune:11,gale_rune:18,void_rune:40,ember_rune:30})},
+  r_apoth:{n:'Sister Maren, Apothecary',sells:id=>/^herb$|^potion$|^beast_treat$|^soul_shard$|^void_shard$|^cooked_|^potato$|^cabbage$/.test(id),mul:1.2,blurb:'Herbs, potions and beast treats. I buy herbs and shards too.',buy:mk(['potion','herb','beast_treat','cooked_meat','cooked_trout','cooked_salmon'],{potion:28,herb:6,beast_treat:6})},
+  r_jewel:{n:"Orsino's Jewellery",sells:id=>/^(sapphire|emerald|ruby|diamond|pearl)$|_ring$|_amulet$|_idol$|^ancient_coin$|^royal_signet$|^jade_figurine$|^gold_bar$|^silver_bar$/.test(id),mul:1.35,blurb:'Gems, rings and old treasure. Nobody pays more.',buy:mk(['silver_ring','gold_ring','gold_amulet'])},
+  r_bazaar:{n:'Grand Bazaar',sells:()=>true,blurb:'Everything under one roof. I buy anything and sell the basics.',buy:[['cooked_meat',9],['cooked_fish',12],['potion',30],['arrows',2],['logs',8],['copper_bar',18],['iron_bar',45],['herb',6],['raw_meat',5]]},
+  r_inn:{n:'The Gilded Stag',sells:id=>/^cooked_|^raw_/.test(id),mul:1.1,blurb:'Hot food and a bed. Rest is free.',buy:[['cooked_meat',8],['cooked_fish',11],['cooked_trout',17],['cooked_salmon',22],['cooked_lobster',32],['potion',32]]},
+  r_coop:{n:'Millbrook Farm Co-op',sells:id=>/^(potato|cabbage|wheat|egg|wool|feather|raw_meat|hide|cooked_meat|baked_potato)$/.test(id),mul:1.35,blurb:'Fresh from the fields. I buy crops, wool, eggs and meat above the usual.',buy:[['cooked_meat',8],['baked_potato',10],['cabbage',4],['potato',4],['herb',6]]},
+  r_fish:{n:'Saltgate Fishmonger',sells:id=>/^(raw|cooked)_(fish|trout|salmon|lobster|swordfish|tuna|shark|eel|voidfin)$/.test(id)||/^pearl$/.test(id),mul:1.5,blurb:'Fish pays one and a half times here. Bring anything from the sea.',buy:[['cooked_fish',11],['cooked_trout',17],['cooked_salmon',22],['cooked_tuna',46]]},
+  r_chandler:{n:"Saltgate Outfitters",sells:id=>/hide$|pelt$|^wool$|_logs$|^rope$|^pearl$/.test(id)||ITEMS[id]&&ITEMS[id].rq==='ranged',mul:1.2,blurb:'Sea-faring kit and leather. I buy hides, wool and timber.',buy:mk(['leather_armour','hard_leather','shortbow','arrows','potion','cooked_fish'],{arrows:2,potion:30,cooked_fish:12})},
+  r_stall1:{n:'Greengrocer Stall',sells:id=>/^(potato|cabbage|wheat|herb)$/.test(id),mul:1.2,blurb:'Vegetables, fresh this morning.',buy:[['potato',4],['cabbage',4],['baked_potato',10],['herb',6]]},
+  r_stall2:{n:'Curios Stall',sells:id=>SELL[id]>=300&&!isGear(id),mul:1.25,blurb:'I collect curiosities. Anything valuable.',buy:[['ancient_coin',0],['jade_figurine',0]].map(([id])=>[id,Math.round(SELL[id]*2.4)])}});
+ for(const sh of Object.values(SHOPS))if(sh.buy)for(const b of sh.buy)if(!b[1]&&ITEMS[b[0]]&&SELL[b[0]]!==undefined)b[1]=Math.max(2,Math.round(SELL[b[0]]*3));
+}
+NQ.push(
+ {id:'harvest',name:'Harvest Help',role:'farmelder',lines:['Elder Wynn of Millbrook. The harvest is in, and the cooks in Highcrown are begging for potatoes.','Bring me fifteen potatoes from the fields and I will see you rewarded.'],need:{item:'potato',n:15},remind:'Fifteen potatoes. Pick them in the fields around the village.',done:['Fine potatoes! The cooks will be happy.'],reward:{coins:600,xp:['alchemy',1100],items:[['baked_potato',5]]}},
+ {id:'supper',name:'Saltgate Supper',role:'harbourmaster',lines:['Harbour master Delia. The tavern has run out of tuna and the sailors are mutinous.','Bring me six raw tuna from the deep water off the piers (Fishing 45).'],need:{item:'raw_tuna',n:6},remind:'Six raw tuna from the harbour deeps.',done:['Tuna! Take this, and a drink on the house.'],reward:{coins:900,xp:['fishing',1800],items:[['cooked_tuna',4]]}},
+ {id:'banditking',name:'The Bandit King',role:'king',lines:['I am King Aldous. Garrick and his men rob every road in my kingdom.','Take his head. His fort lies south-east, beyond the crossroads. He hits hard and steals coin, so bring food.'],need:{kill:'garrick',n:1},remind:'Garrick holds the ruined fort south-east of the crossroads.',done:['You have the thanks of the Crown, hero. Take this, you have earned it.'],reward:{coins:3000,xp:['combat',9000],items:[['aurelite_sword',1],['royal_signet',1]]}});
+/* =============== Kingsmarch: generator =============== */
+const CROPS={potato:{item:'potato',xp:7,dep:30},cabbage:{item:'cabbage',xp:9,dep:34},wheat:{item:'wheat',xp:5,dep:26}};
+function genRealm(){
+  const W=136,H=108,M=newMap(W,H,'Kingsmarch',false);M.outdoor=true;M.env='realm';M.rec=44;
+  M.pal={0:'#2f6f86',1:'#d6c391',2:'#6aa04a',3:'#4a8a34',4:'#8a8e8c',5:'#b09a6c',6:'#7a5a3a',8:'#a0a2a8',9:'#c9b458'};
+  M.treeSp=TREESPECS.realm;M.treeCols=TREESPECS.realm.map(t=>t.col);
+  const R=mulberry32(4242),ri2=(a,b)=>a+Math.floor(R()*(b-a+1));
+  const YB=52;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x,nx=(x-70)/60,ny=(y-54)/48,d=Math.hypot(nx,ny),n1=fbm(x/12,y/12,91);let land=d+(n1-.5)*.5<.93;
+    const bay=Math.hypot((x-30)/17,(y-95)/12)<1;if(bay)land=false;if(x>=12&&x<=24&&Math.abs(y-YB)<=9)land=true;
+    let t=0;if(land){t=2;const f=fbm(x/6,y/6,95);if(x<66&&y<40)t=f>.38?3:2;else if(f>.64)t=3;if(x>=98&&y<=28){t=fbm(x/7,y/7,93)>.46?4:2}}
+    M.t[i]=t;if(t===0||t===4)M.block[i]=1}
+  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=y*W+x;if(M.t[i]===2||M.t[i]===3){if([[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]].some(([a,b])=>M.t[(y+b)*W+x+a]===0)){M.t[i]=1}}}
+  for(let i=0;i<W*H;i++)if(M.t[i]===3&&hash(i%W,(i/W)|0,9)<.5){const x=i%W,y=(i/W)|0,h=hash(x,y,12);M.tree[i]=(x<44&&y<24)?(h<.35?3:h<.7?2:1):(x<66?(h<.55?1:2):(h<.8?1:2));M.block[i]=1}
+  const clear=(x,y,t)=>{if(x<1||y<1||x>=W-1||y>=H-1)return;const i=y*W+x;M.t[i]=t;M.block[i]=0;M.tree[i]=0;M.wall[i]=0;M.obj[i]=null};
+  const put=(x,y,k,ex)=>{const i=y*W+x;M.obj[i]=Object.assign({k,dep:0},ex||{});M.block[i]=1};
+  const flatten=(fx,fy,r)=>{for(let y=Math.floor(fy-r);y<=fy+r;y++)for(let x=Math.floor(fx-r);x<=fx+r;x++)if(x>=0&&y>=0&&x<W&&y<H&&Math.hypot(x-fx,y-fy)<=r)M.flat[y*W+x]=1};
+  const foot=(x0,y0,w,d,t)=>{for(let y=y0;y<y0+d;y++)for(let x=x0;x<x0+w;x++){clear(x,y,t||2);M.block[y*W+x]=1;M.flat[y*W+x]=1}};
+  const prop=(k,x,y,w,d,o)=>{if(w)foot(x,y,w,d,o&&o.ft);M.props.push(Object.assign({k,x,y,w:w||1,d:d||1},o||{}))};
+  const road=(pts,t,w)=>{w=w||2;for(let k=0;k<pts.length-1;k++){const[ax,ay]=pts[k],[bx,by]=pts[k+1];for(let x=Math.min(ax,bx);x<=Math.max(ax,bx);x++)for(let q=0;q<w;q++){clear(x,ay+q,t);M.flat[(ay+q)*W+x]=1}for(let y=Math.min(ay,by);y<=Math.max(ay,by);y++)for(let q=0;q<w;q++){clear(bx+q,y,t);M.flat[y*W+bx+q]=1}}};
+  const doors={};M.doors=doors;
+  const building=(kind,x,y,w,d,wall,roof,to,label,mic)=>{prop(kind,x,y,w,d,{wall,roof});const dx=x+Math.floor(w/2),dy=y+d;clear(dx,dy,8);M.flat[dy*W+dx]=1;put(dx,dy,'enter',{to,label,mic:mic||'shop'});doors[to]={x:dx,y:dy}};
+  const house=(x,y,w,d,wall,roof)=>prop('house',x,y,w,d,{wall,roof});
+  // ---- bridge from the old island
+  for(let x=1;x<=14;x++)for(let q=-1;q<=1;q++){clear(x,YB+q,5);M.flat[(YB+q)*W+x]=1}
+  for(const x of[3,6,9,12]){prop('lamp',x,YB-2,0,0);prop('lamp',x,YB+2,0,0)}
+  M.spawn={x:15,y:YB};
+  // ---- roads
+  road([[14,YB],[46,YB]],5);road([[46,56],[46,62],[98,62],[98,58]],5);road([[68,62],[68,74],[32,74],[32,78]],5);road([[46,42],[46,28],[48,18]],5);road([[108,62],[108,80]],5);road([[117,40],[120,40],[120,24],[114,18]],5);road([[108,80],[122,92]],5);road([[81,40],[70,40],[70,62]],5);
+  // ---- Millbrook (farming village)
+  {const X0=36,X1=60,Y0=42,Y1=66;for(let y=Y0;y<=Y1;y++)for(let x=X0;x<=X1;x++){if(M.t[y*W+x]!==5)clear(x,y,2)}flatten(48,54,14);
+   road([[36,52],[60,52]],5);road([[46,43],[46,66]],5);
+   house(38,44,3,3,'#d9c8a0','#8a4a3a');building('store',41,44,4,3,'#d0c4a0','#7a5a3a','i_coop','Farm Co-op');building('hall',49,44,4,3,'#c9b48c','#5a6a3a','i_lumber','Lumberyard','shop');house(55,44,3,3,'#d9c8a0','#8a4a3a');
+   house(38,56,3,3,'#d9c8a0','#6a4a3a');house(42,56,3,3,'#c9b48c','#8a4a3a');prop('windmill',54,57,2,2);prop('hay',50,58,1,1);prop('hay',51,59,1,1);prop('well',48,49,1,1);prop('banner',44,50,1,1,{col:'#5a7a3a'});prop('sign',34,51,1,1);
+   for(const[lx,ly]of[[40,54],[52,54],[46,48],[46,60]])prop('lamp',lx,ly,0,0);
+   // fields east of the village
+   for(const[fx,fy,ct]of[[62,43,'potato'],[62,50,'cabbage'],[62,57,'wheat']]){for(let y=fy;y<fy+5;y++)for(let x=fx;x<fx+10;x++){clear(x,y,y%2?6:9);M.flat[y*W+x]=1}for(let y=fy;y<fy+5;y+=2)for(let x=fx+1;x<fx+9;x++)put(x,y,'crop',{ct})}
+   road([[60,52],[62,52]],5);
+   M.npcs.push({x:47,y:50,name:'Elder Wynn',role:'farmelder',pal:'farmer',lines:['The harvest was good this year.'],dir:'down',trail:[[47,50]]},{x:44,y:48,name:'Farmhand Tilda',role:'citizen',pal:'farmer',lines:['Cows and sheep graze west of here. Wolves keep to the forest, thank goodness.','Potatoes, cabbage and wheat grow in the fields east of the village. Pick them for coins and food.'],dir:'down',trail:[[44,48]]},{x:52,y:54,name:'Gus',role:'citizen',pal:'fisher',lines:['The Lumberyard pays better than any, for logs.'],dir:'down',trail:[[52,54]]},{x:40,y:51,name:'Miller Bram',role:'citizen',pal:'shop',lines:['Wheat to flour to bread. Pity the cooks are all in Highcrown.'],dir:'down',trail:[[40,51]]});
+   M.npcs.push({x:43,y:48,name:'Hettie',role:'shopkeeper',pal:'farmer',shop:'r_coop',greet:'Millbrook Co-op. Fresh crops, eggs and wool. I pay more for them than the city does.',dir:'down',trail:[[43,48]],mic:'shop'},{x:51,y:48,name:'Lumberjack Orm',role:'shopkeeper',pal:'fisher',shop:'r_lumber',greet:'Need an axe? Bring me logs too, I pay well.',dir:'down',trail:[[51,48]],mic:'shop'})}
+  // ---- Saltgate Harbour
+  {const X0=20,X1=46,Y0=70,Y1=85;for(let y=Y0;y<=Y1;y++)for(let x=X0;x<=X1;x++){if(M.t[y*W+x]!==0&&M.t[y*W+x]!==5)clear(x,y,2)}flatten(33,77,12);
+   road([[22,78],[44,78]],5);road([[32,74],[32,78]],5);for(const px of[22,28,36]){for(let y=79;y<=92;y++)for(let q=0;q<3;q++){clear(px+q,y,5);M.flat[y*W+px+q]=1}}
+   building('store',24,72,4,3,'#d0c4a0','#3f6a7a','i_fishmon','Fishmonger','fish');building('store',36,72,4,3,'#c9b48c','#6a4a3a','i_chandler','Outfitters','shop');building('hall',41,71,5,4,'#c9b48c','#7a3b33','i_tavern','The Salty Gull','mug');house(20,72,3,3,'#b8b8a8','#4a5a6a');
+   for(const[cx,cy,k]of[[22,80,'crate'],[23,80,'barrel'],[26,81,'crate'],[40,80,'barrel'],[41,80,'crate'],[43,81,'barrel']])prop(k,cx,cy,1,1);
+   for(const[lx,ly]of[[26,77],[38,77],[32,80],[30,84]])prop('lamp',lx,ly,0,0);prop('banner',34,76,1,1,{col:'#2f6a7a'});prop('sign',31,76,1,1);
+   prop('ship',16,90,0,0,{col:'#7a4a2a'});prop('ship',41,89,0,0,{col:'#4a3a2a'});
+   const sp=[[31,86,'tuna'],[27,89,'tuna'],[25,86,'swordfish'],[35,88,'lobster'],[21,88,'lobster'],[39,90,'shark'],[31,91,'shark'],[27,91,'shark']];for(const[fx,fy,sk]of sp){const i=fy*W+fx;if(M.t[i]===0&&!M.obj[i]){M.obj[i]={k:'fish',dep:0,sp:sk};M.block[i]=1}}
+   M.npcs.push({x:32,y:76,name:'Harbour master Delia',role:'harbourmaster',pal:'fisher',lines:['Mind the tides, and the gulls.'],dir:'down',trail:[[32,76]]},{x:34,y:80,name:'Old Salt',role:'citizen',pal:'fisher',lines:['Tuna swim by the piers. Sharks run deeper, past the south pier. Bring a good rod arm and Fishing 62.'],dir:'down',trail:[[34,80]]},{x:26,y:76,name:'Fishmonger Nell',role:'shopkeeper',pal:'fisher',shop:'r_fish',greet:'Saltgate Fishmonger. One and a half times for fish.',dir:'down',trail:[[26,76]],mic:'fish'},{x:38,y:76,name:'Captain Brandt',role:'shopkeeper',pal:'guard',shop:'r_chandler',greet:'Outfitters for sailors. Hides, wool, timber, leather.',dir:'down',trail:[[38,76]],mic:'shop'})}
+  // ---- Highcrown (capital)
+  {const X0=82,X1=116,Y0=22,Y1=58;for(let y=Y0;y<=Y1;y++)for(let x=X0;x<=X1;x++)clear(x,y,8);flatten(99,40,24);
+   const wl=(x,y,h)=>{const i=y*W+x;M.t[i]=8;M.tree[i]=0;M.obj[i]=null;M.wall[i]=h;M.block[i]=1};
+   for(let x=X0;x<=X1;x++){wl(x,Y0,1);if(!(x===98||x===99))wl(x,Y1,1)}for(let y=Y0;y<=Y1;y++){if(!(y===40||y===41)){wl(X0,y,1)}if(!(y===40||y===41))wl(X1,y,1)}
+   for(const[qx,qy]of[[X0,Y0],[X1,Y0],[X0,Y1],[X1,Y1],[97,Y1],[100,Y1],[X0,39],[X0,42],[X1,39],[X1,42]])wl(qx,qy,2);
+   for(let y=33;y<=57;y++)for(const x of[98,99])clear(x,y,8);for(let x=83;x<=115;x++)for(const y of[40,41])clear(x,y,8);
+   for(let y=46;y<=56;y++)for(let x=92;x<=105;x++)if(x<98||x>99)if(hash(x,y,2)<.18)clear(x,y,2);
+   prop('castle',90,24,18,8,{wall:'#bdb8a8',roof:'#5a4a7a',ft:8});clear(98,32,8);put(98,32,'enter',{to:'i_castle',label:'Crownhold Castle',mic:'castle'});doors.i_castle={x:98,y:32};
+   prop('fountain',99,44,1,1);
+   for(const[sx,sy,c]of[[92,39,0],[95,39,1],[102,39,0],[105,39,0],[92,46,0],[95,46,0],[102,46,1],[105,46,0]])prop('stall',sx,sy,2,1);
+   building('hall',84,34,5,4,'#bdb8a4','#4a5a66','i_armoury','Royal Armoury','anvil');building('store',84,43,4,3,'#d0c4a0','#4a6a4a','i_bowyer','Bowyer','shop');
+   building('arcane',111,34,4,3,'#b6c4b0','#5a3a9a','i_arcane','Highcrown Arcana','magic');building('store',112,43,3,3,'#d6c294','#7a3b33','i_jewel','Jeweller','shop');
+   building('hall',85,50,6,4,'#c9b48c','#7a4a2f','i_bazaar','Grand Bazaar','shop');building('store',92,50,4,3,'#b3b8b0','#4a5a66','i_bank','Crown Bank','chest');
+   building('hall',103,50,5,4,'#c9b48c','#7a3b33','i_tavern2','The Gilded Stag','mug');building('store',110,50,4,3,'#d0c4a0','#3f6a4a','i_apoth','Apothecary','flask');
+   for(const[hx,hy]of[[84,25],[87,25],[109,25],[112,25]])house(hx,hy,3,3,'#c9c0a8','#6a4a5a');prop('hall',109,29,6,4,{wall:'#a8a8a8',roof:'#4a4a5a'});
+   for(const[lx,ly]of[[97,35],[100,35],[97,48],[100,48],[97,55],[100,55],[90,42],[108,42],[90,39],[108,39]])prop('lamp',lx,ly,0,0);
+   for(const[bx,by,c]of[[96,58,'#2f4a8a'],[101,58,'#2f4a8a'],[83,38,'#8a2a33'],[83,43,'#8a2a33'],[115,38,'#8a2a33'],[115,43,'#8a2a33']])prop('banner',bx,by,1,1,{col:c});
+   M.npcs.push({x:98,y:56,name:'Gate guard',role:'cityguard',pal:'guard',lines:['Welcome to Highcrown. Weapons stay sheathed within the walls.','No monster passes the gates. The Crown keeps the peace.'],dir:'down',trail:[[98,56]]},{x:99,y:56,name:'Gate guard',role:'cityguard',pal:'guard',lines:['The castle is open to loyal subjects. King Aldous has work for heroes.'],dir:'down',trail:[[99,56]]},{x:84,y:40,name:'Gate guard',role:'cityguard',pal:'guard',lines:['Halt. Ah, a traveller. Mind the market crowds.'],dir:'right',trail:[[84,40]]},{x:114,y:41,name:'Gate guard',role:'cityguard',pal:'guard',lines:['The road east leads to the hills and the Miners\' Guild.'],dir:'left',trail:[[114,41]]},
+    {x:93,y:41,name:'Greengrocer Pim',role:'shopkeeper',pal:'farmer',shop:'r_stall1',greet:'Fresh from Millbrook! Potatoes, cabbage, herbs.',dir:'down',trail:[[93,41]],mic:'shop'},{x:103,y:47,name:'Curio Vesper',role:'shopkeeper',pal:'archmage',shop:'r_stall2',greet:'Curios and old coins. I pay handsomely.',dir:'down',trail:[[103,47]],mic:'shop'},
+    {x:96,y:44,name:'Townsman Ivo',role:'citizen',pal:'shop',lines:['The Bazaar buys everything, the Jeweller pays most for gems.','Bring ore to the Miners\' Guild in the hills for the best price.'],dir:'down',trail:[[96,44]]},{x:101,y:44,name:'Lady Corvane',role:'citizen',pal:'herbalist',lines:['The Gilded Stag does a fine tuna chowder.'],dir:'down',trail:[[101,44]]})}
+  // ---- Miners' Guild at the quarry (hills)
+  {clear(108,22,2);building('hall',106,21,5,3,'#a8a8a8','#6a5a4a','i_miners','Miners\' Guild','anvil')}
+  // ---- Briarmother's glade
+  {const gx=48,gy=14;for(let dy=-8;dy<=8;dy++)for(let dx=-8;dx<=8;dx++)if(Math.hypot(dx,dy)<=7)clear(gx+dx,gy+dy,2);flatten(gx,gy,8);for(let q=0;q<10;q++){const a=q*Math.PI/5+.3,mx=Math.round(gx+Math.cos(a)*7),my=Math.round(gy+Math.sin(a)*7);if(my>gy+4&&Math.abs(mx-gx)<=3)continue;prop('menhir',mx,my,1,1)}M.glade={x:gx,y:gy}}
+  // ---- Ruined fort
+  {const fx0=100,fy0=72,fx1=116,fy1=88;for(let y=fy0;y<=fy1;y++)for(let x=fx0;x<=fx1;x++)clear(x,y,5);flatten(108,80,10);const wl=(x,y)=>{const i=y*W+x;M.t[i]=8;M.tree[i]=0;M.obj[i]=null;M.wall[i]=1;M.block[i]=1};
+   for(let x=fx0;x<=fx1;x++)for(const y of[fy0,fy1])if(!(x>=107&&x<=109)&&hash(x,y,5)>.22)wl(x,y);for(let y=fy0;y<=fy1;y++)for(const x of[fx0,fx1])if(!(y>=79&&y<=81)&&hash(x,y,6)>.22)wl(x,y);for(const[qx,qy]of[[fx0,fy0],[fx1,fy0],[fx0,fy1],[fx1,fy1]]){const i=qy*W+qx;M.wall[i]=2;M.block[i]=1;M.t[i]=8}
+   prop('tent',103,75,2,2,{col:'#6a4a3a'});prop('tent',112,75,2,2,{col:'#5a3a3a'});prop('campfire',108,84,1,1);prop('crate',103,84,1,1);prop('barrel',104,84,1,1);prop('banner',108,73,1,1,{col:'#5a1a1a'});M.fort={x:108,y:80}}
+  // ---- Reef cove
+  {const cx=122,cy=92;for(let dy=-7;dy<=7;dy++)for(let dx=-8;dx<=8;dx++)if(Math.hypot(dx/1.1,dy)<=6.5&&cx+dx<W-1&&cy+dy<H-1)clear(cx+dx,cy+dy,1);flatten(cx,cy,7);M.cove={x:cx,y:cy};for(let q=0;q<7;q++){const a=q*Math.PI*2/7,mx=Math.round(cx+Math.cos(a)*5),my=Math.round(cy+Math.sin(a)*4);prop('menhir',mx,my,1,1)}}
+  // ---- reach + scatter
+  const reach=new Uint8Array(W*H),q=[(YB)*W+15];reach[q[0]]=1;
+  for(let h=0;h<q.length;h++){const x=q[h]%W,y=(q[h]/W)|0;for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<W&&ny<H&&walk(M,nx,ny)&&!reach[ny*W+nx]){reach[ny*W+nx]=1;q.push(ny*W+nx)}}}
+  M.reach=reach;
+  const SAFEZ=[[36,42,60,66],[20,70,46,85],[82,22,116,58]],inTown=(x,y,pad)=>SAFEZ.some(([a,b,c,d])=>x>=a-pad&&x<=c+pad&&y>=b-pad&&y<=d+pad);
+  const scat=(n,ok,gap,pad)=>{const out=[];let tr=0;while(out.length<n&&tr++<12000){const x=ri2(3,W-4),y=ri2(3,H-4),i=y*W+x;if(!reach[i]||M.block[i]||M.obj[i]||M.t[i]===5||M.t[i]===8)continue;if(inTown(x,y,pad===undefined?6:pad)||!ok(x,y,i))continue;if(out.some(p=>Math.hypot(p.x-x,p.y-y)<gap))continue;out.push({x,y})}return out};
+  const land=i=>M.t[i]===2||M.t[i]===3||M.t[i]===1;
+  const mobs=(kind,n,ok,gap,pad)=>scat(n,ok,gap,pad).forEach(p=>M.mobs.push(mkMob(kind,p.x,p.y)));
+  const inR=(x,y,a,b,c,d)=>x>=a&&x<=c&&y>=b&&y<=d;
+  // resources
+  for(const[kind,n,a,b,c,d,gap]of[['coal',9,100,6,128,28,3],['aurelite',5,104,6,128,26,5],['gold',5,100,6,128,28,5],['silver',5,100,6,128,28,5],['iron',6,100,6,128,28,4]])scat(n,(x,y,i)=>land(i)&&inR(x,y,a,b,c,d),gap,0).forEach(p=>put(p.x,p.y,kind));
+  scat(24,(x,y,i)=>land(i),3,2).forEach(p=>{M.obj[p.y*W+p.x]={k:'herb',dep:0}});
+  // passive animals in the pasture west of Millbrook
+  for(const[kind,n]of[['cow',7],['sheep',7],['chicken',7]])scat(n,(x,y,i)=>land(i)&&inR(x,y,15,56,33,68),2,0).forEach(p=>M.mobs.push(mkMob(kind,p.x,p.y)));
+  mobs('boar',6,(x,y,i)=>land(i)&&inR(x,y,30,16,70,48),6);mobs('bull',3,(x,y,i)=>land(i)&&inR(x,y,62,64,96,90),8);mobs('bear',4,(x,y,i)=>land(i)&&inR(x,y,14,8,56,34),9);
+  // hunting game
+  mobs('pheasant',10,(x,y,i)=>land(i)&&inR(x,y,50,60,96,90),3);mobs('deer',8,(x,y,i)=>land(i)&&inR(x,y,14,8,70,40),4);mobs('elk',5,(x,y,i)=>land(i)&&inR(x,y,60,6,98,24),5);
+  // hostile
+  mobs('direwolf',8,(x,y,i)=>land(i)&&(inR(x,y,14,8,64,36)||inR(x,y,98,6,130,30)),8);mobs('thornling',10,(x,y,i)=>land(i)&&inR(x,y,14,6,66,34)&&Math.hypot(x-48,y-14)>9,6);
+  mobs('highwayman',8,(x,y,i)=>land(i)&&(inR(x,y,62,64,130,100)&&!inR(x,y,98,70,118,90)),8);mobs('hillogre',5,(x,y,i)=>land(i)&&inR(x,y,100,6,130,28),8);
+  mobs('sandcrab',8,(x,y,i)=>M.t[i]===1&&x>=96&&y>=70,5);mobs('cutthroat',5,(x,y,i)=>land(i)&&inR(x,y,96,60,130,72),8);
+  // boss lairs
+  for(const[dx,dy]of[[-5,3],[5,3],[-4,-4],[4,-4]])M.mobs.push(mkMob('thornling',48+dx,14+dy));M.mobs.push(mkMob('briarmother',48,12));
+  for(const[dx,dy]of[[-5,2],[5,2],[0,5],[-4,-3],[4,-3],[0,-5]])M.mobs.push(mkMob(dy%2?'cutthroat':'highwayman',108+dx,80+dy));M.mobs.push(mkMob('garrick',108,79));
+  for(const[dx,dy]of[[-4,3],[4,3],[0,-4]])M.mobs.push(mkMob('sailor',122+dx,92+dy));for(const[dx,dy]of[[-5,0],[5,1]])M.mobs.push(mkMob('sandcrab',122+dx,92+dy));M.mobs.push(mkMob('reefqueen',122,91));
+  // fishing at the cove
+  {let n=0;for(let y=84;y<100&&n<6;y++)for(let x=110;x<134&&n<6;x++){const i=y*W+x;if(M.t[i]!==0||M.obj[i])continue;if([[1,0],[-1,0],[0,1],[0,-1]].some(([a,b])=>M.t[(y+b)*W+x+a]===1&&!M.block[(y+b)*W+x+a])&&hash(x,y,77)<.14&&hash(x+1,y,78)<2){M.obj[i]={k:'fish',dep:0,sp:n%2?'swordfish':'tuna'};M.block[i]=1;n++}}}
+  M.poi=[[15,YB,'Bridge landing'],[48,54,'Millbrook'],[33,77,'Saltgate Harbour'],[99,42,'Highcrown'],[48,12,"Briarmother's glade"],[108,80,'Ruined fort'],[122,92,'Reef cove'],[112,18,'Hill quarry']];
+  M.blurb='Kingsmarch. Roads lead to Millbrook, Saltgate Harbour and the walled city of Highcrown. Wild lands lie beyond.';
+  M.zones=[];markKeepOut(M);
+  return M;
+}
+function genInteriors(REALM){
+  const SPEC=[['i_armoury','Royal Armoury','r_armoury','Gideon','guard','Welcome to the Royal Armoury. Plate for the Crown, steel for the rest of you.'],
+   ['i_bowyer','Wren the Bowyer','r_bowyer','Wren','farmer','Bows, arrows and leather. Hides and feathers are welcome.'],['i_arcane','Highcrown Arcana','r_arcane','Isolde','arcanist','Runes, staves, robes. The royal mages shop here.'],
+   ['i_jewel',"Orsino's Jewellery",'r_jewel','Orsino','shop','Gems, rings and old treasure. Nobody pays more.'],['i_bazaar','Grand Bazaar','r_bazaar','Merchant Hobb','shop','Everything under one roof. I buy anything.'],
+   ['i_apoth','Sister Maren','r_apoth','Sister Maren','herbalist','Herbs, potions, beast treats. Bring herbs and shards.'],['i_tavern2','The Gilded Stag','r_inn','Innkeeper Rosa','farmer','Sit. Eat. Rest is free.',true],
+   ['i_tavern','The Salty Gull','r_inn','Barman Pike','fisher','Fresh fish, hot chowder. Rest by the fire.',true],['i_coop','Millbrook Co-op','r_coop','Hettie','farmer','Crops, eggs and wool. I pay above the usual.'],
+   ['i_lumber','Lumberyard','r_lumber','Orm','fisher','Axes, and the best price for logs.'],['i_fishmon','Fishmonger','r_fish','Nell','fisher','Fish pays one and a half times here.'],
+   ['i_chandler','Saltgate Outfitters','r_chandler','Captain Brandt','guard','Hides, wool and timber. Sea-kit and leather.'],['i_miners',"Miners' Guild",'r_miners','Guildmaster Dolf','guard','Pickaxes, and the best price for ore and bars.'],
+   ['i_bank','Crown Bank',null,'Banker Ellis','archmage','The Crown Bank. Your chest, anywhere in the kingdom.']];
+  const out={};
+  const room=(id,name,W,H)=>{const M=newMap(W,H,name,true);M.indoor=true;M.t.fill(7);M.block.fill(1);for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){M.t[y*W+x]=6;M.block[y*W+x]=0}const cx=W>>1;M.spawn={x:cx,y:H-2};M.t[(H-1)*W+cx]=6;M.block[(H-1)*W+cx]=1;M.obj[(H-1)*W+cx]={k:'stairs',door:true,dep:0};
+    M.put=(x,y,k,ex)=>{const i=y*W+x;M.obj[i]=Object.assign({k,dep:0},ex||{});M.block[i]=1};for(const[x,y]of[[1,3],[W-2,3],[1,H-3],[W-2,H-3]])M.decor.push({x,y,k:'torch'});M.cx=cx;M.rec=0;out[id]=M;return M};
+  for(const[id,name,shop,nm,pal,greet,rest]of SPEC){const W=15,H=11,M=room(id,name,W,H),cx=M.cx;
+    for(let x=cx-3;x<=cx+3;x++)M.put(x,3,'counter');for(let x=2;x<=W-3;x+=2)if(Math.abs(x-cx)>1)M.put(x,1,'shelf',{c:x%4?'#6a4a8a':'#8a6a3a'});
+    if(rest)for(const[x,y]of[[3,7],[W-4,7],[3,5],[W-4,5]])M.put(x,y,'counter');
+    M.npcs.push({x:cx,y:2,name:nm,role:shop?'shopkeeper':'banker',pal,shop,greet,rest:!!rest,dir:'down',trail:[[cx,2]]});M.block[2*W+cx]=1;
+    if(rest)M.npcs.push({x:6,y:6,name:'Patron',role:'citizen',pal:'shop',lines:['The chowder is the best on this coast.','Garrick holds the old fort south-east. Do not go without food.'],dir:'down',trail:[[6,6]]})}
+  {const W=21,H=15,M=room('i_castle','Crownhold Castle',W,H),cx=M.cx;
+   for(let y=2;y<=H-3;y++){if(y%3===0)for(const x of[3,W-4])M.put(x,y,'shelf',{c:'#8a2a33'})}M.put(cx,2,'throne');
+   M.npcs.push({x:cx,y:3,name:'King Aldous',role:'king',pal:'king',lines:['Welcome to Crownhold. A kingdom is only as safe as its roads.','Walk the realm, hero. Millbrook feeds us, Saltgate feeds the sea, and the hills give us ore.'],dir:'down',trail:[[cx,3]]},{x:cx-4,y:5,name:'Royal guard',role:'cityguard',pal:'guard',lines:['Bow to the King.'],dir:'down',trail:[[cx-4,5]]},{x:cx+4,y:5,name:'Royal guard',role:'cityguard',pal:'guard',lines:['Garrick has taken the old fort. The King would pay well for his head.'],dir:'down',trail:[[cx+4,5]]},{x:5,y:9,name:'Chancellor Odric',role:'citizen',pal:'archmage',lines:['The Crown thanks every adventurer who clears the roads.','There are three great beasts: the Bandit King in the fort, the Briarmother in the north wood, and the Reef Queen in the south-east cove.'],dir:'down',trail:[[5,9]]})}
+  // interiors link back to Kingsmarch
+  for(const id of Object.keys(out)){const d=REALM.doors[id];out[id].retMap=REALM;out[id].ret={x:d.x,y:d.y+1};out[id].poi=[]}
+  return out;
+}
+
+const WORLD=genWorld(),DUN=genDungeon(),CRYPT=genCrypts(),HOME=genHome(),MARSH=genMarsh(),EMBER=genRegion('ember'),VOID=genRegion('void'),REALM=genRealm(),INTS=genInteriors(REALM);
+const ALLM=[WORLD,DUN,CRYPT,HOME,MARSH,EMBER,VOID,REALM,...Object.values(INTS)],OUTM=[WORLD,MARSH,EMBER,VOID,REALM];
 /* safe zones: towns and camps. Monsters cannot enter, aggro or attack here, and you cannot start fights from inside. */
-const SAFE=new Map([[WORLD,[{x0:33,y0:34,x1:63,y1:58},{cx:74,cy:36,r:9}]],[MARSH,[{x0:22,y0:5,x1:54,y1:33}]],[EMBER,[{cx:11,cy:60,r:8}]],[VOID,[{cx:11,cy:60,r:8}]],[HOME,[{x0:0,y0:0,x1:99,y1:99}]]]);
+const SAFE=new Map([[WORLD,[{x0:33,y0:34,x1:63,y1:58},{cx:74,cy:36,r:9}]],[MARSH,[{x0:22,y0:5,x1:54,y1:33}]],[EMBER,[{cx:11,cy:60,r:8}]],[VOID,[{cx:11,cy:60,r:8}]],[HOME,[{x0:0,y0:0,x1:99,y1:99}]],[REALM,[{x0:36,y0:42,x1:60,y1:66},{x0:20,y0:70,x1:46,y1:85},{x0:82,y0:22,x1:116,y1:58}]]]);
+for(const mp of Object.values(INTS))SAFE.set(mp,[{x0:0,y0:0,x1:99,y1:99}]);
 function inSafe(mp,x,y){const L=SAFE.get(mp);if(!L)return false;for(const z of L){if(z.r!==undefined?Math.hypot(x-z.cx,y-z.cy)<=z.r:(x>=z.x0&&x<=z.x1&&y>=z.y0&&y<=z.y1))return true}return false}
+function fitZones(mp){if(mp===HOME)return;const zones=mp.zones=mp.zones||[];const hostile=mp.mobs.filter(m=>!m.def.prey&&m.def.aggro&&!inSafe(mp,m.hx,m.hy));
+  const inZ=(z,x,y)=>z.r!==undefined?Math.hypot(x-z.cx,y-z.cy)<=z.r:(x>=z.x0&&x<=z.x1&&y>=z.y0&&y<=z.y1);
+  const rest=hostile.filter(m=>!zones.some(z=>inZ(z,m.hx,m.hy))),used=new Set();
+  for(const m of rest){if(used.has(m))continue;const grp=rest.filter(o=>!used.has(o)&&Math.hypot(o.hx-m.hx,o.hy-m.hy)<=7);if(grp.length<3)continue;grp.forEach(g=>used.add(g));let cx=0,cy=0;for(const g of grp){cx+=g.hx;cy+=g.hy}cx=Math.round(cx/grp.length);cy=Math.round(cy/grp.length);zones.push({cx,cy,r:Math.min(11,Math.ceil(Math.max(...grp.map(g=>Math.hypot(g.hx-cx,g.hy-cy))))+3)})}
+  for(const z of zones)if(z.r!==undefined&&z.r<11)for(const m of hostile){const d=Math.hypot(m.hx-z.cx,m.hy-z.cy);if(d>z.r&&d<=z.r+2)z.r=Math.min(11,Math.ceil(d)+1)}}
+REALM.zones=[{cx:48,cy:14,r:9},{cx:108,cy:80,r:11},{cx:122,cy:92,r:9}];
+for(const mp of ALLM)fitZones(mp);
 for(const mp of ALLM){mp.mobs=mp.mobs.filter(m=>!inSafe(mp,m.hx,m.hy));mp.mobs.forEach((m,i)=>{m.id=i});mp.nextId=1000}
 for(const[mp,key,cuts]of[[WORLD,'world',[.6,.88]],[MARSH,'marsh',[.5,.78]],[EMBER,'ember',[.5,.82]]]){mp.treeSp=TREESPECS[key];mp.treeCols=TREESPECS[key].map(t=>t.col);
   for(let i=0;i<mp.tree.length;i++)if(mp.tree[i]){const h=hash(i%mp.W,(i/mp.W)|0,11);mp.tree[i]=h<cuts[0]?1:h<cuts[1]?2:3}}
@@ -890,7 +1124,12 @@ for(const[mp,key,cuts]of[[WORLD,'world',[.6,.88]],[MARSH,'marsh',[.5,.78]],[EMBE
   const ch=[];for(const p of c){if(ch.length>=14)break;if(ch.every(z=>Math.hypot(z.x-p.x,z.y-p.y)>8)&&Math.hypot(p.x-M.spawn.x,p.y-M.spawn.y)>8)ch.push(p)}ch.forEach(p=>{const i=p.y*W+p.x;M.obj[i]={k:'fish',dep:0};M.block[i]=1})}
 for(const mp of[WORLD,MARSH]){const W=mp.W;let n=0;for(let i=0;i<mp.obj.length;i++){const o=mp.obj[i];if(o&&o.k==='fish'){const x=i%W,y=(i/W)|0,h=hash(x,y,21);n++;
   o.sp=mp===WORLD?(h<.45?'fish':h<.75?'trout':'salmon'):(h<.1?'fish':h<.4?'salmon':h<.8?'lobster':'swordfish')}}}
-for(const mp of OUTM)for(const n of mp.npcs){n.hx=n.x;n.hy=n.y;n.px=n.x;n.py=n.y;n.mt=-9999;if(n.role==='citizen')n.wander=3;else if(['farmer','herbalist','fisher','hermit'].includes(n.role))n.wander=2}
+for(const mp of ALLM)for(const n of mp.npcs){n.hx=n.x;n.hy=n.y;n.px=n.x;n.py=n.y;n.mt=-9999;if(n.role==='citizen')n.wander=3;else if(['farmer','herbalist','fisher','hermit'].includes(n.role))n.wander=2}
+{const W_=WORLD;let wy=64,bx0=0;const rs=new Uint8Array(W_.W*W_.H),rq=[W_.spawn.y*W_.W+W_.spawn.x];rs[rq[0]]=1;for(let h=0;h<rq.length;h++){const x=rq[h]%W_.W,y=(rq[h]/W_.W)|0;for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<W_.W&&ny<W_.H&&walk(W_,nx,ny)&&!rs[ny*W_.W+nx]){rs[ny*W_.W+nx]=1;rq.push(ny*W_.W+nx)}}}
+  for(let y=44;y<=80;y++){for(let x=W_.W-2;x>40;x--){if(rs[y*W_.W+x]&&rs[(y-1)*W_.W+x]&&rs[(y+1)*W_.W+x]){if(x>bx0||(x===bx0&&Math.abs(y-62)<Math.abs(wy-62))){bx0=x;wy=y}break}}}
+  for(let x=bx0+1;x<W_.W;x++)for(let q=-1;q<=1;q++){const i=(wy+q)*W_.W+x;W_.t[i]=5;W_.block[i]=0;W_.tree[i]=0;W_.obj[i]=null;W_.flat[i]=1}
+  for(let x=bx0+3;x<W_.W-1;x+=4)W_.props.push({k:'lamp',x,y:wy-2,w:1,d:1});W_.props.push({k:'sign',x:bx0+2,y:wy-3,w:1,d:1});
+  W_.links=[-1,0,1].map(q=>({x:W_.W-1,y:wy+q,map:'realm',tx:3,ty:52+q}));W_.bridge={x:bx0,y:wy};REALM.links=[-1,0,1].map(q=>({x:1,y:52+q,map:'world',tx:W_.W-3,ty:wy+q}))}
 DUN.ret=WORLD.caveExit;CRYPT.ret=WORLD.cryptExit;HOME.ret=WORLD.homeExit;MARSH.ret=WORLD.marshExit;EMBER.ret=WORLD.emberExit;VOID.ret=EMBER.voidExit;VOID.retMap=EMBER;
 let M=WORLD;
 
@@ -959,6 +1198,7 @@ function startWork(o){
       if(o.dep>tickN)return null;if(!(o.ore>0))o.ore=ri(3,6);const pk=ITEMS[S.eq.pickaxe];if(!pk){say('You need a pickaxe. Forge one at the anvil.');return null}
       return{kind:'mine',left:pk.speed,o}}
     case'herb':return o.dep>tickN?null:{kind:'herb',left:2,o};
+    case'crop':return o.dep>tickN?null:{kind:'crop',left:2,o};
     case'fire':{const c=COOK.find(r=>hasItem(r[0],1)&&al>=r[2]);if(c)return{kind:'cook',left:2};const w2=COOK.find(r=>hasItem(r[0],1));say(w2?'You need Alchemy '+w2[2]+' (cooking) for that.':'You have nothing to cook. Catch animals or fish.');return null}
     case'tree':{if(o.dep>tickN){say('That tree has been felled.');pl.target=nearestTree(7,o);return null}const sp=treeSp(o);if(lvlOf(S.xp.woodcutting)<sp.lv){say('You need Woodcutting '+sp.lv+' to chop '+sp.n.toLowerCase()+' trees.');pl.target=null;return null}return{kind:'chop',left:(ITEMS[S.eq.axe]||{speed:4}).speed,o}}
     case'fish':{const sp=FISHSP[o.sp||'fish'];if(lvlOf(S.xp.fishing)<sp.lv){say('You need Fishing '+sp.lv+' for '+sp.spot.toLowerCase()+'.');pl.target=null;return null}return{kind:'fish',left:3,o}}
@@ -998,14 +1238,15 @@ function _finishWork(w){
         if(Math.random()<.009){const gm=Math.random()<.7?'sapphire':Math.random()<.8?'emerald':'ruby';giveItem(gm,1);float(pl.x,pl.y,'Gem! +1 '+ITEMS[gm].n,'#9fe8ff',-1.3)}
         if(w.o.ore<=0){w.o.dep=tickN+22;pl.target=nearestObj(w.o.k,8,w.o)}}
       break}
+    case'crop':{const cd=CROPS[w.o.ct];giveItem(cd.item,1);addXp('alchemy',cd.xp);float(pl.x,pl.y,'+1 '+ITEMS[cd.item].n,'#fff',-.7);w.o.dep=tickN+cd.dep;pl.target=nearestObj('crop',8,w.o);break}
     case'herb':giveItem('herb',1);addXp('alchemy',6);float(pl.x,pl.y,'+1 Herb','#fff',-.7);w.o.dep=tickN+25;pl.target=nearestObj('herb',8,w.o);break;
     case'train':{const sk=TRAIN[w.o.id];addXp(sk,8);pl.swingT=performance.now();break}
     case'build':{const r=w.r,o=r.o;if(!canAfford(r)||o.built)break;for(const[k,v]of Object.entries(r.in))giveItem(k,-v);addXp('construction',r.xp);if(ROOMS[o.id]){S.home.rooms=S.home.rooms||{};S.home.rooms[o.id]=true;unlockRoom(o.id);rebuildHome();say('You build the '+r.n+'. A new room opens.');save();break}o.built=true;S.home.built[o.id]=true;refreshObj(o);say('You build the '+r.n+'.');save();break}
     case'smelt':case'forge':case'craft':{const r=w.r;if(!canAfford(r))break;stat().crafts++;for(const[k,v]of Object.entries(r.in))giveItem(k,-v);const q=r.qty||1;giveItem(r.id,q);addXp(r.skill||'smithing',r.xp);float(pl.x,pl.y,'+'+q+' '+ITEMS[r.id].n,'#fff',-.7);break}
     case'cook':{const c=COOK.find(r=>hasItem(r[0],1)&&lvlOf(S.xp.alchemy)>=r[2]);if(c){const lv=lvlOf(S.xp.alchemy);giveItem(c[0],-1);if(c[2]>1&&Math.random()<clamp(.4-.03*(lv-c[2]),0,.4)){giveItem('burnt_food',1);float(pl.x,pl.y,'You burn it','#aaa',-.7)}else{giveItem(c[1],1);addXp('alchemy',c[3]);float(pl.x,pl.y,'+1 '+ITEMS[c[1]].n,'#fff',-.7)}}
       if(!COOK.some(r=>hasItem(r[0],1)&&lvlOf(S.xp.alchemy)>=r[2]))pl.target=null;break}
-    case'catch':{const m=w.m;if(m.dead||cheb(pl,m)>1)break;
-      if(Math.random()<clamp(.5+.03*(lvlOf(S.xp.hunting)-m.def.lv),.5,.95)){m.dead=true;m.respawn=tickN+45;giveItem('raw_meat',m.def.meat);addXp('hunting',m.def.xp*4);float(pl.x,pl.y,'+'+m.def.meat+' Raw meat','#fff',-.7);{const hd=m.def.hide!==undefined?m.def.hide:m.kind==='rabbit'?1:m.kind==='fox'?2:0;if(hd){giveItem('hide',hd);float(pl.x,pl.y,'+'+hd+' Hide','#fff',-1.2)}}pl.target=null}
+    case'catch':{const m=w.m;if(m.dead||cheb(pl,m)>2)break;
+      if(Math.random()<clamp(.68+.03*(lvlOf(S.xp.hunting)-m.def.lv),.6,.97)){if(!isHost())NET.toHost({k:'catch',id:m.id});m.dead=true;m.respawn=tickN+45;giveItem('raw_meat',m.def.meat);addXp('hunting',m.def.xp*4);float(pl.x,pl.y,'+'+m.def.meat+' Raw meat','#fff',-.7);{const hd=m.def.hide!==undefined?m.def.hide:m.kind==='rabbit'?1:m.kind==='fox'?2:0;if(hd){giveItem('hide',hd);float(pl.x,pl.y,'+'+hd+' Hide','#fff',-1.2)}}pl.target=null}
       else float(pl.x,pl.y,'It slips away','#aaa',-.7);break}
   }
 }
@@ -1027,6 +1268,9 @@ function talk(n){
   else if(r==='apothecary'){lines=['Fen Apothecary. Herbs, potions, runes. The fen fever keeps me busy.'];end=()=>openShop('apoth')}
   else if(r==='innkeeper'){lines=['Welcome to the Reedcutter. Sit by the fire. You look tired.'];end=()=>{pl.hp=pstats().hp;say('You rest by the fire and feel fully restored.');openShop('inn')}}
   else if(r==='dockhand'){lines=['Pike, harbour master. I pay one and a half times for fish.'];end=()=>openShop('docks')}
+  else if(r==='shopkeeper'){lines=[n.greet];end=()=>{if(n.rest){pl.hp=pstats().hp;say('You rest and feel fully restored.')}openShop(n.shop)}}
+  else if(r==='banker'){lines=[n.greet||'The Crown Bank. Your chest, anywhere in the kingdom.'];end=()=>openBank()}
+  else if(r==='king'||r==='farmelder'||r==='harbourmaster'){lines=n.lines}
   else if(r==='citizen'||r==='cityguard'||r==='acolyte'){lines=n.lines}
   else if(r==='fisher'){lines=['The lake is calm today. Tap a ripple on the water and tight lines.']}
   else if(r==='warden'){lines=['Mirewatch holds because we keep watch. Thank you for your help, traveller.']}
@@ -1176,7 +1420,11 @@ const ACH=[
  {id:'myth',n:'Mythril bearer',d:'Wield and wear mythril.',chk:()=>tierWorn('mythril'),r:{coins:1000}},
  {id:'crafter',n:'Busy hands',d:'Smelt, forge or craft 50 times.',chk:()=>stat().crafts>=50,p:()=>[stat().crafts,50],r:{coins:300}},
  {id:'focus',n:'Focused mind',d:'Catch 10 Focus bonuses.',chk:()=>stat().focus>=10,p:()=>[stat().focus,10],r:{coins:250}}
- ,{id:'ember',n:'Into the ash',d:'Enter Emberwaste.',chk:()=>!!stat().v.ember,r:{coins:300}},
+ ,{id:'kings',n:'Across the bridge',d:'Enter Kingsmarch.',chk:()=>!!stat().v.realm,r:{coins:300}},
+ {id:'garrick',n:'Regicide of roads',d:'Defeat Garrick, the Bandit King.',chk:()=>(S.kills.garrick||0)>0,r:{coins:1500}},
+ {id:'briarm',n:'Wood cleared',d:'Defeat the Briarmother.',chk:()=>(S.kills.briarmother||0)>0,r:{coins:1800}},
+ {id:'reefq',n:'Reef ruler',d:'Defeat the Reef Queen.',chk:()=>(S.kills.reefqueen||0)>0,r:{coins:2000}},
+ {id:'ember',n:'Into the ash',d:'Enter Emberwaste.',chk:()=>!!stat().v.ember,r:{coins:300}},
  {id:'voidreach',n:'Edge of everything',d:'Enter Voidreach.',chk:()=>!!stat().v.void,r:{coins:600}},
  {id:'tyrant',n:'Tyrant slain',d:'Defeat the Cinder Tyrant.',chk:()=>(S.kills.tyrant||0)>0,r:{coins:900}},
  {id:'maw',n:'The Maw closes',d:'Defeat the Hollow Maw.',chk:()=>(S.kills.maw||0)>0,r:{coins:2000}},
@@ -1186,7 +1434,7 @@ const ACH=[
 ];
 function toast(t,sub){const el=document.getElementById('toast');if(!el)return;el.innerHTML='<b>'+t+'</b>'+(sub?'<small>'+sub+'</small>':'');el.hidden=false;el.classList.remove('go');void el.offsetWidth;el.classList.add('go');clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,3600)}
 function achTick(){S.ach=S.ach||{};const st=stat();
-  if(M===EMBER)st.v.ember=true;if(M===VOID)st.v.void=true;
+  if(M===REALM||M.retMap===REALM)st.v.realm=true;if(M===EMBER)st.v.ember=true;if(M===VOID)st.v.void=true;
   if(M===MARSH){st.v.marsh=true;if(pl.x>=22&&pl.x<=54&&pl.y>=5&&pl.y<=33)st.v.city=true;if(Math.hypot(pl.x-M.mage.x,pl.y-M.mage.y)<10)st.v.spire=true}
   for(const a of ACH){if(S.ach[a.id])continue;let ok=false;try{ok=a.chk()}catch(e){}
     if(ok){S.ach[a.id]=dayKey();S.coins+=a.r.coins;if(a.r.xp)addXp(a.r.xp[0],a.r.xp[1]);sfx('ach');toast('Achievement: '+a.n,'+'+a.r.coins+' coins');save()}}}
@@ -1307,6 +1555,7 @@ const canShoot=()=>{const w=ITEMS[S.eq.weapon];return !!w&&(w.ranged?hasItem('ar
 function attackMob(m){
   faceTo(m.x,m.y);
   if(inSafe(M,pl.x,pl.y)){if(!pl._sf||tickN-pl._sf>6){pl._sf=tickN;say('Safe zone: you cannot fight here. Step outside.')}pl.target=null;return}
+  if(m.def.aggro===0&&!m.def.prey&&!m.chasing&&(!pl._pk||pl._pk!==m.kind)){pl._pk=m.kind;say(m.def.n+' is peaceful. It only fights back if you attack it.')}
   if(m.def.tame&&!m.dead&&hasItem('beast_treat',1)&&tameTry(m))return;
   if(!canEngage(m)){if(cheb(pl,pl.engaged)<=1){pl.target={type:'mob',m:pl.engaged};say('Single-combat area: you are busy with another enemy.')}else say('Single-combat area: that enemy is busy.');return}
   pl.combatT=tickN;m.chasing=true;engage(m);
@@ -1341,6 +1590,7 @@ function rollLoot(def,kind){
     for(let r=0;r<L.rolls;r++){let x=Math.random()*tot;for(const e of L.main){x-=e[3];if(x<=0){add(e[0],ri(e[1],e[2]));break}}}}
   for(const[it,o]of def.uniques||[])if(Math.random()<1/o)add(it,1,true);
   {const mult=def.boss?10:Math.max(1,def.hp/40);for(const[g,o]of GEM_ODDS)if(Math.random()<mult/o){add(g,1,true);break}const pd=PETDROP[kind];if(pd&&Math.random()<1/pd[1])add(pd[0],1,true)}
+  if(!def.prey&&def.lv){for(const[rid,odds,minLv]of RARES)if(def.lv>=minLv&&Math.random()<1/(odds*(def.boss?.3:1)))add(rid,1,true)}
   if(!def.prey){const n=def.boss?ri(3,5):Math.random()<Math.min(.3,def.hp/250)?1:0;if(n)add('soul_shard',n)}
   return out;
 }
@@ -1386,7 +1636,8 @@ function mobAttack(m,T){
   if(m.def.mech)for(const k of m.def.mech){
     if(k.type==='drain'&&m.atk%k.every===k.every-1&&dmg>0){const h=Math.ceil(dmg*.8);m.hp=Math.min(m.def.hp,m.hp+h);float(m.x,m.y,'Drain +'+h,'#c9a6ff',-1.5)}
     if(k.type==='steal'&&m.atk%k.every===k.every-1&&S.coins>0){const st=Math.max(5,Math.floor(S.coins*.05));S.coins-=st;m.stolen=(m.stolen||0)+st;float(pl.x,pl.y,'Pickpocket -'+st,'#ffd24a',-1.5)}}
-  if(!(pl.target&&pl.target.type==='mob'&&!pl.target.m.def.prey)&&pl.hp>0){pl.target={type:'mob',m};pl.work=null}
+  {const busy=pl.work||(pl.target&&pl.target.type!=='move'),fightingOther=pl.target&&pl.target.type==='mob'&&!pl.target.m.def.prey;
+   if(!busy&&!fightingOther&&pl.hp>0&&!(S.set&&S.set.noret)){pl.target={type:'mob',m};pl.work=null}else if(pl.work&&(!pl._ua||tickN-pl._ua>8)){pl._ua=tickN;float(pl.x,pl.y,'Under attack!','#ff9a7a',-1.6)}}
 }
 
 /* =============== ticks =============== */
@@ -1403,7 +1654,7 @@ function playerTick(){
     if(!path){pl.target=null;return}stepAlong(path,2);if(pl.x===T.x&&pl.y===T.y)pl.target=null;return}
   if(T.type==='mob'){
     const m=T.m;if(m.dead||M.mobs.indexOf(m)<0){pl.target=null;pl.work=null;return}
-    const rch=!m.def.prey&&canShoot()?5:1;
+    const rch=!m.def.prey&&canShoot()?5:m.def.prey?2:1;
     if(cheb(pl,m)<=rch){
       if(m.def.prey){faceTo(m.x,m.y);if(!pl.work)pl.work={kind:'catch',left:2,m};else if(--pl.work.left<=0){finishWork(pl.work);pl.work=null}}
       else attackMob(m);
@@ -1420,6 +1671,7 @@ function playerTick(){
     if(!near){pl.work=null;const path=bfs(pl.x,pl.y,(x,y)=>Math.max(Math.abs(x-T.x),Math.abs(y-T.y))<=1);
       if(!path){say("Can't reach that.");pl.target=null;return}stepAlong(path,2);return}
     faceTo(T.x,T.y);const k=T.o.k;
+    if(k==='enter'){pl.target=null;enterMap(INTS[T.o.to]);return}
     if(k==='voidgate'&&lvlOf(S.xp.voidpower)<25){pl.target=null;say('The gate rejects you. It needs Voidpower 25. Channel the void rifts around Emberwaste to train it.');return}
     if(k==='portal'||k==='crypt'||k==='home'||k==='marsh'||k==='wastes'||k==='voidgate'){enterDungeon(k==='voidgate'?'void':k);return}
     if(k==='chest'){pl.target=null;openBank();return}
@@ -1437,6 +1689,7 @@ function playerTick(){
     else if(--pl.work.left<=0){const w=pl.work;pl.work=null;finishWork(w)}
   }
 }
+function enterMap(mp){if(!mp)return;hazards.length=0;M=mp;pl.x=mp.spawn.x;pl.y=mp.spawn.y;pl.face='up';pl.trail=[[pl.x,pl.y]];pl.target=null;pl.work=null;pl.engaged=null;say(mp.name+'.');updateRoute()}
 function enterDungeon(k){if(k==='home')S.tut.home=true;hazards.length=0;if(k==='home')camDist=Math.max(camDist,19);M=k==='crypt'?CRYPT:k==='home'?HOME:k==='marsh'?MARSH:k==='wastes'?EMBER:k==='void'?VOID:DUN;pl.x=M.spawn.x;pl.y=M.spawn.y;pl.face='up';pl.trail=[[pl.x,pl.y]];pl.target=null;pl.work=null;say(k==='wastes'||k==='void'?M.blurb:k==='marsh'?'Mistfen. A grey wet land. Mirewatch lies along the path to the north-east.':k==='home'?'Home sweet home. Furnace, anvil, workbench, altar and your chest are here.':M.name+'. Recommended Combat '+M.rec+'.');updateRoute()}
 function exitDungeon(){hazards.length=0;const from=M;M=from.retMap||WORLD;pl.x=from.ret.x;pl.y=from.ret.y;pl.face='down';pl.trail=[[pl.x,pl.y]];pl.target=null;pl.work=null;save();updateRoute()}
 function mobStep(m,dx,dy){const nx=m.x+dx,ny=m.y+dy;if(!walk(M,nx,ny)||inSafe(M,nx,ny))return false;if(dx&&dy&&(!walk(M,m.x+dx,m.y)||!walk(M,m.x,m.y+dy)))return false;m.trail=[[m.x,m.y],[nx,ny]];m.x=nx;m.y=ny;m.face=faceOf(dx,dy);if(dx)m.fx=dx>0?1:-1;return true}
@@ -1447,13 +1700,13 @@ function mobTick(m){
   if(m.dead){if(tickN>=m.respawn){if(m.def.mech){for(const k of m.def.mech)if(k.type==='summon')delete m['s_'+k.kind];m.enraged=false;m.stolen=0}m.dead=false;m.hp=m.def.hp;m.x=m.hx;m.y=m.hy;m.trail=[[m.x,m.y]];m.chasing=false;m.tele=false;m.stun=0}return}
   const T=mobTarget(m),d=Math.max(Math.abs(m.x-T.x),Math.abs(m.y-T.y));
   if(m.def.prey){
-    if(d<=m.def.fear){
+    if(d<=Math.max(2,m.def.fear-1)){if(Math.random()<.42)return;
       const flee=()=>{let best=null,bd=-1;for(const[dx,dy]of D8){const nx=m.x+dx,ny=m.y+dy;if(!walk(M,nx,ny)||(nx===T.x&&ny===T.y)||M.mobs.some(q=>q!==m&&!q.dead&&q.x===nx&&q.y===ny))continue;if(dx&&dy&&(!walk(M,m.x+dx,m.y)||!walk(M,m.x,m.y+dy)))continue;const dd=Math.hypot(nx-T.x,ny-T.y)+Math.random()*.35;if(dd>bd){bd=dd;best=[dx,dy]}}return best};
-      const f1=flee();if(f1&&mobStep(m,f1[0],f1[1])){const t1=m.trail.slice(),f2=flee();if(f2&&mobStep(m,f2[0],f2[1]))m.trail=[t1[0],t1[1],[m.x,m.y]]}}
+      const f1=flee();if(f1)mobStep(m,f1[0],f1[1])}
     else if(Math.random()<.15){const[dx,dy]=D8[ri(0,7)];if(Math.hypot(m.x+dx-m.hx,m.y+dy-m.hy)<=4)mobStep(m,dx,dy)}
     return}
   const homeD=Math.max(Math.abs(m.x-m.hx),Math.abs(m.y-m.hy));
-  if(!m.chasing&&d<=m.def.aggro&&T.hp>0&&!T.safe)m.chasing=true;
+  if(!m.chasing&&d<=m.def.aggro&&T.hp>0&&!T.safe&&!(T===pl&&!m.def.boss&&m.def.lv&&lvlOf(S.xp.combat)>=m.def.lv*2+6))m.chasing=true;
   if(m.chasing&&(homeD>m.def.leash||T.hp<=0||T.safe)){m.chasing=false;m.tele=false}
   if(m.def.mech&&m.chasing)bossMech(m,d,T);
   if(m.chasing){
@@ -1474,9 +1727,9 @@ function mobTick(m){
 const DAYLEN=720,gameHour=()=>((Date.now()/1000)/(DAYLEN/24)+8)%24;
 const isNight=()=>{const h=DBG.hour!==undefined?DBG.hour:gameHour();return h>=21.5||h<5.5};
 function musicMood(){
-  if(M===HOME)return 'home';
+  if(M===HOME||(M.indoor&&M!==DUN&&M!==CRYPT))return 'home';
   if(M===DUN||M===CRYPT){return M.mobs.some(m=>!m.dead&&m.def.boss&&m.chasing)?'boss':'dungeon'}
-  if(M===EMBER||M===VOID)return M.mobs.some(m=>!m.dead&&m.def.boss&&m.chasing)?'boss':'marsh';
+  if(M===EMBER||M===VOID||M===REALM)return M.mobs.some(m=>!m.dead&&m.def.boss&&m.chasing)?'boss':(M===REALM&&inSafe(M,pl.x,pl.y)?'city':'village');
   if(M===MARSH){if(M.mobs.some(m=>!m.dead&&m.def.boss&&m.chasing))return 'boss';if(Math.hypot(pl.x-M.mage.x,pl.y-M.mage.y)<14)return 'mage';if(pl.x>=20&&pl.x<=56&&pl.y>=3&&pl.y<=35)return 'city';return 'marsh'}
   if(M.mobs.some(m=>!m.dead&&m.def.boss&&m.chasing))return 'boss';
   return isNight()?'night':'village'}
@@ -1494,6 +1747,7 @@ function tickTrees(){for(const mp of OUTM){const f=mp.felled;if(!f||!f.length)co
 function tick(){
   tickN++;tickTrees();playerTick();if(tickN%3===0)updateRoute();
   const host=isHost();for(const m of M.mobs){if(host)mobTick(m);else if(m.dead&&m.add){m.gone=true;if(m._g)m._g.visible=false}}if(M.mobs.some(m=>m.gone)){const gone=M.mobs.filter(m=>m.gone);M.mobs=M.mobs.filter(m=>!m.gone);M.pick=(M.pick||[]).filter(g=>!(g.userData.pick&&g.userData.pick.m&&g.userData.pick.m.gone));for(const m of gone)if(m._g&&m._g.parent)m._g.parent.remove(m._g)}
+  {const L=(M.links||[]).find(l=>l.x===pl.x&&l.y===pl.y);if(L){const mp=MAPS[L.map];if(mp){const msg=mp===REALM?REALM.blurb:'You cross the bridge back to the island.';goTo(mp,L.tx,L.ty);say(msg);save()}}}
   if(host)NET.sendMobs();tickHazards();npcTick();if(tickN%3===0)SND.mood(musicMood());if(tickN%5===0){achTick();ensureBounties()}
   if(pl.guard>0)pl.guard--;
   if(tickN%30===0)save();
@@ -1514,7 +1768,7 @@ scene.add(hemi,sun,sun.target);
 const plLight=new T.PointLight(0xffb060,0,18,1);scene.add(plLight);
 const torchLights=[0,1,2,3].map(()=>{const l=new T.PointLight(0xff9a44,0,10,1);scene.add(l);return l});
 let CW=1,CH=1,DPR=1,FONT='sans-serif',camDist=15;
-const ENV={ember:{bg:0x2a1612,fogN:900,fogF:1000,hemi:.6,sun:.55},void:{bg:0x0e0620,fogN:900,fogF:1000,hemi:.5,sun:.4},marsh:{bg:0xa3bdb2,fogN:900,fogF:1000,hemi:.62,sun:.62},indoor:{bg:0x15100a,fogN:40,fogF:90,hemi:.85,sun:0},world:{bg:0x9ccbec,fogN:900,fogF:1000,hemi:.62,sun:.78},dark:{bg:0x050403,fogN:12,fogF:30,hemi:.42,sun:0}};
+const ENV={realm:{bg:0x9ccbec,fogN:900,fogF:1000,hemi:.62,sun:.78},ember:{bg:0x2a1612,fogN:900,fogF:1000,hemi:.6,sun:.55},void:{bg:0x0e0620,fogN:900,fogF:1000,hemi:.5,sun:.4},marsh:{bg:0xa3bdb2,fogN:900,fogF:1000,hemi:.62,sun:.62},indoor:{bg:0x15100a,fogN:40,fogF:90,hemi:.85,sun:0},world:{bg:0x9ccbec,fogN:900,fogF:1000,hemi:.62,sun:.78},dark:{bg:0x050403,fogN:12,fogF:30,hemi:.42,sun:0}};
 function resize(){DPR=S.gfx==='low'?1:Math.min(1.5,window.devicePixelRatio||1);CW=wrapEl.clientWidth||innerWidth;CH=wrapEl.clientHeight||innerHeight;
   renderer.setPixelRatio(DPR);renderer.setSize(CW,CH,false);ov.width=CW*DPR;ov.height=CH*DPR;octx.setTransform(DPR,0,0,DPR,0,0);
   cam.aspect=CW/CH;cam.updateProjectionMatrix();FONT=getComputedStyle(document.body).fontFamily;
@@ -1567,6 +1821,13 @@ const PAL={
 };
 const pv=(b,o)=>Object.assign({},PAL[b],o);
 Object.assign(PAL,{
+ king:pv('knight',{tunic:'#5a1a3a',red:'#c9a24a',paul:'#c9a24a',plate:'#c9a24a',helm:'#e8c14a',plume:'#a8222d',cuff:'#c9a24a',beard:'#d8d8d8',shield:null}),
+ thornling:pv('wraith',{skin:'#7aa84a',skinSh:'#5a8a34',hair:'#b8e070',hairHi:'#e0ff98',tunic:'#2a4a1a',red:'#6acb4a',paul:'#4a8a2a',belt:'#1a2a10',trou:'#22381a',boot:'#1a2a10',cuff:'#6acb4a',glove:'#7aa84a',plate:'#4a8a2a'}),
+ ogre:pv('golem',{skin:'#7a8a5a',skinSh:'#5a6a3a',tunic:'#5a4a30',red:'#8a6a3a',paul:'#7a8a5a',belt:'#3a2a1a',trou:'#4a3a28',boot:'#2a2018',cuff:'#8a6a3a',glove:'#7a8a5a',plate:'#6a6a50',helm:'#6a6a50'}),
+ sailor:pv('skeleton',{tunic:'#2a4a5a',red:'#3a7a8a',paul:'#cfc8b4',skin:'#a8c0b0',skinSh:'#7a9a8a'}),
+ garrick:pv('knight',{tunic:'#2a2024',red:'#a8222d',paul:'#5a5058',plate:'#5a5058',helm:'#4a4048',plume:'#a8222d',shield:'#3a2a2a',cuff:'#8a7a5a'}),
+ briarmother:pv('golem',{skin:'#4a7a3a',skinSh:'#2f5a28',tunic:'#3a5a2a',red:'#8acb5a',paul:'#4a7a3a',belt:'#2a3a1a',trou:'#2a4a1a',boot:'#1a2a10',cuff:'#8acb5a',glove:'#4a7a3a',plate:'#5a8a3a',helm:'#3a6a2a'}),
+ reefqueen:pv('drowned',{skin:'#d8a0a0',skinSh:'#b07878',tunic:'#1f4a5a',red:'#e0707a',paul:'#5ae0d0',belt:'#1a3a44',trou:'#1f3a48',boot:'#1a3038',cuff:'#5ae0d0',glove:'#d8a0a0',plate:'#5ae0d0',helm:'#e0707a'}),
  emberling:pv('wraith',{skin:'#f0a05a',skinSh:'#c07038',hair:'#ffd24a',hairHi:'#fff3a0',tunic:'#5a1a10',red:'#ff6a2a',paul:'#ff8a3a',belt:'#2a0e08',trou:'#3a140c',boot:'#2a0e08',cuff:'#ff8a3a',glove:'#f0a05a',plate:'#ff8a3a'}),
  slag:pv('golem',{skin:'#5a3a32',skinSh:'#3a2420',tunic:'#4a2a22',red:'#ff6a2a',paul:'#6a4036',belt:'#2a1612',trou:'#3a2018',boot:'#2a1612',cuff:'#6a4036',glove:'#5a3a32',plate:'#6a4036',helm:'#5a3a32'}),
  tyrant:pv('drowned',{skin:'#8a4a3a',skinSh:'#6a3228',tunic:'#2a1410',red:'#d8501a',paul:'#ff8a3a',belt:'#1a0c08',trou:'#241008',boot:'#1a0c08',cuff:'#ff8a3a',glove:'#8a4a3a',plate:'#ff8a3a',helm:'#e0602a'}),
@@ -1628,7 +1889,7 @@ function makeFigure(){
       else if(tb==='steel'){paul((s,p)=>{for(let k=0;k<3;k++)box(.38-k*.05,.05,.34-k*.04,m.plate,s*(.04+k*.02),.18-k*.07,0,p,0,0,s*.12)});chest(.5,.5);box(.34,.64,.03,clothR,0,.92,.225,body);box(.34,.64,.03,clothR,0,.92,-.225,body);D(ms(cylG(.2,.22,.1,8),m.plate,0,1.42,0,body))}
       else if(tb==='mythril'){paul((s,p)=>{cone(.07,.55,m.plate,s*.18,.38,0,p,0,0,-s*.7);cone(.06,.4,m.plate,s*.1,.34,.08,p,.3,0,-s*.4);sph(.17,m.plate,s*.02,.07,0,p,1.1,.7,1)});chest(.5,.5);D(ms(new T.OctahedronGeometry(.1),glass,0,1.2,.28,body));box(.06,.5,.03,glass,.2,1.18,.27,body);box(.06,.5,.03,glass,-.2,1.18,.27,body)}
       else if(tb==='ember'){paul((s,p)=>{for(const[px,pz,h,r]of[[.05,0,.5,-.5],[.14,.1,.36,-.8],[.14,-.1,.36,-.8],[-.04,0,.3,.4]])cone(.06,h,flame,s*px*2,.3,pz,p,0,0,s*r);sph(.18,m.plate,s*.03,.08,0,p,1.1,.8,1)});chest(.54,.52);D(ms(new T.IcosahedronGeometry(.11,0),flame,0,1.2,.28,body));for(const x of[-.2,.2])box(.04,.46,.03,flame,x,1.18,.27,body);for(const l of F.legs)cone(.05,.2,flame,0,0,.12,l.knee,Math.PI/2)}
-      else if(tb==='warden'){paul((s,p)=>{box(.46,.08,.4,m.plate,s*.06,.15,0,p);box(.48,.03,.42,gold,s*.06,.2,0,p);box(.4,.08,.36,m.plate,s*.06,.07,0,p)});chest(.56,.52);box(.4,.7,.03,gold,0,.92,.225,body);box(.1,.5,.04,m.red,0,1.18,.27,body)}
+      else if(tb==='warden'||tb==='aurelite'){paul((s,p)=>{box(.46,.08,.4,m.plate,s*.06,.15,0,p);box(.48,.03,.42,gold,s*.06,.2,0,p);box(.4,.08,.36,m.plate,s*.06,.07,0,p)});chest(.56,.52);box(.4,.7,.03,gold,0,.92,.225,body);box(.1,.5,.04,m.red,0,1.18,.27,body)}
       else if(tb==='drowned'){paul((s,p)=>{cone(.14,.42,glass,s*.08,.28,0,p,0,0,-s*.5,3);cone(.1,.3,glass,s*.04,.28,.14,p,.4,0,-s*.3,3)});chest(.52,.5);for(let k=0;k<4;k++)cone(.1,.22,glass,0,1.38-k*.12,-.28,body,-Math.PI/2.4,0,0,3);for(const s of[-1,1])box(.05,.4,.03,glass,s*.18,.72,.22,body)}
       else{paul((s,p)=>{sph(.22,m.plate,s*.04,.08,0,p,1.15,.8,1.05);for(const[px,pz]of[[.14,0],[0,.14],[0,-.14]])cone(.05,.16,m.plate,s*.04+px*s,.2,pz,p)});chest();for(const x of[-.14,.14])box(.18,.32,.05,m.plate,x,.68,.2,body);for(const l of F.legs)D(ms(cylG(.1,.09,.3,6),m.plate,0,-.2,.01,l.knee))}
       for(const l of F.legs)if(tb==='steel'||tb==='iron'||tb==='warden')D(ms(cylG(.1,.09,.3,6),m.plate,0,-.2,.01,l.knee))}
@@ -1636,7 +1897,7 @@ function makeFigure(){
     else if(sb==='range'){
       for(const i of[0,1])D(ms(cylG(.092,.1,.2,7),m.belt,0,-.22,0,F.arms[i].el));
       if(tb==='leather'||tb==='hleather'){box(.09,.78,.04,m.cuff,.04,1.12,.2,body,0,0,.55);box(.5,.07,.05,m.belt,0,.93,.2,body);for(const x of[-.2,.2])box(.12,.14,.1,m.belt,x,.82,.2,body)}
-      else if(tb==='marsh'){for(let k=0;k<14;k++){const a=k/14*Math.PI*2;cone(.045,.5+hash(k,3,5)*.2,m.paul,Math.cos(a)*.34,.55,Math.sin(a)*.26,body,0,0,0,3).rotation.x=Math.PI}box(.5,.07,.05,m.belt,0,.93,.2,body);D(ms(new T.SphereGeometry(.34,8,5,0,Math.PI*2,0,Math.PI*.4),m.paul,0,1.32,0,body,1,.7,.75))}
+      else if(tb==='marsh'||tb==='briar'){for(let k=0;k<14;k++){const a=k/14*Math.PI*2;cone(.045,.5+hash(k,3,5)*.2,m.paul,Math.cos(a)*.34,.55,Math.sin(a)*.26,body,0,0,0,3).rotation.x=Math.PI}box(.5,.07,.05,m.belt,0,.93,.2,body);D(ms(new T.SphereGeometry(.34,8,5,0,Math.PI*2,0,Math.PI*.4),m.paul,0,1.32,0,body,1,.7,.75))}
       else if(tb==='fenhunter'){const c=D(new T.Group());body.add(c);D(ms(new T.ConeGeometry(.45,1.05,8,1,true),m.paul,0,.95,-.05,c,1,1,.6));D(ms(new T.SphereGeometry(.38,9,5,0,Math.PI*2,0,Math.PI*.4),m.paul,0,1.34,0,c,1,.7,.75));box(.09,.78,.04,m.cuff,.04,1.12,.2,body,0,0,.55);for(const i of[0,1])box(.14,.12,.14,m.cuff,0,-.26,0,F.arms[i].el)}
       else if(tb==='ash'){for(const s of[-1,1]){for(let k=0;k<3;k++)cone(.05,.22,LM('#e8e0d0'),s*.04+s*k*.06,.2,.02*k,sh0[s<0?0:1],0,0,-s*(.2+k*.3),4)}box(.46,.1,.05,flame,0,1.4,.2,body);box(.5,.07,.05,m.belt,0,.93,.2,body);D(ms(new T.ConeGeometry(.4,.6,8,1,true),m.paul,0,.78,-.05,body,1,1,.6))}
       else{box(.09,.78,.04,m.cuff,.04,1.12,.2,body,0,0,.55);D(ms(new T.ConeGeometry(.42,.78,8,1,true),m.paul,0,1.0,-.04,body,1,1,.6))}}
@@ -1645,21 +1906,21 @@ function makeFigure(){
       D(ms(cylG(.3,.5,.78,10),m.tunic,0,.55,0,body,1,1,.78));D(ms(cylG(.505,.505,.08,10),m.red,0,.17,0,body,1,1,.78));D(ms(cylG(.31,.31,.07,10),m.red,0,.93,0,body,1,1,.78));
       for(const i of[0,1])D(ms(cylG(.1,.17,.22,7),m.red,0,-.2,0,F.arms[i].el));D(ms(new T.SphereGeometry(.4,9,5,0,Math.PI*2,0,Math.PI*.42),m.paul,0,1.3,0,body,1,.8,.8));
       if(tb==='mage'){D(ms(cylG(.03,.03,.5,5),LM('#c8b890'),0,.9,.2,body)).rotation.z=Math.PI/2;box(.04,.4,.04,LM('#c8b890'),.2,.7,.2,body)}
-      else if(tb==='veil'){D(ms(cylG(.34,.52,.62,10,1,true),EM(0x6ac8d8,0x1a5a6a),0,.52,0,body,1,1,.82)).material.transparent=true;box(.4,.6,.02,EM(0x9ae0f0,0x2a6a7a),0,.7,.24,body);for(const x of[-.15,.15])box(.05,.5,.02,glass,x,.7,.25,body)}
+      else if(tb==='veil'||tb==='tide'){D(ms(cylG(.34,.52,.62,10,1,true),EM(0x6ac8d8,0x1a5a6a),0,.52,0,body,1,1,.82)).material.transparent=true;box(.4,.6,.02,EM(0x9ae0f0,0x2a6a7a),0,.7,.24,body);for(const x of[-.15,.15])box(.05,.5,.02,glass,x,.7,.25,body)}
       else if(tb==='arcane'){D(ms(cylG(.505,.505,.14,10),gold,0,.14,0,body,1,1,.78));for(const[x,y]of[[-.15,.8],[.15,.6],[0,.4]])D(ms(new T.OctahedronGeometry(.05),gold,x,y,.28,body));D(ms(new T.TorusGeometry(.34,.03,5,12),gold,0,1.3,0,body)).rotation.x=Math.PI/2}
       else if(tb==='cinder'){for(let k=0;k<12;k++){const a=k/12*Math.PI*2;cone(.08,.3,flame,Math.cos(a)*.5,.14,Math.sin(a)*.4,body,0,0,0,3)}for(const s of[-1,1])cone(.06,.4,flame,s*.4,1.58,0,body,0,0,-s*.5)}
       else if(tb==='voidtouched'){for(let k=0;k<9;k++){const a=k/9*Math.PI*2;cone(.09,.34+hash(k,7,3)*.2,LM('#1a1030'),Math.cos(a)*.5,.12,Math.sin(a)*.4,body,Math.PI,0,0,3)}for(let k=0;k<5;k++)D(ms(new T.OctahedronGeometry(.06),void_,Math.cos(k*1.3)*.55,.4+k*.18,Math.sin(k*1.3)*.4,body))}}
     /* ---------- heads ---------- */
     if(sh==='mage'){
       if(th==='mage'){D(ms(cylG(.36,.36,.03,10),m.helm,0,.1,0,head));D(ms(new T.ConeGeometry(.2,.5,8),m.helm,0,.36,0,head));cone(.09,.3,m.helm,.12,.62,0,head,0,0,-1.1,6);box(.42,.04,.42,m.red,0,.14,0,head)}
-      else if(th==='veil'){D(ms(new T.SphereGeometry(.24,9,6,0,Math.PI*2,0,Math.PI*.72),m.helm,0,.0,-.015,head,1,1.1,1.05));box(.3,.2,.01,EM(0x9ae0f0,0x2a6a7a),0,-.04,.24,head);box(.3,.5,.01,m.helm,0,-.3,-.2,head)}
+      else if(th==='veil'||th==='tide'){D(ms(new T.SphereGeometry(.24,9,6,0,Math.PI*2,0,Math.PI*.72),m.helm,0,.0,-.015,head,1,1.1,1.05));box(.3,.2,.01,EM(0x9ae0f0,0x2a6a7a),0,-.04,.24,head);box(.3,.5,.01,m.helm,0,-.3,-.2,head)}
       else if(th==='arcane'){D(ms(cylG(.38,.38,.03,10),m.helm,0,.1,0,head));D(ms(new T.ConeGeometry(.19,.78,8),m.helm,0,.5,0,head));D(ms(new T.OctahedronGeometry(.09),gold,0,.93,0,head));D(ms(cylG(.2,.2,.07,8),gold,0,.14,0,head));for(const[x,y]of[[-.08,.4],[.08,.55],[0,.7]])D(ms(new T.OctahedronGeometry(.025),gold,x,y,.17,head))}
       else if(th==='cinder'){D(ms(cylG(.25,.28,.1,9),m.helm,0,.1,0,head));for(let k=0;k<7;k++){const a=k/7*Math.PI*2;cone(.07,.34+(k%2)*.14,flame,Math.cos(a)*.24,.3,Math.sin(a)*.24,head,0,0,0,3)}}
       else if(th==='voidtouched'){D(ms(new T.SphereGeometry(.23,9,6,0,Math.PI*2,0,Math.PI*.68),m.helm,0,.0,-.015,head,1,1.1,1.05));for(let k=0;k<6;k++){const a=k/6*Math.PI*2;cone(.05,.3+(k%3)*.1,void_,Math.cos(a)*.22,.3,Math.sin(a)*.22,head,0,0,0,3)}}
       else{D(ms(cylG(.36,.36,.03,10),m.helm,0,.1,0,head));D(ms(new T.ConeGeometry(.2,.55,8),m.helm,0,.38,0,head))}}
     else if(sh==='range'){
       D(ms(new T.SphereGeometry(.235,9,6,0,Math.PI*2,0,Math.PI*.7),m.helm,0,.0,-.015,head,1,1.08,1.05));D(ms(new T.ConeGeometry(.12,.34,5),m.helm,0,.0,-.26,head)).rotation.x=-Math.PI/2.4;
-      if(th==='marsh'){for(const x of[-.08,0,.08])cone(.04,.28,m.cuff,x,.26,.02,head,0,0,x*3,3)}
+      if(th==='marsh'||th==='briar'){for(const x of[-.08,0,.08])cone(.04,.28,m.cuff,x,.26,.02,head,0,0,x*3,3)}
       else if(th==='fenhunter'){D(ms(cylG(.32,.32,.03,9),m.helm,0,.12,0,head));cone(.03,.5,LM('#e8e0b0'),.2,.34,-.05,head,0,0,-.9,3);cone(.03,.4,LM('#c85a4a'),.24,.3,-.02,head,0,0,-.8,3)}
       else if(th==='ash'){box(.3,.22,.02,LM('#e8e0d0'),0,-.07,.215,head);box(.05,.05,.02,flame,-.06,-.02,.226,head);box(.05,.05,.02,flame,.06,-.02,.226,head);cone(.04,.18,LM('#e8e0d0'),-.14,.2,.1,head,0,0,.4,3);cone(.04,.18,LM('#e8e0d0'),.14,.2,.1,head,0,0,-.4,3)}
       else box(.3,.05,.05,m.cuff,0,.12,.18,head)}
@@ -1669,7 +1930,7 @@ function makeFigure(){
       else if(th==='steel'){box(.04,.09,.5,m.helm,0,.28,0,head);box(.04,.2,.1,m.helm,-.22,-.05,.02,head);box(.04,.2,.1,m.helm,.22,-.05,.02,head);box(.04,.16,.03,m.helm,0,-.02,.225,head)}
       else if(th==='mythril'){for(const s of[-1,1]){box(.02,.34,.2,m.helm,s*.22,.12,-.04,head,0,0,s*.5);box(.02,.2,.14,m.helm,s*.2,.0,-.04,head,0,0,s*.9)}D(ms(new T.OctahedronGeometry(.045),glass,0,.12,.215,head))}
       else if(th==='ember'){for(const s of[-1,1]){cone(.06,.4,flame,s*.2,.22,0,head,0,0,-s*.8);cone(.05,.22,flame,s*.26,.36,0,head,0,0,-s*.2)}box(.04,.2,.1,m.helm,-.22,-.05,.02,head);box(.04,.2,.1,m.helm,.22,-.05,.02,head)}
-      else if(th==='warden'){for(let k=-2;k<=2;k++)cone(.04,.3,gold,k*.07,.26,-.02,head,0,0,-k*.25,4);box(.04,.2,.1,m.helm,-.22,-.05,.02,head);box(.04,.2,.1,m.helm,.22,-.05,.02,head)}
+      else if(th==='warden'||th==='aurelite'){for(let k=-2;k<=2;k++)cone(.04,.3,gold,k*.07,.26,-.02,head,0,0,-k*.25,4);box(.04,.2,.1,m.helm,-.22,-.05,.02,head);box(.04,.2,.1,m.helm,.22,-.05,.02,head)}
       else if(th==='drowned'||th==='mythril'){for(let k=0;k<5;k++){const a=(k-2)*.5;cone(.045,.28,glass,Math.sin(a)*.2,.22,Math.cos(a)*.2-.02,head,0,0,0,3)}}
       else box(.04,.2,.1,m.helm,-.22,-.05,.02,head)}
     /* ---------- shields ---------- */
@@ -1709,7 +1970,7 @@ function makeFigure(){
        else if(tier==='fang'){grip(.16);const c=ms(new T.ConeGeometry(.07,.5,5),LM('#d8d2bf'),0,.38,.04,T0);c.rotation.x=-.25}
        else done=false}
      else if(kind==='mace'){
-       if(id==='drowned_trident'){ms(cylG(.025,.03,1.1,5),wood,0,.45,0,T0);for(const z of[-.13,0,.13]){bx(.03,.3,.03,gl,0,1.1+(z===0?.06:0),z,T0)}bx(.04,.04,.34,gl,0,1.0,0,T0);for(const z of[-.13,0,.13])ms(new T.ConeGeometry(.03,.1,4),gl,0,1.3+(z===0?.06:0),z,T0)}
+       if(id==='drowned_trident'||id==='reef_trident'){ms(cylG(.025,.03,1.1,5),wood,0,.45,0,T0);for(const z of[-.13,0,.13]){bx(.03,.3,.03,gl,0,1.1+(z===0?.06:0),z,T0)}bx(.04,.04,.34,gl,0,1.0,0,T0);for(const z of[-.13,0,.13])ms(new T.ConeGeometry(.03,.1,4),gl,0,1.3+(z===0?.06:0),z,T0)}
        else if(tier==='copper'){ms(cylG(.03,.04,.6,5),wood,0,.27,0,T0);ms(new T.SphereGeometry(.15,8,6),mm,0,.66,0,T0)}
        else if(tier==='iron'){ms(cylG(.03,.04,.62,5),wood,0,.28,0,T0);ms(cylG(.07,.07,.26,6),mm,0,.7,0,T0);for(let k=0;k<4;k++){const a=k*Math.PI/2;bx(.03,.2,.1,mm,Math.cos(a)*.1,.7,Math.sin(a)*.1,T0).rotation.y=-a}}
        else if(tier==='mythril'){ms(cylG(.03,.04,.62,5),wood,0,.28,0,T0);ms(new T.OctahedronGeometry(.2),gl,0,.78,0,T0,.8,1.3,.8)}
@@ -1827,7 +2088,7 @@ function buildWorld(Mp){
       if(h>2.1)CC.lerp(SNOWC,sstep(2.1,2.7,h)*(1-slope*1.2>.2?1:.4))}
     if(anyNat&&h<-.04&&h>-.5){CC.lerp(FOAM,sstep(-.5,-.16,h)*.5*(1-sstep(-.16,-.02,h)*.6))}
     const lum=(allFlat?.96:.86)+fbm(x*1.6,z*1.6,95)*.34+(hash(sx,sy,96)-.5)*.04;CC.multiplyScalar(lum);
-    if(isMulti(Mp,x,z))CC.lerp(ZTINT,.16);
+    if(isMulti(Mp,x,z))CC.lerp(ZTINT,.3);
     CG[i*3]=CC.r;CG[i*3+1]=CC.g;CG[i*3+2]=CC.b}
   Mp.terrain=[];const CS=32,tmat=new T.MeshLambertMaterial({vertexColors:true});
   for(let c0=0;c0<SH-1;c0+=CS)for(let r0=0;r0<SW-1;r0+=CS){const nx=Math.min(CS,SW-1-r0),ny=Math.min(CS,SH-1-c0),vc=(nx+1)*(ny+1);
@@ -1918,6 +2179,15 @@ function buildProps(Mp,grp){
         else if(k==='arcane'){bx(1.5,.34,.09,LM('#2a2150'),0,2.45,d/2+.1,g);ms(new T.OctahedronGeometry(.18),EM('#c9a6ff','#7a4bd0'),0,2.45,d/2+.2,g);
           const cr=ms(new T.OctahedronGeometry(.4),EM('#b58bff','#7a4bd0'),0,h+1.55,d*.1,g,.6,1.5,.6);const gl=new T.PointLight(0xa070ff,.8,6,2);gl.position.set(0,h+1.6,d*.1);g.add(gl);Mp.anim.push({orb:cr,light:gl})}
         break}
+      case'castle':{const st=LM(p.wall),dk=LM('#6a665c'),rf=LM(p.roof),w=p.w,d=p.d;
+        bx(w,4.2,d,st,0,2.1,0,g);bx(w-6,3,d-2,st,0,5.7,0,g);bx(w+.4,.35,d+.4,dk,0,.18,0,g);
+        for(const sx of[-1,1])for(const sz of[-1,1]){ms(cylG(1.7,1.9,8.2,10),st,sx*(w/2-.9),4.1,sz*(d/2-.9),g);ms(new T.ConeGeometry(2.1,2.4,10),rf,sx*(w/2-.9),9.4,sz*(d/2-.9),g)}
+        ms(cylG(1.6,1.8,4,10),st,0,8.2,-1,g);ms(new T.ConeGeometry(2.2,2.8,10),rf,0,11.6,-1,g);bx(.08,2.2,.08,wood,0,13.8,-1,g);bx(.9,.55,.05,LM('#8a2a33'),.5,14.3,-1,g);
+        bx(2.8,2.8,.5,LM('#2a2420'),0,1.4,d/2,g);bx(3.4,.3,.6,dk,0,2.9,d/2+.05,g);for(const sx of[-1,1])bx(.5,3,.6,dk,sx*1.8,1.5,d/2+.05,g);
+        for(let q=-w/2+1.2;q<w/2-.5;q+=1.7)bx(.9,.6,.5,st,q,4.5,d/2-.2,g);
+        for(const sx of[-5,-2.5,2.5,5])bx(.7,1.6,.06,LM('#8a2a33'),sx,2.6,d/2+.05,g);
+        g.add(blob(w*.45));break}
+      case'ship':{const col=p.col||'#7a4a2a';bx(2.4,.7,6,LM(col),0,.35,0,g);const bow=bx(1.6,.5,1.8,LM(col),0,.6,3.6,g);bow.rotation.x=.45;bx(.14,5,.14,wood,0,3.2,.2,g);bx(.08,.08,2.4,wood,0,5.2,.2,g);bx(.05,3.4,2.2,LM('#efe6cf'),0,3.4,.2,g);bx(2.7,.12,6.2,LM('#4a3320'),0,.74,0,g);break}
       case'bench2':{bx(1.3,.1,.45,wood,0,.5,0,g);for(const sx of[-1,1])bx(.1,.5,.4,wood,sx*.5,.25,0,g);bx(1.3,.34,.06,wood,0,.85,-.2,g);break}
       case'board':{bx(.1,1.6,.1,wood,-.6,.8,0,g);bx(.1,1.6,.1,wood,.6,.8,0,g);bx(1.5,.9,.08,LM('#8a6a45'),0,1.35,0,g);bx(1.7,.1,.2,wood,0,1.88,0,g);for(const[x2,y2,c2]of[[-.4,1.5,'#efe6cf'],[.1,1.25,'#e6d9b0'],[.45,1.55,'#efe6cf']])bx(.3,.4,.02,LM(c2),x2,y2,.06,g);break}
       case'hay':{ms(cylG(.45,.45,.7,8),LM('#cbb260'),0,.35,0,g).rotation.z=Math.PI/2;ms(cylG(.46,.46,.08,8),LM('#b39a48'),0,.35,0,g).rotation.z=Math.PI/2;break}
@@ -1994,9 +2264,16 @@ function buildObj(o,x,y,Mp){
   else if(k==='portal'){const rock=ms(jitter(new T.DodecahedronGeometry(1,1),.22,x+y),LM('#7a7e84'),0,.7,0,g,1.2,.95,1.0);bx(.8,.9,.4,LM('#0b0908'),0,.45,.82,g);bx(.18,1.1,.3,LM('#8a8e94'),-.5,.55,.82,g);bx(.18,1.1,.3,LM('#8a8e94'),.5,.55,.82,g);bx(1.2,.22,.32,LM('#8a8e94'),0,1.12,.82,g);g.add(blob(1.3))}
   else if(k==='crypt'){bx(.28,1.5,.5,LM('#8e9098'),-.6,.75,0,g);bx(.28,1.5,.5,LM('#8e9098'),.6,.75,0,g);bx(1.7,.3,.55,LM('#8e9098'),0,1.55,0,g);bx(.95,1.3,.3,LM('#0b0908'),0,.65,-.05,g);
     for(let i=0;i<4;i++)bx(.95,.08,.3,LM('#6f6c66'),0,.1+i*.06,.2+i*.2,g);ms(new T.IcosahedronGeometry(.14,0),LM('#d9d4c4'),0,1.8,.05,g);g.add(blob(1))}
+  else if(k==='counter'){bx(.96,.9,.96,LM('#7a5230'),0,.45,0,g);bx(1.0,.1,1.0,LM('#a67a4a'),0,.95,0,g);g.add(blob(.6))}
+  else if(k==='shelf'){bx(.9,1.7,.5,LM('#6a4a2a'),0,.85,0,g);for(let q=0;q<3;q++){bx(.82,.06,.46,LM('#8a6a3a'),0,.4+q*.5,0,g);for(let b2=0;b2<4;b2++)bx(.12,.3,.3,LM(['#c9a24a','#8a2a33','#3f6a8a','#6a8a3a'][(b2+q)%4]),-.3+b2*.2,.58+q*.5,0,g)}}
+  else if(k==='throne'){bx(1.6,.5,1.2,LM('#7a1a2a'),0,.25,0,g);bx(1.3,.5,.9,LM('#c9a24a'),0,.7,0,g);bx(1.3,1.9,.25,LM('#c9a24a'),0,1.5,-.45,g);ms(new T.OctahedronGeometry(.2),EM('#ffe58a','#c9a24a'),0,2.6,-.45,g);for(const sx of[-1,1])bx(.18,.8,.8,LM('#a8822a'),sx*.7,.9,0,g);g.add(blob(1.1))}
+  else if(k==='crop'){const ct=o.ct,col=ct==='wheat'?'#d9c24a':ct==='cabbage'?'#7ac85a':'#4a9a3a';o.body=new T.Group();g.add(o.body);
+    if(ct==='wheat'){for(let i=0;i<5;i++){const a=i*1.3;ms(cylG(.025,.025,.7,4),LM('#c9b050'),Math.cos(a)*.18,.35,Math.sin(a)*.18,o.body);ms(new T.IcosahedronGeometry(.07,0),LM(col),Math.cos(a)*.18,.72,Math.sin(a)*.18,o.body)}}
+    else if(ct==='cabbage'){ms(new T.IcosahedronGeometry(.22,0),LM(col),0,.2,0,o.body,1,.8,1);ms(new T.IcosahedronGeometry(.14,0),LM('#a8e088'),0,.3,0,o.body)}
+    else{for(let i=0;i<4;i++){const a=i*1.6;const c=ms(new T.ConeGeometry(.08,.4,4),LM(col),Math.cos(a)*.12,.22,Math.sin(a)*.12,o.body);c.rotation.z=Math.cos(a)*.35;c.rotation.x=Math.sin(a)*.35}ms(new T.IcosahedronGeometry(.07,0),LM('#c9a070'),.1,.06,.1,o.body)}}
   else if(k==='rift'){g.position.y=0;o.ring=ms(new T.TorusGeometry(.5,.07,5,16),EM(0xb58bff,0x5a2ab0),0,.9,0,g);o.core=ms(new T.OctahedronGeometry(.22),EM(0xe8d8ff,0x8a5ad0),0,.9,0,g);bx(.7,.08,.7,LM('#2a2040'),0,.04,0,g);g.add(blob(.7))}
   else if(k==='marsh'||k==='wastes'||k==='voidgate'||(k==='stairs'&&o.gate)){const st=LM('#8b8d94'),mt=k==='wastes'?EM(0xff8a3a,0x8a3a08):k==='voidgate'?EM(0xb58bff,0x4a2a8a):EM(0x7fe8f4,0x2a8a98);bx(.35,2.2,.5,st,-.8,1.1,0,g);bx(.35,2.2,.5,st,.8,1.1,0,g);bx(2.1,.4,.55,st,0,2.3,0,g);const mist=bx(1.25,1.9,.06,mt,0,1.05,0,g);mist.material=new T.MeshBasicMaterial({color:k==='wastes'?0xff8a3a:k==='voidgate'?0xb58bff:0x7fe8f4,transparent:true,opacity:.35,side:T.DoubleSide});mist.castShadow=false;ms(new T.OctahedronGeometry(.16),mt,0,2.7,0,g);g.add(blob(1.1))}
-  else if(k==='stairs'&&o.door){bx(.16,1.9,.3,LM('#5b3d24'),-.55,.95,0,g);bx(.16,1.9,.3,LM('#5b3d24'),.55,.95,0,g);bx(1.3,.2,.3,LM('#5b3d24'),0,1.9,0,g);bx(.9,1.7,.1,LM('#7a5230'),0,.85,-.05,g);ms(new T.IcosahedronGeometry(.07,0),LM('#c9a24a'),.3,.9,.05,g);bx(1.0,.04,.5,LM('#8f2a33'),0,.03,.55,g)}
+  else if((k==='stairs'&&o.door)||k==='enter'){bx(.16,1.9,.3,LM('#5b3d24'),-.55,.95,0,g);bx(.16,1.9,.3,LM('#5b3d24'),.55,.95,0,g);bx(1.3,.2,.3,LM('#5b3d24'),0,1.9,0,g);bx(.9,1.7,.1,LM('#7a5230'),0,.85,-.05,g);ms(new T.IcosahedronGeometry(.07,0),LM('#c9a24a'),.3,.9,.05,g);bx(1.0,.04,.5,LM('#8f2a33'),0,.03,.55,g)}
   else if(k==='stairs'){for(let i=0;i<5;i++)bx(1.2-i*.1,.14,.3,LM('#8c857b'),0,.07+i*.14,-.5+i*.3,g);bx(.2,1.5,.3,LM('#7e7870'),-.6,.75,.3,g);bx(.2,1.5,.3,LM('#7e7870'),.6,.75,.3,g)}
   else if(k==='pillar'){ms(cylG(.26,.3,1.8,8),LM('#8b8d94'),0,.9,0,g);bx(.7,.18,.7,LM('#a2a4ab'),0,1.85,0,g);bx(.7,.15,.7,LM('#8b8d94'),0,.08,0,g)}
   g.userData.pick={type:'obj',o,x,y};return g;
@@ -2010,15 +2287,21 @@ function mkEntity(parent,kind,e){
   else{F=makeFigure();F.applyPal(PAL[e.pal||e.role]);F.setTool(e.role==='cityguard'?null:null);g=new T.Group();g.add(F.g);g.scale.setScalar(FS);g.add(blob(.5));g.userData.pick={type:'npc',n:e}}
   e._g=g;e._F=F;e._ang=0;parent.add(g);return g;
 }
+function buildZoneMarks(Mp,grp,kind){const W=Mp.W,H=Mp.H,fn=kind==='safe'?(x,y)=>inSafe(Mp,x,y):(x,y)=>isMulti(Mp,x,y)&&!inSafe(Mp,x,y);
+  const pts=[];for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){if(!fn(x,y))continue;if(fn(x-1,y)&&fn(x+1,y)&&fn(x,y-1)&&fn(x,y+1))continue;const i=y*W+x;if(Mp.block[i]||Mp.t[i]===0||Mp.obj[i])continue;if(((x+y)%(kind==='safe'?3:2))!==0)continue;pts.push([x,y])}
+  if(!pts.length)return;const col=kind==='safe'?0x4acb78:0xe0524a,pole=new T.InstancedMesh(new T.BoxGeometry(.07,1.15,.07),new T.MeshLambertMaterial({color:0x4a3a2a}),pts.length),flag=new T.InstancedMesh(new T.BoxGeometry(.5,.3,.04),new T.MeshBasicMaterial({color:col,side:T.DoubleSide}),pts.length);
+  pts.forEach(([x,y],n)=>{const h=hAt(Mp,x+.5,y+.5);D.rotation.set(0,0,0);D.scale.set(1,1,1);D.position.set(x+.5,h+.57,y+.5);D.updateMatrix();pole.setMatrixAt(n,D.matrix);D.position.set(x+.75,h+1.0,y+.5);D.updateMatrix();flag.setMatrixAt(n,D.matrix)});
+  pole.castShadow=false;flag.castShadow=false;pole.frustumCulled=flag.frustumCulled=false;grp.add(pole);grp.add(flag)}
 function buildMapGroup(Mp){
   const grp=Mp.dark?buildDungeon(Mp):buildWorld(Mp),pick=[];
   for(let i=0;i<Mp.obj.length;i++){const o=Mp.obj[i];if(o){const x=i%Mp.W,y=(i/Mp.W)|0,og=buildObj(o,x,y,Mp);o._g=og;grp.add(og);pick.push(og);Mp.objs=Mp.objs||[];Mp.objs.push({o,x,y})}}
   for(const m of Mp.mobs)pick.push(mkEntity(grp,'mob',m));
   for(const n of Mp.npcs)pick.push(mkEntity(grp,'npc',n));
   if(Mp.liquid&&Mp.water){const L=Mp.liquid;Mp.water.material.color.setHex(L.c);Mp.water.material.emissive.setHex(L.e);Mp.water.material.opacity=L.o;Mp.water.material.map=null;Mp.water.material.needsUpdate=true}
+  if(!Mp.indoor){buildZoneMarks(Mp,grp,'multi');buildZoneMarks(Mp,grp,'safe')}
   Mp.pick=pick;Mp.group=grp;grp.visible=false;scene.add(grp);return grp;
 }
-buildMapGroup(WORLD);buildMapGroup(DUN);buildMapGroup(CRYPT);buildMapGroup(HOME);buildMapGroup(MARSH);buildMapGroup(EMBER);buildMapGroup(VOID);
+buildMapGroup(WORLD);buildMapGroup(DUN);buildMapGroup(CRYPT);buildMapGroup(HOME);buildMapGroup(MARSH);buildMapGroup(EMBER);buildMapGroup(VOID);buildMapGroup(REALM);for(const mp of Object.values(INTS))buildMapGroup(mp);
 const heroF=makeFigure();heroF.applyPal(PAL.hero);heroF.g.scale.setScalar(FS);scene.add(heroF.g);const heroBlob=blob(.5*FS+.1);scene.add(heroBlob);
 const markMesh=new T.Mesh(new T.RingGeometry(.3,.4,18),new T.MeshBasicMaterial({color:0xffe58a,transparent:true,opacity:0,depthWrite:false,side:T.DoubleSide}));markMesh.rotation.x=-Math.PI/2;scene.add(markMesh);
 const teleRing=new T.Mesh(new T.RingGeometry(1.0,1.2,24),new T.MeshBasicMaterial({color:0xff4a32,transparent:true,opacity:.85,depthWrite:false,side:T.DoubleSide}));teleRing.rotation.x=-Math.PI/2;teleRing.visible=false;scene.add(teleRing);
@@ -2033,7 +2316,7 @@ function showMap(Mp){for(const k of ALLM)k.group.visible=(k===Mp);shown=Mp;const
   scene.background=new T.Color(e.bg);scene.fog=new T.Fog(e.bg,e.fogN,e.fogF);hemi.intensity=e.hemi;sun.intensity=e.sun;sun.castShadow=!Mp.dark&&qLevel<1;plLight.intensity=Mp.indoor?.35:Mp.dark?1.7:0;if(Mp.dark){hemi.color.copy(HEMI_D);hemi.groundColor.copy(GND_D)}focusInit=false}
 const angOf=(trail,face,cur)=>{let a=null;if(trail.length>1){const p=trail[trail.length-1],q=trail[trail.length-2];a=Math.atan2(p[0]-q[0],p[1]-q[1])}else if(face)a={down:0,up:Math.PI,right:Math.PI/2,left:-Math.PI/2}[face];return a===null||a===undefined?cur:a};
 function turn(cur,target,dt){let d=target-cur;while(d>Math.PI)d-=Math.PI*2;while(d<-Math.PI)d+=Math.PI*2;return cur+d*Math.min(1,dt*10)}
-const LABELS={silver:'Silver vein',gold:'Gold vein',wastes:'To Emberwaste',voidgate:'To Voidreach',rift:'Void rift',ember:'Emberstone vein',bounty:'Bounty board',marsh:'To Mistfen',mythril:'Mythril vein',home:'Your house',chest:'Chest',altar:'Sigil altar',sigil:'Sigilstone',bench:'Workbench',fish:'Fishing spot',furnace:'Furnace',anvil:'Anvil',fire:'Cooking fire',cauldron:'Cauldron',portal:'Rat Warrens',crypt:'Keep Crypts',stairs:'Way out'};
+const LABELS={enter:'Door',crop:'Crops',counter:'',silver:'Silver vein',gold:'Gold vein',wastes:'To Emberwaste',voidgate:'To Voidreach',rift:'Void rift',ember:'Emberstone vein',bounty:'Bounty board',marsh:'To Mistfen',mythril:'Mythril vein',home:'Your house',chest:'Chest',altar:'Sigil altar',sigil:'Sigilstone',bench:'Workbench',fish:'Fishing spot',furnace:'Furnace',anvil:'Anvil',fire:'Cooking fire',cauldron:'Cauldron',portal:'Rat Warrens',crypt:'Keep Crypts',stairs:'Way out'};
 const V3=new T.Vector3();
 function proj(x,y,z){V3.set(x,y,z).project(cam);return V3.z<1?[(V3.x+1)/2*CW,(1-V3.y)/2*CH]:null}
 const gearSig=()=>[S.eq.armour,S.eq.weapon,S.eq.helm,S.eq.shield].join('|');
@@ -2043,25 +2326,26 @@ function heroPal(){const p=Object.assign({},PAL.hero),a=ITEMS[S.eq.armour];
     if(a&&a.tier==='mage'||a&&a.tier==='veil'){const c=MT[a.tier];p.tunic=c[0];p.red=c[1];p.paul=c[0];p.plate=c[0];p.cuff=c[1];p.trou=c[0];p.cape=c[0]}
     if(hh&&MT[hh.tier]&&['mage','veil','arcane'].includes(hh.tier)){p.helm=MT[hh.tier][0];p.hat=true;p.plume=hh.tier==='arcane'?MT[hh.tier][1]:undefined}
     if(ss&&MT[ss.tier])p.shield=MT[ss.tier][0]}
-  {const T2={ash:['#8a4a2a','#4a2a1a'],marsh:['#4a6a3a','#2e4a2a'],fenhunter:['#2e5a3a','#1e3a28'],warden:['#a8883a','#d8c060'],drowned:['#2a6a7a','#7fd0e8']},hh2=ITEMS[S.eq.helm],ss2=ITEMS[S.eq.shield];
+  {const T2={briar:['#3a6a2a','#6a4a2a'],ash:['#8a4a2a','#4a2a1a'],marsh:['#4a6a3a','#2e4a2a'],fenhunter:['#2e5a3a','#1e3a28'],warden:['#a8883a','#d8c060'],drowned:['#2a6a7a','#7fd0e8']},hh2=ITEMS[S.eq.helm],ss2=ITEMS[S.eq.shield];
     if(a&&T2[a.tier]){const c=T2[a.tier];p.tunic=c[0];p.red=c[1];p.paul=c[1];p.plate=c[1];p.cuff=c[1];if(a.tier==='warden'||a.tier==='drowned'){p.trou=c[0]}}
     if(hh2&&T2[hh2.tier]){p.helm=T2[hh2.tier][1]}
     if(ss2&&T2[ss2.tier])p.shield=T2[ss2.tier][1]}
-  for(const[tn,c0]of[['cinder',['#5a1a10','#ff7a2a','#e0602a']],['voidtouched',['#1a1030','#a070f0','#8a5ad0']]]){if(a&&a.tier===tn){p.tunic=c0[0];p.red=c0[1];p.paul=c0[2];p.plate=c0[2];p.cuff=c0[1];p.trou=c0[0];p.cape=c0[0]}const hx=ITEMS[S.eq.helm];if(hx&&hx.tier===tn){p.helm=c0[2];p.hat=true;p.plume=c0[1]}}
+  for(const[tn,c0]of[['tide',['#0f3a4a','#5ae0d0','#2a8a9a']],['cinder',['#5a1a10','#ff7a2a','#e0602a']],['voidtouched',['#1a1030','#a070f0','#8a5ad0']]]){if(a&&a.tier===tn){p.tunic=c0[0];p.red=c0[1];p.paul=c0[2];p.plate=c0[2];p.cuff=c0[1];p.trou=c0[0];p.cape=c0[0]}const hx=ITEMS[S.eq.helm];if(hx&&hx.tier===tn){p.helm=c0[2];p.hat=true;p.plume=c0[1]}}
   if(a&&a.tier==='arcane'){p.tunic='#4a2a7a';p.red='#c8a84a';p.paul='#7a4ab0';p.plate='#7a4ab0';p.cuff='#c8a84a';p.trou='#3a2060';p.cape='#341a5a'}
   if(a&&a.tier==='leather'){p.tunic='#7a5a34';p.red='#4a3320';p.paul='#8a6a3c';p.plate='#8a6a3c';p.cuff='#5b3d24';p.trou='#3d3020'}
   if(a&&a.tier==='hleather'){p.tunic='#5a4028';p.red='#2e2218';p.paul='#6b5030';p.plate='#6b5030';p.cuff='#3b2c1c';p.trou='#2a2218';p.helm='#5a4028'}
-  const TPC={copper:'#cf8f4f',iron:'#b9c1c8',steel:'#d4dbe6',mythril:'#8fe0f4',ember:'#f08a4a'},hl=ITEMS[S.eq.helm],sd=ITEMS[S.eq.shield];
+  const TPC={copper:'#cf8f4f',iron:'#b9c1c8',steel:'#d4dbe6',mythril:'#8fe0f4',ember:'#f08a4a',aurelite:'#f2dc98'},hl=ITEMS[S.eq.helm],sd=ITEMS[S.eq.shield];
+  if(a&&a.tier==='aurelite'){p.tunic='#d8d0b0';p.red='#a8222d';p.paul='#f0d890';p.plate='#f0d890';p.cuff='#f0d890';p.trou='#6a5a3a';p.helm='#f0d890'}
   if(a&&a.tier==='ember'){p.tunic='#3a1a14';p.red='#ff7a2a';p.paul='#f08a4a';p.plate='#f08a4a';p.cuff='#f08a4a';p.trou='#2a1612';p.helm='#e0602a'}
   if(a&&(a.tier==='steel'||a.tier==='mythril')){const c=TPC[a.tier];p.tunic=a.tier==='steel'?'#59606e':'#2f4f66';p.red=a.tier==='steel'?'#7a2733':'#1f8aa8';p.paul=c;p.plate=c;p.cuff=c}
   if(hl&&TPC[hl.tier])p.helm=TPC[hl.tier];if(sd&&TPC[sd.tier])p.shield=TPC[sd.tier];
-  const w=ITEMS[S.eq.weapon];if(w&&w.magic&&!(a&&['mage','veil','arcane','cinder','voidtouched'].includes(a.tier))){p.tunic='#2e3a7a';p.red='#c8a84a';p.cape='#232c66';p.paul='#4a5aa8'}
+  const w=ITEMS[S.eq.weapon];if(w&&w.magic&&!(a&&['mage','veil','arcane','cinder','voidtouched','tide'].includes(a.tier))){p.tunic='#2e3a7a';p.red='#c8a84a';p.cape='#232c66';p.paul='#4a5aa8'}
   if(a&&a.tier==='copper'){p.tunic='#7a4a2a';p.red='#9c5d33';p.paul='#cf8f4f';p.plate='#cf8f4f';p.cuff='#cf8f4f'}
   if(a&&a.tier==='iron'){p.tunic='#4d535b';p.red='#6b7480';p.paul='#b9c1c8';p.plate='#b9c1c8';p.cuff='#b9c1c8';p.helm='#aab3ba'}
   if(a&&a.tier==='plate'){p.tunic='#39404f';p.red='#7a2733';p.paul='#9aa6bd';p.plate='#9aa6bd';p.cuff='#9aa6bd';p.helm='#8d99b0';p.plume='#7a2733'}
   p.sb=gStyle(a);p.tb=a?a.tier:'';p.sd=ITEMS[S.eq.shield]?ITEMS[S.eq.shield].tier:'';{const hh=ITEMS[S.eq.helm];p.sh=gStyle(hh);p.th=hh?hh.tier:'';if(p.sh==='mage'||p.sh==='range')p.helm=p.helm||hh.col}
   return p}
-const gStyle=it=>!it?'':(it.rq==='magic'||['mage','veil','arcane','void','cinder','voidtouched'].includes(it.tier))?'mage':(it.rq==='ranged'||['leather','hleather','marsh','fenhunter','ash'].includes(it.tier))?'range':'melee';
+const gStyle=it=>!it?'':(it.rq==='magic'||['mage','veil','arcane','void','cinder','voidtouched','tide'].includes(it.tier))?'mage':(it.rq==='ranged'||['leather','hleather','marsh','fenhunter','ash','briar'].includes(it.tier))?'range':'melee';
 const ZERO_M=new T.Matrix4().makeScale(0,0,0);
 function showTree(i,on,mp){mp=mp||M;const r=mp.treeRef&&mp.treeRef[i];if(!r)return;if(!on){r.m=r.ims.map(im=>{const m=new T.Matrix4();im.getMatrixAt(r.n,m);return m});r.ims.forEach(im=>{im.setMatrixAt(r.n,ZERO_M);im.instanceMatrix.needsUpdate=true})}
   else if(r.m){r.ims.forEach((im,k)=>{im.setMatrixAt(r.n,r.m[k]);im.instanceMatrix.needsUpdate=true});r.m=null}}
@@ -2073,9 +2357,9 @@ function updShots(now){for(let k=shots.length-1;k>=0;k--){const s=shots[k],q=(no
   s.g.position.set(x,y,z);s.g.lookAt(x2,hAt(M,x2,z2)+1.0+Math.sin(Math.min(1,q+.05)*Math.PI)*.5,z2)}}
 const PETS={pet_rat:{art:'rat',col:'#5d5249'},pet_gnaw:{art:'rat',col:'#8a6045'},pet_toad:{art:'rat',col:'#5a8a3a'},pet_hound:{art:'wolf',col:'#5d7468'},pet_wisp:{orb:'#8ad8ff'},pet_golem:{cube:'#8a8a98'},pet_drowned:{orb:'#7fe8f4'},pet_veyra:{orb:'#c08cff'},pet_aldric:{orb:'#e8c14a'}};
 let petG=null,petId=null,petPos=null;
-Object.assign(NEED,{ember:32,silver:25,gold:40});Object.assign(MXP,{ember:22,silver:16,gold:30});Object.assign(HEAL,{cooked_trout:22,cooked_salmon:30,cooked_lobster:40,cooked_swordfish:52,cooked_eel:44,cooked_voidfin:60});
-Object.assign(PETDROP,{tyrant:['pet_tyrant',40],maw:['pet_maw',40]});
-Object.assign(PETS,{pet_tyrant:{orb:'#ff7a2a'},pet_maw:{orb:'#a070f0'}});
+Object.assign(NEED,{ember:32,silver:25,gold:40,coal:30,aurelite:52});Object.assign(MXP,{ember:22,silver:16,gold:30,coal:18,aurelite:40});Object.assign(HEAL,{cooked_tuna:46,cooked_shark:64,baked_potato:16,cabbage:6,cooked_trout:22,cooked_salmon:30,cooked_lobster:40,cooked_swordfish:52,cooked_eel:44,cooked_voidfin:60});
+Object.assign(PETDROP,{tyrant:['pet_tyrant',40],maw:['pet_maw',40],garrick:['pet_garrick',40],briarmother:['pet_briar',40],reefqueen:['pet_reef',40]});
+Object.assign(PETS,{pet_tyrant:{orb:'#ff7a2a'},pet_maw:{orb:'#a070f0'},pet_briar:{orb:'#6acb4a'},pet_garrick:{art:'wolf',col:'#3a3a44'},pet_reef:{art:'rat',col:'#e0804a'}});
 for(const k in TAME)PETS['beast_'+k]={art:TAME[k].art,col:TAME[k].col};
 function updPet(now,dt){
   if(!S.pet||!PETS[S.pet]){if(petG)petG.visible=false;return}
@@ -2133,6 +2417,7 @@ function render(now){
     n._g.position.set(fx+.5,hAt(M,fx+.5,fy+.5)+.02,fy+.5);n._ang=turn(n._ang||0,{down:0,up:Math.PI,right:Math.PI/2,left:-Math.PI/2}[n.dir],dt);n._g.rotation.y=n._ang;animFigure(n._F,now+n.x*70,a<1,{tool:null,attack:-1,dt})}
   if(tele){teleRing.visible=true;teleRing.position.set(tele._g.position.x,.1,tele._g.position.z);const sc=(tele.def.sz||1)*FS*1.1*(1+.08*Math.sin(now/70));teleRing.scale.set(sc,sc,sc)}else teleRing.visible=false;
   for(const e of M.objs||[]){const o=e.o;if(o.k==='copper'||o.k==='iron'||o.k==='sigil'||o.k==='mythril'||o.k==='ember'||o.k==='silver'||o.k==='gold'){const dep=o.dep>tickN;o.flecks.visible=!dep;o.body.material=dep?LM('#5d6165'):LM('#868b90')}
+    else if(o.k==='crop'){o.body.visible=!(o.dep>tickN)}
     else if(o.k==='herb'){o.flecks.visible=!(o.dep>tickN);o._g.scale.y=o.dep>tickN?.55:1}
     else if(o.k==='altar'){o.orb.position.y=1.15+Math.sin(now/500)*.08;o.orb.rotation.y=now/400;o.light.intensity=.6+.2*Math.sin(now/300)}
     else if(o.k==='rift'){const dp=o.dep>tickN;o.ring.visible=o.core.visible=!dp;o.ring.rotation.z=now/500;o.ring.rotation.x=Math.sin(now/900)*.5;o.core.rotation.y=now/400;o.core.position.y=.9+Math.sin(now/600)*.08}
@@ -2184,7 +2469,7 @@ function drawOverlay(now,dt){
     if(inside)octx.restore()}
   if(M.treeSp){const wl=lvlOf(S.xp.woodcutting);let shown2=0;const px0=pl.x,py0=pl.y,cand=[];for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){const x=px0+dx,y=py0+dy;if(x<0||y<0||x>=M.W||y>=M.H)continue;const i=y*M.W+x,v=M.tree[i];if(!v)continue;const o=M.tOb&&M.tOb[i];if(o&&o.dep>tickN)continue;cand.push([dx*dx+dy*dy,x,y,M.treeSp[v-1]])}
     cand.sort((a,b)=>a[0]-b[0]);for(const[,x,y,sp]of cand){if(shown2>=5)break;const p=proj(x+.5,hAt(M,x+.5,y+.5)+2.6,y+.5);if(p){tag(p[0],p[1],sp.n+' · '+sp.lv,wl>=sp.lv?'#d8f0c0':'#ffa090');shown2++}}}
-  for(const e of M.objs||[]){const k=e.o.k;if((LABELS[k]||k==='slot')&&Math.hypot(e.x-pl.x,e.y-pl.y)<7){const p=proj(e.x+.5,hAt(M,e.x+.5,e.y+.5)+(k==='portal'||k==='crypt'?2.2:1.5),e.y+.5);if(p)tag(p[0],p[1],k==='slot'?(e.o.built?BUILDS[e.o.id].n:'Build: '+BUILDS[e.o.id].n):k==='fish'?FISHSP[e.o.sp||'fish'].spot:LABELS[k],e.o.built===false?'#ffe58a':'#f4efe0')}}
+  for(const e of M.objs||[]){const k=e.o.k;if((LABELS[k]||k==='slot')&&k!=='counter'&&Math.hypot(e.x-pl.x,e.y-pl.y)<7){const p=proj(e.x+.5,hAt(M,e.x+.5,e.y+.5)+(k==='portal'||k==='crypt'?2.2:1.5),e.y+.5);if(p)tag(p[0],p[1],k==='slot'?(e.o.built?BUILDS[e.o.id].n:'Build: '+BUILDS[e.o.id].n):k==='fish'?FISHSP[e.o.sp||'fish'].spot:k==='enter'?(e.o.label||'Door'):k==='crop'?({potato:'Potatoes',cabbage:'Cabbages',wheat:'Wheat'}[e.o.ct]):LABELS[k],e.o.built===false?'#ffe58a':'#f4efe0')}}
   if(M===WORLD){const qm=questMarks();for(const n of M.npcs){if(n.hidden)continue;const k=qm.find(q=>q.x===n.x&&q.y===n.y&&(q.kind==='give'||q.kind==='turn'));
     if(k&&cheb(pl,n)<=14){const p=proj(n.x+.5,hAt(M,n.x+.5,n.y+.5)+2.65*FS+.1+Math.sin(now/300)*.08,n.y+.5);if(p){octx.fillStyle=k.kind==='give'?'#f2c744':'#5fd36a';octx.strokeStyle='#000';octx.lineWidth=3;octx.beginPath();octx.arc(p[0],p[1],11,0,7);octx.stroke();octx.fill();octx.fillStyle='#1a1204';octx.font='700 16px '+FONT;octx.fillText(k.kind==='give'?'!':'?',p[0],p[1]+6);octx.font='700 12px '+FONT}}}}
   for(const n of M.npcs)if(!n.hidden&&cheb(pl,n)<=6){const p=proj(n.x+.5,hAt(M,n.x+.5,n.y+.5)+2.15*FS+.1,n.y+.5);if(p)tag(p[0],p[1],n.name,'#ffe58a')}
@@ -2292,26 +2577,45 @@ function onLoot(m,loot,coins){sfx(loot.some(l=>l.rare)?'rare':'coin');
 document.getElementById('loot').addEventListener('pointerdown',e=>{e.stopPropagation();e.currentTarget.hidden=true});
 let confirmReset=false,bagTab='items',bagSel=null,craftSt=null;
 /* ---- item icons (inline SVG) ---- */
-const TIERCOL={copper:'#c9803d',iron:'#aab3c2',mythril:'#7fd0e8',ember:'#e0602a',ash:'#b0623a',cinder:'#e0602a',voidtouched:'#8a5ad0',void:'#8a5ad0',steel:'#d4dbe6',mythril:'#7fd0e8',copper:'#c9803d',iron:'#aab3c2',hollow:'#c7d2ea',plate:'#8f99b0',fang:'#d8d2bf',rusty:'#8a8f94'};
+const TIERCOL={aurelite:'#f0d890',briar:'#4a7a3a',tide:'#5ae0d0',garrick:'#c8c0b0',copper:'#c9803d',iron:'#aab3c2',mythril:'#7fd0e8',ember:'#e0602a',ash:'#b0623a',cinder:'#e0602a',voidtouched:'#8a5ad0',void:'#8a5ad0',steel:'#d4dbe6',mythril:'#7fd0e8',copper:'#c9803d',iron:'#aab3c2',hollow:'#c7d2ea',plate:'#8f99b0',fang:'#d8d2bf',rusty:'#8a8f94'};
 
-const LOGC={oak_logs:'#6a4a2a',maple_logs:'#c4522a',willow_logs:'#9aae6a',cypress_logs:'#6a8a74',yew_logs:'#3a5a40',ash_logs:'#7a6a62',char_logs:'#2a2220',ember_logs:'#c04a1a'};
-const FISHC={trout:'#8fc07a',salmon:'#e89a8a',lobster:'#d85a3a',swordfish:'#8aa0d8',eel:'#ff8a3a',voidfin:'#b58bff'};
-const METALC={silver:'#e8f0ff',gold:'#ffd24a',ember:'#e0602a',mythril:'#7fd0e8',steel:'#cfd6e2',sigil:'#c08cff'};
+const LOGC={birch_logs:'#cfc8a8',elm_logs:'#6a5a3a',redwood_logs:'#9a4a2a',oak_logs:'#6a4a2a',maple_logs:'#c4522a',willow_logs:'#9aae6a',cypress_logs:'#6a8a74',yew_logs:'#3a5a40',ash_logs:'#7a6a62',char_logs:'#2a2220',ember_logs:'#c04a1a'};
+const FISHC={tuna:'#6a8ad8',shark:'#8aa0b0',trout:'#8fc07a',salmon:'#e89a8a',lobster:'#d85a3a',swordfish:'#8aa0d8',eel:'#ff8a3a',voidfin:'#b58bff'};
+const METALC={coal:'#3a3e48',aurelite:'#f0d890',silver:'#e8f0ff',gold:'#ffd24a',ember:'#e0602a',mythril:'#7fd0e8',steel:'#cfd6e2',sigil:'#c08cff'};
+const MISCIC={
+ potato:'<ellipse cx="16" cy="17" rx="10" ry="8" fill="#b08a55"/><circle cx="12" cy="15" r="1.2" fill="#8a6a3a"/><circle cx="20" cy="19" r="1.2" fill="#8a6a3a"/>',
+ baked_potato:'<ellipse cx="16" cy="17" rx="10" ry="8" fill="#c9a060"/><path d="M8 15 H24" stroke="#f2e0a0" stroke-width="3"/><circle cx="16" cy="14" r="2" fill="#f6e84a"/>',
+ cabbage:'<circle cx="16" cy="17" r="10" fill="#7ac85a"/><path d="M16 8 C10 12 10 22 16 26 M16 8 C22 12 22 22 16 26" fill="none" stroke="#4a9a3a" stroke-width="1.4"/>',
+ wheat:'<path d="M16 28 V8 M16 14 L11 10 M16 14 L21 10 M16 19 L11 15 M16 19 L21 15 M16 9 L16 3" stroke="#d9c24a" stroke-width="2.4" stroke-linecap="round"/>',
+ wool:'<circle cx="11" cy="17" r="6" fill="#f4f0e6"/><circle cx="19" cy="15" r="7" fill="#f4f0e6"/><circle cx="16" cy="21" r="6" fill="#e8e4d8"/>',
+ feather:'<path d="M6 27 Q8 8 26 5 Q24 20 9 26Z" fill="#e8e0d0"/><path d="M6 27 L22 9" stroke="#a89a80" stroke-width="1.4"/>',
+ egg:'<ellipse cx="16" cy="17" rx="8" ry="10" fill="#f6ecd8"/><ellipse cx="13" cy="13" rx="2.4" ry="3.6" fill="#fff" opacity=".7"/>',
+ crab_claw:'<path d="M6 26 L14 12 Q10 4 16 4 Q20 8 18 14 L26 20 Q28 24 22 24 L14 22Z" fill="#e0804a"/>',
+ bear_claw:'<path d="M8 26 Q6 8 16 4 Q22 12 20 26Z" fill="#e8dfc8"/><path d="M12 24 Q12 12 16 8" stroke="#bfb298" stroke-width="1.6" fill="none"/>',
+ briar_thorn:'<path d="M6 26 L16 4 L18 18 L26 12 L20 28Z" fill="#6a8a3a"/>',
+ briar_heart:'<path d="M16 28 C4 18 4 7 11 7 C14 7 16 10 16 10 C16 10 18 7 21 7 C28 7 28 18 16 28Z" fill="#6acb4a"/><path d="M10 11 Q13 9 15 12" stroke="#c8ffa0" stroke-width="1.6" fill="none"/>',
+ bandit_seal:'<circle cx="16" cy="16" r="11" fill="#8a2a33" stroke="#c9a24a" stroke-width="2"/><path d="M10 20 L16 8 L22 20 Z" fill="#c9a24a"/>',
+ ancient_coin:'<circle cx="16" cy="16" r="11" fill="#c9a24a" stroke="#8a6a2a" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="none" stroke="#8a6a2a" stroke-width="1.6"/><path d="M16 11 V21" stroke="#8a6a2a" stroke-width="1.6"/>',
+ jade_figurine:'<path d="M16 4 C10 4 10 11 13 13 C7 17 8 27 16 28 C24 27 25 17 19 13 C22 11 22 4 16 4Z" fill="#4ac88a"/><circle cx="16" cy="9" r="2" fill="#2a7a5a"/>',
+ silver_idol:'<path d="M16 3 C11 3 11 9 14 11 L9 27 H23 L18 11 C21 9 21 3 16 3Z" fill="#e8f0ff"/><circle cx="16" cy="8" r="1.8" fill="#9aa8c0"/>',
+ gold_idol:'<path d="M16 3 C11 3 11 9 14 11 L9 27 H23 L18 11 C21 9 21 3 16 3Z" fill="#ffd24a"/><circle cx="16" cy="8" r="1.8" fill="#a8822a"/>',
+ royal_signet:'<circle cx="16" cy="19" r="8" fill="none" stroke="#ffd24a" stroke-width="3.6"/><path d="M10 10 L13 5 L16 9 L19 5 L22 10Z" fill="#ffd24a"/><circle cx="16" cy="8" r="1.4" fill="#e0404a"/>'};
 function extraIcon(id,it,c){
+  if(MISCIC[id])return MISCIC[id];
   {const G={sapphire:'#4a8ae0',emerald:'#3fbf6a',ruby:'#e0404a',diamond:'#e8f8ff'};if(G[id]){const k=G[id];return`<path d="M16 4 L26 11 L22 27 H10 L6 11Z" fill="${k}" stroke="rgba(0,0,0,.35)" stroke-width="1"/><path d="M6 11 H26 M16 4 L12 11 L16 27 L20 11Z" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1"/><path d="M16 4 L12 11 H20Z" fill="rgba(255,255,255,.45)"/>`}}
   if(id==='pearl')return`<circle cx="16" cy="16" r="9" fill="#f4efe6" stroke="#cfc6b4"/><circle cx="12.5" cy="12.5" r="3" fill="#fff" opacity=".9"/>`;
   if(id==='bird_nest')return`<ellipse cx="16" cy="21" rx="11" ry="6" fill="#8a6a3a"/><path d="M6 20 Q16 28 26 20 M8 17 Q16 24 24 17" fill="none" stroke="#5a4020" stroke-width="1.6"/><ellipse cx="13" cy="17" rx="3" ry="3.8" fill="#9ad0d8"/><ellipse cx="19.5" cy="17.5" rx="3" ry="3.6" fill="#9ad0d8"/>`;
   if(it.slot==='axe')return`<rect x="14.5" y="6" width="3" height="23" rx="1.4" fill="#6b4a2e" transform="rotate(25 16.5 17.5)"/><path d="M8 7 Q15 2 22 9 L19 14 Q14 10 9 12Z" fill="${c}" stroke="rgba(0,0,0,.3)" stroke-width=".8" transform="rotate(8 16 16)"/>`;
   if(it.furn){const k=it.col;return{chair:`<rect x="9" y="4" width="3" height="22" fill="${k}"/><rect x="9" y="4" width="12" height="3" fill="${k}"/><rect x="9" y="16" width="14" height="3.5" fill="${k}"/><rect x="21" y="16" width="3" height="11" fill="${k}"/>`,table:`<rect x="3" y="11" width="26" height="4" rx="1" fill="${k}"/><rect x="6" y="15" width="3" height="12" fill="${k}"/><rect x="23" y="15" width="3" height="12" fill="${k}"/>`,shelf:`<rect x="5" y="3" width="22" height="26" rx="1.5" fill="${k}"/><rect x="8" y="6" width="16" height="6" fill="rgba(0,0,0,.35)"/><rect x="8" y="15" width="16" height="6" fill="rgba(0,0,0,.35)"/><rect x="11" y="23" width="10" height="3" fill="rgba(0,0,0,.35)"/>`,throne:`<rect x="8" y="3" width="16" height="16" rx="2" fill="${k}"/><rect x="5" y="17" width="22" height="5" fill="${k}"/><rect x="6" y="22" width="4" height="7" fill="${k}"/><rect x="22" y="22" width="4" height="7" fill="${k}"/><circle cx="16" cy="9" r="2.4" fill="#ffd24a"/>`}[it.furn]}
   if(LOGC[id]){const k=LOGC[id];return`<rect x="4" y="9" width="24" height="7" rx="3.5" fill="${k}"/><rect x="6" y="17" width="22" height="7" rx="3.5" fill="${k}" opacity=".82"/><circle cx="26" cy="12.5" r="2.6" fill="#e8d2a0"/><circle cx="26" cy="12.5" r="1.1" fill="${k}"/>`}
-  let m=id.match(/^(raw|cooked)_(trout|salmon|lobster|swordfish|eel|voidfin)$/);
+  let m=id.match(/^(raw|cooked)_(trout|salmon|lobster|swordfish|eel|voidfin|tuna|shark)$/);
   if(m){const raw=m[1]==='raw',f=raw?FISHC[m[2]]:'#c98a4a',n=m[2];
     if(n==='eel')return`<path d="M3 20 Q9 8 14 18 T25 14" fill="none" stroke="${f}" stroke-width="5" stroke-linecap="round"/><circle cx="26" cy="13" r="2.2" fill="${f}"/>`+(raw?'':`<path d="M6 17 Q10 11 14 17" fill="none" stroke="#7a4a20" stroke-width="1.5"/>`);
     if(n==='lobster')return`<ellipse cx="15" cy="17" rx="6" ry="9" fill="${f}" transform="rotate(90 15 17)"/><path d="M22 14 L29 8 M22 20 L29 26" stroke="${f}" stroke-width="3.2" stroke-linecap="round"/><circle cx="29" cy="8" r="2.6" fill="${f}"/><circle cx="29" cy="26" r="2.6" fill="${f}"/><path d="M8 17 H2" stroke="${f}" stroke-width="3" stroke-linecap="round"/>`;
     return`<path d="M3 17 Q13 6 24 17 Q13 28 3 17Z" fill="${f}"/><path d="M24 17 L30 10 L30 24Z" fill="${f}"/><circle cx="8" cy="15" r="1.5" fill="#1a1510"/>`+(n==='swordfish'?`<path d="M3 17 L-1 17" stroke="${f}" stroke-width="2"/>`:'')+(raw?'':`<path d="M10 17 H21" stroke="#7a4a20" stroke-width="1.4" stroke-dasharray="2 2"/>`)}
-  m=id.match(/^(silver|gold|ember|mythril|sigil)_ore$/);
+  m=id.match(/^(silver|gold|ember|mythril|sigil|coal|aurelite)_ore$/);
   if(m)return`<path d="M4 25 L8 11 L18 5 L28 13 L27 25Z" fill="#7d8287"/><path d="M18 5 L28 13 L27 25 L17 25Z" fill="rgba(0,0,0,.2)"/>`+[[12,16,2.7],[21,13,2.3],[19,20,2.5]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${METALC[m[1]]}"/>`).join('');
-  m=id.match(/^(silver|gold|ember|mythril|steel)_bar$/);
+  m=id.match(/^(silver|gold|ember|mythril|steel|aurelite)_bar$/);
   if(m)return`<path d="M4 23 L8 12 H25 L29 23Z" fill="${METALC[m[1]]}"/><path d="M8 12 H25 L24 16 H9Z" fill="rgba(255,255,255,.4)"/>`;
   if(/_ring$/.test(id)){const k=id[0]==='s'?'#e8f0ff':'#ffd24a';return`<circle cx="16" cy="19" r="8" fill="none" stroke="${k}" stroke-width="3.4"/><circle cx="16" cy="9" r="3.2" fill="#7fd0e8" stroke="${k}"/>`}
   if(id==='gold_amulet')return`<path d="M7 4 Q16 24 25 4" fill="none" stroke="#ffd24a" stroke-width="2"/><circle cx="16" cy="21" r="5" fill="#ffd24a"/><circle cx="16" cy="21" r="2.6" fill="#4a8ae0"/>`;
@@ -2332,7 +2636,7 @@ function weaponIcon(id,it,c){const t=it.tier,K='#6b4a2e',gold='#d8b448';
   const wrap=(inner,rot)=>`<g transform="rotate(${rot===undefined?45:rot} 16 16)">${inner}</g>`;
   const hilt=(gc)=>`<rect x="14.7" y="23" width="2.6" height="6" rx="1" fill="${K}"/><rect x="10" y="21.5" width="12" height="2.2" rx="1" fill="${gc||'#6a5a3a'}"/>`;
   const wk=it.wk||(id.endsWith('dagger')?'dagger':id.endsWith('mace')?'mace':id.endsWith('sword')||id==='hollow_blade'?'sword':'');
-  if(id==='drowned_trident')return wrap(`<rect x="15" y="8" width="2" height="21" fill="${K}"/><path d="M9 3 V12 Q16 16 23 12 V3 M16 1 V14" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round"/>`);
+  if(id==='drowned_trident'||id==='reef_trident')return wrap(`<rect x="15" y="8" width="2" height="21" fill="${K}"/><path d="M9 3 V12 Q16 16 23 12 V3 M16 1 V14" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round"/>`);
   if(it.magic)return wrap(`<rect x="15" y="9" width="2.4" height="21" fill="${id==='rift_staff'?'#2a1a40':K}"/>`+({apprentice_staff:`<circle cx="16" cy="6" r="4.6" fill="none" stroke="${K}" stroke-width="1.8"/><circle cx="16" cy="6" r="2.6" fill="#8b5cd6"/>`,storm_staff:`<path d="M10 8 A6 6 0 1 1 22 8" fill="none" stroke="${c}" stroke-width="2"/><circle cx="16" cy="6" r="3" fill="#5ab0e6"/>`,veil_staff:`<path d="M16 0 L19 9 H13Z M10 4 L13 11 H8Z M22 4 L24 11 H19Z" fill="#6ac8d8"/>`,mist_staff:`<circle cx="16" cy="6" r="3.6" fill="#7fe0f0"/><ellipse cx="16" cy="6" rx="7" ry="2.4" fill="none" stroke="#7fe0f0" stroke-width="1.2"/>`,cinder_staff:`<path d="M16 -1 C19 3 21 5 20 9 H12 C11 5 14 3 16 -1Z" fill="#ff7a2a"/><path d="M16 3 C17 5 18 6 17 9 H15 C14 6 16 5 16 3Z" fill="#ffd24a"/>`,rift_staff:`<circle cx="16" cy="6" r="6" fill="none" stroke="#b58bff" stroke-width="1.8"/><path d="M16 1 L19 6 L16 11 L13 6Z" fill="#b58bff"/>`}[id]||`<circle cx="16" cy="6" r="4.6" fill="${c}"/>`));
   if(it.ranged){const bc=c;return `<path d="M10 3 Q28 16 10 29" fill="none" stroke="${bc}" stroke-width="${id==='shortbow'?2.6:3.4}" stroke-linecap="round"/><path d="M10 3 L10 29" stroke="#e8e2d0" stroke-width="1"/>`+(id==='cinder_bow'?`<path d="M10 3 L7 0 M10 29 L7 32" stroke="#ff7a2a" stroke-width="2.4"/>`:id==='fen_longbow'?`<circle cx="9" cy="3" r="2" fill="#7ac87a"/><circle cx="9" cy="29" r="2" fill="#7ac87a"/>`:id==='umbral_bow'?`<path d="M10 3 L5 1 M10 29 L5 31" stroke="#b58bff" stroke-width="2.2"/>`:'')}
   if(wk==='mace'){const head={copper:`<circle cx="16" cy="8" r="5.5" fill="${c}"/>`,iron:`<rect x="12" y="2" width="8" height="12" rx="1" fill="${c}"/><path d="M8 8 H24" stroke="${c}" stroke-width="3"/>`,steel:`<circle cx="16" cy="8" r="5.5" fill="${c}"/><path d="M16 -1 V17 M7 8 H25 M10 2 L22 14 M22 2 L10 14" stroke="${c}" stroke-width="2"/>`,mythril:`<path d="M16 -1 L24 8 L16 17 L8 8Z" fill="${c}"/><path d="M16 -1 L24 8 L16 8Z" fill="rgba(255,255,255,.4)"/>`,ember:`<rect x="10" y="2" width="12" height="12" fill="#2a1a14"/><rect x="13" y="5" width="6" height="6" fill="#ff7a2a"/><path d="M10 8 H6 M22 8 H26" stroke="#ff7a2a" stroke-width="2.4"/>`}[t]||`<circle cx="16" cy="8" r="5" fill="${c}"/>`;return wrap(`<rect x="15" y="12" width="2.4" height="17" fill="${K}"/>${head}`)}
@@ -2452,10 +2756,72 @@ function bagItems(){
   let cells='';for(let i=0;i<30;i++){const id=ids[i];cells+=id?'<button class="cell'+(bagSel&&bagSel.id===id?' sel':'')+'" data-item="'+id+'" title="'+ITEMS[id].n+'">'+icon(id)+(S.inv[id]>1?'<em>'+S.inv[id]+'</em>':'')+'</button>':'<div class="cell empty"></div>'}
   return'<div class="eq">'+eq+'</div><div class="mute n">HP '+P.hp+' · Acc '+P.acc+' · Max hit '+P.max+' · Def '+P.def+' · Coins '+S.coins+(S.buff&&S.buff.end>tickN?' · '+S.buff.n+(S.buff.k==='phoenix'?' (ready)':' '+Math.ceil((S.buff.end-tickN)*.6)+'s'):'')+'</div>'+itemSheet()+'<h2>Backpack</h2><div class="grid">'+cells+'</div>';
 }
-const UNLOCKS={woodcutting:[[1,'Trees (axes from the Armoury and Anvil)'],[15,'Oak trees'],[30,'Maple, willow trees'],[38,'Cypress'],[45,'Yew'],[35,'Ash trees (Emberwaste)'],[48,'Charwood'],[60,'Emberwood']],fishing:[[1,'Fish shallows'],[12,'Trout'],[25,'Salmon'],[38,'Lobster pots'],[42,'Lava eels'],[50,'Swordfish'],[58,'Voidfin']],mining:[[1,'Copper'],[4,'Sigilstone'],[8,'Iron'],[15,'Mythril'],[25,'Silver'],[32,'Emberstone'],[40,'Gold']],hunting:[[1,'Rabbits'],[6,'Foxes'],[12,'Hares'],[24,'Deer'],[36,'Ash hares'],[46,'Lava geckos']],alchemy:[[1,'Cook meat and fish'],[12,'Cook trout'],[25,'Cook salmon'],[38,'Cook lobster'],[50,'Cook swordfish']],beastbond:[[1,'Cave rat'],[12,'Wolf'],[20,'Bog toad'],[28,'Marsh hound'],[36,'Cinder fox'],[46,'Ash hound'],[56,'Void stalker']],soulbinding:[[1,'Warrior stone'],[12,'Guardian'],[24,'Seeker'],[36,'Phoenix'],[48,'Reaver']],voidpower:[[1,'Ember rifts'],[20,'Voidreach rifts'],[25,'Void gate'],[60,'Max special regen']],construction:[[1,'Rough chairs'],[6,'Tables'],[12,'Bookshelves'],[16,'Oak furniture'],[34,'Willow bench'],[48,'Yew throne'],[62,'Emberwood throne']],smithing:[[1,'Copper'],[8,'Iron'],[18,'Steel'],[25,'Silver bars'],[28,'Mythril'],[36,'Ember'],[38,'Gold bars']],crafting:[[1,'Leather'],[20,'Silver rings'],[34,'Gold rings'],[35,'Ash and cinder gear'],[50,'Void gear']]};
+const UNLOCKS={woodcutting:[[1,'Trees (axes from the Armoury and Anvil)'],[20,'Birch (Kingsmarch)'],[42,'Elm'],[68,'Redwood'],[15,'Oak trees'],[30,'Maple, willow trees'],[38,'Cypress'],[45,'Yew'],[35,'Ash trees (Emberwaste)'],[48,'Charwood'],[60,'Emberwood']],fishing:[[45,'Tuna (Saltgate)'],[62,'Sharks'],[1,'Fish shallows'],[12,'Trout'],[25,'Salmon'],[38,'Lobster pots'],[42,'Lava eels'],[50,'Swordfish'],[58,'Voidfin']],mining:[[30,'Coal (Kingsmarch hills)'],[52,'Aurelite'],[1,'Copper'],[4,'Sigilstone'],[8,'Iron'],[15,'Mythril'],[25,'Silver'],[32,'Emberstone'],[40,'Gold']],hunting:[[18,'Pheasants'],[50,'Elk'],[1,'Rabbits'],[6,'Foxes'],[12,'Hares'],[24,'Deer'],[36,'Ash hares'],[46,'Lava geckos']],alchemy:[[1,'Cook meat and fish'],[12,'Cook trout'],[25,'Cook salmon'],[38,'Cook lobster'],[50,'Cook swordfish']],beastbond:[[1,'Cave rat'],[12,'Wolf'],[20,'Bog toad'],[28,'Marsh hound'],[36,'Cinder fox'],[46,'Ash hound'],[56,'Void stalker']],soulbinding:[[1,'Warrior stone'],[12,'Guardian'],[24,'Seeker'],[36,'Phoenix'],[48,'Reaver']],voidpower:[[1,'Ember rifts'],[20,'Voidreach rifts'],[25,'Void gate'],[60,'Max special regen']],construction:[[1,'Rough chairs'],[6,'Tables'],[12,'Bookshelves'],[16,'Oak furniture'],[34,'Willow bench'],[48,'Yew throne'],[62,'Emberwood throne']],smithing:[[50,'Aurelite bars'],[1,'Copper'],[8,'Iron'],[18,'Steel'],[25,'Silver bars'],[28,'Mythril'],[36,'Ember'],[38,'Gold bars']],crafting:[[1,'Leather'],[20,'Silver rings'],[34,'Gold rings'],[35,'Ash and cinder gear'],[50,'Void gear']]};
 function nextUnlock(sk,l){const u=(UNLOCKS[sk]||[]).filter(x=>x[0]>l).sort((a,b)=>a[0]-b[0])[0];return u?' · next: '+u[1]+' ('+u[0]+')':''}
-function bagSkills(){return SKILLS.map(sk=>{const xp=Number(S.xp[sk])||0,l=lvlOf(xp),lo=XPT[l-1],hi=l<MAXLV?XPT[l]:lo,pct=l>=MAXLV?100:(xp-lo)/(hi-lo)*100;
-  return`<div class="row"><div style="flex:1"><div class="row" style="border:0;padding:0"><span>${SKN[sk]}</span><b class="n">${l}</b></div><div class="bar"><i style="width:${pct}%"></i></div><div class="mute n">${xp.toLocaleString('en-US')} xp${nextUnlock(sk,l)}${l<MAXLV?' · '+(hi-xp).toLocaleString('en-US')+' to next':''}</div></div></div>`}).join('')}
+const SKICON={
+ combat:'<path d="M6 6 L22 22 M26 6 L10 22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M4 24 L9 28 M28 24 L23 28 M9 18 L14 23 M23 18 L18 23" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>',
+ mining:'<path d="M5 13 Q16 2 27 13" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M16 8 V29" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/>',
+ hunting:'<circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="16" cy="16" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M16 2 V9 M16 23 V30 M2 16 H9 M23 16 H30" stroke="currentColor" stroke-width="2.4"/>',
+ alchemy:'<path d="M12 3 H20 M14 3 V12 L6 25 Q4 29 9 29 H23 Q28 29 26 25 L18 12 V3" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M9 22 H23 L25 26 Q26 28 23 28 H9 Q6 28 7 26Z" fill="currentColor"/>',
+ smithing:'<path d="M4 9 H27 Q27 15 19 16 V21 H23 V27 H8 V21 H13 V16 Q6 15 4 9Z" fill="currentColor"/>',
+ woodcutting:'<path d="M9 28 L23 8" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M16 5 Q27 3 28 11 Q22 14 17 12Z" fill="currentColor"/>',
+ fishing:'<path d="M2 16 Q13 4 24 16 Q13 28 2 16Z M24 16 L30 9 V23Z" fill="currentColor"/><circle cx="9" cy="14" r="1.7" fill="#000" opacity=".6"/>',
+ ranged:'<path d="M9 3 Q29 16 9 29" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M9 3 V29 M4 16 H27 M23 12 L27 16 L23 20" fill="none" stroke="currentColor" stroke-width="2"/>',
+ crafting:'<path d="M16 3 L27 12 L22 28 H10 L5 12Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M5 12 H27 M16 3 L12 12 L16 28 L20 12Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
+ sigilcraft:'<path d="M9 3 H23 L29 10 V22 L23 29 H9 L3 22 V10Z" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M16 8 L21 16 L16 24 L11 16Z" fill="currentColor"/>',
+ magic:'<path d="M16 2 L19.5 12 L30 16 L19.5 20 L16 30 L12.5 20 L2 16 L12.5 12Z" fill="currentColor"/>',
+ construction:'<path d="M3 15 L16 4 L29 15" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M7 14 V28 H25 V14" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M13 28 V20 H19 V28" fill="currentColor"/>',
+ beastbond:'<ellipse cx="16" cy="21" rx="7" ry="6" fill="currentColor"/><circle cx="6" cy="14" r="3" fill="currentColor"/><circle cx="12" cy="8" r="3" fill="currentColor"/><circle cx="20" cy="8" r="3" fill="currentColor"/><circle cx="26" cy="14" r="3" fill="currentColor"/>',
+ soulbinding:'<path d="M16 2 C24 10 26 14 25 20 C24 27 19 30 16 30 C13 30 8 27 7 20 C6 14 8 10 16 2Z" fill="currentColor"/><circle cx="12.5" cy="18" r="2" fill="#000" opacity=".55"/><circle cx="19.5" cy="18" r="2" fill="#000" opacity=".55"/>',
+ voidpower:'<path d="M16 4 C26 4 29 15 22 21 C16 26 8 22 9 15 C10 10 16 9 18 13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="17" cy="16" r="2" fill="currentColor"/>'};
+const skillIcon=(sk,cls)=>'<svg class="'+(cls||'ski')+'" viewBox="0 0 32 32" aria-hidden="true" style="color:'+(XPCOL[sk]||'#e8c14a')+'">'+(SKICON[sk]||'')+'</svg>';
+const SKDESC={
+ combat:'Fight monsters with sword, bow or staff. Combat level raises your health and defence and unlocks better melee gear. Train on monsters close to your level, and eat before you drop low.',
+ mining:'Mine ore from rocks with a pickaxe. Higher levels unlock richer veins and faster, luckier swings with better pickaxes. Ore feeds Smithing.',
+ hunting:'Catch rabbits, foxes and other game for raw meat and hides. Walk up close (two tiles is enough). Game flees, so corner it against trees and water. Meat feeds Cooking, hides feed Crafting.',
+ alchemy:'Cook food, brew potions and pick herbs. Cooking can burn at low level. Better food heals more, so it keeps you fighting longer.',
+ smithing:'Smelt ore into bars at a furnace and forge tools, weapons and armour at an anvil. Every new metal is a new tier of gear.',
+ woodcutting:'Chop trees with an axe. Different trees need higher levels and give better logs. Logs become bows and furniture, and sell well.',
+ fishing:'Catch fish at fishing spots. Each kind of spot needs a higher level. Cook your catch in the Alchemy skill for healing food.',
+ ranged:'Shoot with bows. Ranged gear makes arrows land and hurt more. Buy or craft arrows. You can attack from five tiles away.',
+ crafting:'Craft armour from hides, rings and amulets from bars and gems, and more at the workbench. Jewellery sells well.',
+ sigilcraft:'Carve runes from sigilstone at an altar. Runes feed your spells and teleports.',
+ magic:'Cast spells with a staff. Each spell has an effect: shock, chill, chain, decay or burn. Teleport spells move you around the world.',
+ construction:'Build furniture at the workbench and rooms for your house. Furniture sells for coins, and every piece trains the skill.',
+ beastbond:'Bond with wild beasts using beast treats. A bonded companion follows you and fights at your side, stronger as the skill grows.',
+ soulbinding:'Bind soul shards (dropped by monsters) into soulstones at an altar. Using a soulstone gives you a timed buff.',
+ voidpower:'Channel void rifts for void shards. Voidpower boosts special attack damage, refills special energy faster and opens the void gate.'};
+const MAPNAME={realm:'Kingsmarch',world:'overworld',marsh:'Mistfen',ember:'Emberwaste',void:'Voidreach'};
+function guideRows(sk){const R=[],add=(lv,t,x,n)=>R.push({lv,t,x:x||'',n:n||''});
+  const inStr=r=>Object.entries(r.in||{}).map(([k,v])=>v+' '+(ITEMS[k]?ITEMS[k].n:k)).join(', ');
+  const rec=(st,skill)=>{for(const r of RECIPES[st]||[])if((r.skill||'smithing')===skill&&ITEMS[r.id])add(r.lv,(r.kind==='smelt'?'Smelt ':r.kind==='forge'?'Forge ':'Make ')+(r.qty?r.qty+' ':'')+ITEMS[r.id].n,r.xp+' xp',inStr(r)+' · '+STATION[st])};
+  const gear=(slot,fn)=>{for(const id of Object.keys(ITEMS)){const it=ITEMS[id];if(it.slot===slot&&(!fn||fn(it)))add(it.req||1,it.n,'',itemStat(it))}};
+  switch(sk){
+   case'mining':for(const k in NEED)if(ITEMS[k+'_ore'])add(NEED[k],ITEMS[k+'_ore'].n.replace(' ore','')+' veins',MXP[k]+' xp per ore','tap a vein');gear('pickaxe');break;
+   case'woodcutting':for(const k in TREESPECS)for(const t of TREESPECS[k])add(t.lv,t.n+' trees',t.xp+' xp per log',(MAPNAME[k]||k)+' · '+ITEMS[t.item].n);gear('axe');rec('bench','woodcutting');break;
+   case'fishing':for(const k in FISHSP){const f=FISHSP[k];add(f.lv,f.spot,f.xp+' xp per catch',ITEMS[f.item].n)}break;
+   case'hunting':for(const k in MOBS){const d=MOBS[k];if(d.prey)add(d.lv,d.n,d.xp*4+' xp per catch',d.meat+' raw meat'+(d.hide?', '+d.hide+' hide':''))}break;
+   case'alchemy':add(1,'Pick herbs','6 xp','herb plants in the wild');add(3,'Brew a potion','15 xp','2 herbs at the cauldron');for(const r of COOK)add(r[2],'Cook '+ITEMS[r[0]].n,r[3]+' xp','heals '+(HEAL[r[1]]||10)+' · tap a cooking fire');break;
+   case'smithing':rec('furnace','smithing');rec('anvil','smithing');break;
+   case'crafting':rec('bench','crafting');break;
+   case'sigilcraft':rec('altar','sigilcraft');break;
+   case'soulbinding':rec('altar','soulbinding');add(1,'Collect soul shards','','monsters drop them, bosses drop more');break;
+   case'construction':rec('bench','construction');for(const id in BUILDS){const b=BUILDS[id];add(b.lv,'Build: '+b.n,b.xp+' xp',b.note)}break;
+   case'magic':for(const sp of SPELLS)add(sp.lv,sp.n+' (spell)','',sp.d);for(const t of TELES)add(t.lv,t.n,(20+t.lv*3)+' xp',t.note);gear('weapon',it=>it.magic);break;
+   case'ranged':gear('weapon',it=>it.ranged);gear('helm',it=>it.rq==='ranged');gear('armour',it=>it.rq==='ranged');break;
+   case'beastbond':add(1,'Craft beast treats','12 xp','raw meat + herb at the workbench');for(const k in TAME)add(TAME[k].lv,'Bond with a '+MOBN[k],(60+TAME[k].lv*8)+' xp','companion hits for up to +'+(2+TAME[k].p));break;
+   case'voidpower':add(1,'Channel rifts in Emberwaste','22 xp per shard','void shards, a rare soul shard');add(20,'Channel rifts in Voidreach','46 xp per shard','');add(25,'Open the void gate','','Emberwaste to Voidreach');add(30,'Special energy refills faster','','+1 energy per tick every 30 levels');add(1,'Use special attacks','2 xp per energy','your weapon special trains it too');break;
+   case'combat':gear('weapon',it=>!it.magic&&!it.ranged);gear('armour',it=>!it.rq);gear('shield',it=>!it.rq);for(const k in MOBS){const d=MOBS[k];if(!d.prey&&d.lv)add(d.lv,(d.boss?'BOSS: ':'')+d.n,'6 xp per damage',(d.aggro?'':'passive until hit · ')+d.hp+' hp')}for(const k in SPECS){}break}
+  R.sort((a,b)=>a.lv-b.lv);return R}
+let skillSel=null;
+function skillGuideHtml(sk){const xp=Number(S.xp[sk])||0,l=lvlOf(xp),lo=XPT[l-1],hi=l<MAXLV?XPT[l]:lo+1,pct=l>=MAXLV?100:(xp-lo)/(hi-lo)*100;
+  const rows=guideRows(sk);
+  return'<div class="row" style="border:0;padding:0 0 8px"><button data-a="skback">‹ Skills</button></div><div class="skhead" style="--c:'+XPCOL[sk]+'">'+skillIcon(sk,'skbig')+'<div><h2 style="margin:0">'+SKN[sk]+' <span class="n">'+l+'</span></h2><div class="bar"><i style="width:'+pct+'%;background:'+XPCOL[sk]+'"></i></div><div class="mute n">'+xp.toLocaleString('en-US')+' xp'+(l<MAXLV?' · '+(hi-xp).toLocaleString('en-US')+' to level '+(l+1):' · max')+'</div></div></div>'+
+   '<p class="mute" style="line-height:1.45">'+SKDESC[sk]+'</p><h2>Guide</h2><div class="gd">'+rows.map(r=>'<div class="gr'+(r.lv>l?' lock':'')+'"><span class="gl">'+r.lv+'</span><div class="gt"><b>'+esc(r.t)+'</b>'+(r.x?' <span class="gx">'+esc(r.x)+'</span>':'')+(r.n?'<small>'+esc(r.n)+'</small>':'')+'</div></div>').join('')+'</div>'}
+function bagSkills(){if(skillSel)return skillGuideHtml(skillSel);
+  const cards=SKILLS.map(sk=>{const xp=Number(S.xp[sk])||0,l=lvlOf(xp),lo=XPT[l-1],hi=l<MAXLV?XPT[l]:lo+1,pct=l>=MAXLV?100:(xp-lo)/(hi-lo)*100;
+    return'<button class="skc" data-sk="'+sk+'" style="--c:'+XPCOL[sk]+'">'+skillIcon(sk)+'<span class="skn">'+SKN[sk]+'</span><span class="skl">'+l+'</span><div class="bar"><i style="width:'+pct+'%;background:'+XPCOL[sk]+'"></i></div></button>'}).join('');
+  return'<div class="mute n" style="margin:2px 0 8px">Total level '+totalLv()+' / '+SKILLS.length*MAXLV+' · tap a skill for its guide</div><div class="skgrid">'+cards+'</div>'}
 function bagQuests(){
   const kills=k=>S.kills[k]||0,prog=k=>kills(k)-(S.qb[k]||0),row=(n,st)=>'<div class="row"><span>'+n+'</span><b>'+st+'</b></div>';
   const hk=['Not started. Speak to Sir Edric in Greywatch Keep.','Bring the signet of Sir Aldric to Sir Edric.','Complete'][S.quest];
@@ -2501,10 +2867,12 @@ $('panel').addEventListener('click',e=>{
   if(d.a==='sfx'){SND.cfg().sfx=!SND.cfg().sfx;sfx('click');save();$('panel').innerHTML=panelHtml();return}
   if(d.a==='mus'){SND.setMus(!SND.cfg().mus);save();$('panel').innerHTML=panelHtml();return}
   if(d.a==='gfx'){S.gfx=S.gfx==='low'?'auto':'low';applyGfx();save();$('panel').innerHTML=panelHtml();return}
+  if(d.sk){skillSel=d.sk;$('panel').innerHTML=panelHtml();return}
+  if(d.a==='skback'){skillSel=null;$('panel').innerHTML=panelHtml();return}
   if(d.tele){castTele(d.tele);return}
   if(d.claim!==undefined){claimBounty(d.claim);$('panel').innerHTML=panelHtml();updateHud();return}
   if(d.spell){S.spell=d.spell;const c=SPELLS.find(x=>x.id===d.spell);say('Spell: '+(c?c.n:'best available'));save();updateHud();$('panel').innerHTML=panelHtml();return}
-  if(d.tab){bagTab=d.tab;bagSel=null;confirmReset=false}
+  if(d.tab){skillSel=null;bagTab=d.tab;bagSel=null;confirmReset=false}
   else if(d.item)bagSel={id:d.item};
   else if(d.slot)bagSel={slot:d.slot};
   else if(d.a==='close'){$('panel').hidden=true;confirmReset=false;return}
@@ -2566,6 +2934,7 @@ const TELES=[
   {id:'village',n:'Greywatch teleport',lv:8,in:{spark_rune:2,frost_rune:1},note:'to the village square'},
   {id:'mirewatch',n:'Mirewatch teleport',lv:20,in:{gale_rune:3,frost_rune:2},note:'to Mirewatch in Mistfen'},
   {id:'spire',n:'Veil Spire teleport',lv:28,in:{gale_rune:4,void_rune:1},note:'to the Veil Spire in Mistfen'},
+  {id:'kingsmarch',n:'Highcrown teleport',lv:36,in:{gale_rune:4,frost_rune:3},note:'to the plaza of Highcrown in Kingsmarch'},
   {id:'emberwaste',n:'Emberwaste teleport',lv:40,in:{ember_rune:3,gale_rune:3},note:'to the Cinder Hold camp in Emberwaste'},
   {id:'voidreach',n:'Voidreach teleport',lv:52,in:{void_rune:4,ember_rune:2},vp:25,note:'to the gate camp in Voidreach (needs Voidpower 25)'}];
 function goTo(map,x,y){hazards.length=0;M=map;pl.x=x;pl.y=y;pl.trail=[[x,y]];pl.face='down';pl.target=null;pl.work=null;pl.engaged=null;updateRoute();focusInit=false}
@@ -2575,34 +2944,66 @@ function castTele(id){const t=TELES.find(q=>q.id===id);if(!t)return;
   if(tickN-pl.combatT<=8){say("You can't concentrate in combat.");return}
   if(!Object.entries(t.in).every(([k,v])=>hasItem(k,v))){say('You lack the runes.');return}
   for(const[k,v]of Object.entries(t.in))giveItem(k,-v);addXp('magic',20+t.lv*3);sfx('tele');stat().tele++;
-  if(id==='home')enterDungeon('home');else if(id==='village')goTo(WORLD,WORLD.spawn.x,WORLD.spawn.y+1);else if(id==='mirewatch')goTo(MARSH,38,27);else if(id==='emberwaste')goTo(EMBER,EMBER.spawn.x,EMBER.spawn.y);else if(id==='voidreach')goTo(VOID,VOID.spawn.x,VOID.spawn.y);else goTo(MARSH,19,50);
+  if(id==='home')enterDungeon('home');else if(id==='village')goTo(WORLD,WORLD.spawn.x,WORLD.spawn.y+1);else if(id==='mirewatch')goTo(MARSH,38,27);else if(id==='kingsmarch')goTo(REALM,99,44);else if(id==='emberwaste')goTo(EMBER,EMBER.spawn.x,EMBER.spawn.y);else if(id==='voidreach')goTo(VOID,VOID.spawn.x,VOID.spawn.y);else goTo(MARSH,19,50);
   const f=document.getElementById('flash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}
   $('mapPanel').hidden=true;$('panel').hidden=true;say('You teleport '+t.note+'.');save();updateHud()}
 const teleHtml=()=>'<div class="mute" style="margin-top:12px">Teleports <small>(Magic, no staff needed)</small></div><div class="tele">'+TELES.map(t=>{const lock=lvlOf(S.xp.magic)<t.lv,ok=Object.entries(t.in).every(([k,v])=>hasItem(k,v));return'<button data-tele="'+t.id+'" '+(lock||!ok?'disabled':'')+'><b style="display:flex;align-items:center;gap:6px">'+spellSvg('tele')+t.n+'</b><small>'+(lock?'Needs Magic '+t.lv:Object.entries(t.in).map(([k,v])=>v+' '+ITEMS[k].n.replace(' rune','')).join(', '))+'</small></button>'}).join('')+'</div>';
+const ORE_C={copper:'#d9722a',iron:'#8fb2da',sigil:'#c08cff',mythril:'#7fe8f4',ember:'#ff7a2a',silver:'#e8f0ff',gold:'#ffd24a',coal:'#6a6e78',aurelite:'#f0d890'};
+const MAPIC={
+ shop:{d:'M16 4 C13 7 11 9 11 13 C6 16 6 26 16 28 C26 26 26 16 21 13 C21 9 19 7 16 4Z M13 18 H19 M16 15 V21',c:'#ffd24a'},
+ anvil:{d:'M4 9 H27 Q27 15 19 16 V21 H23 V27 H8 V21 H13 V16 Q6 15 4 9Z',c:'#c3cad2'},
+ furnace:{d:'M6 6 H26 V28 H6Z M12 28 V21 Q16 11 20 21 V28Z',c:'#ff8a3a'},
+ bench:{d:'M3 10 H29 V15 H3Z M6 15 H10 V28 H6Z M22 15 H26 V28 H22Z',c:'#d9b27a'},
+ altar:{d:'M8 28 H24 V24 H8Z M10 24 H22 V14 H10Z M16 2 L21 10 H11Z',c:'#b58bff'},
+ chest:{d:'M4 12 Q4 6 16 6 Q28 6 28 12 V27 H4Z M13 15 H19 V21 H13Z',c:'#e0a050'},
+ flask:{d:'M12 3 H20 V12 L27 25 Q28 29 24 29 H8 Q4 29 5 25 L12 12Z',c:'#8fd08f'},
+ fish:{d:'M2 16 Q13 5 24 16 Q13 27 2 16Z M24 16 L30 9 V23Z',c:'#5ab0e6'},
+ mug:{d:'M5 7 H21 V26 H5Z M21 10 H28 V21 H21Z',c:'#e8a94d'},
+ scroll:{d:'M6 4 H26 V24 Q26 28 22 28 H8 Q6 28 6 24Z M10 10 H22 M10 15 H22 M10 20 H18',c:'#efe6cf'},
+ dungeon:{d:'M5 28 V13 Q5 3 16 3 Q27 3 27 13 V28Z M11 28 V17 Q16 11 21 17 V28Z',c:'#e8704a'},
+ portal:{d:'M16 2 A14 14 0 1 1 15.99 2Z M16 9 A7 7 0 1 0 16.01 9Z',c:'#8fe8ff'},
+ rift:{d:'M16 3 L22 16 L16 29 L10 16Z',c:'#b58bff'},
+ skull:{d:'M16 3 C8 3 5 9 6 15 C6 18 8 19 9 21 V27 H23 V21 C24 19 26 18 26 15 C27 9 24 3 16 3Z M12 15 A2.5 2.5 0 1 0 12.01 15Z M20 15 A2.5 2.5 0 1 0 20.01 15Z',c:'#ff6a5a'},
+ door:{d:'M7 28 V11 L16 3 L25 11 V28Z M13 28 V19 H19 V28Z',c:'#d9b27a'},
+ magic:{d:'M16 2 L19.5 12 L30 16 L19.5 20 L16 30 L12.5 20 L2 16 L12.5 12Z',c:'#b58bff'},
+ castle:{d:'M3 28 V9 H8 V13 H12 V9 H16 V13 H20 V9 H24 V13 H29 V28Z M13 28 V20 H19 V28Z',c:'#d8d2c0'},
+ rock:{d:'M4 25 L8 11 L17 5 L27 12 L26 25Z',c:'#9aa2aa'}};
+for(const k in ORE_C)MAPIC['ore_'+k]={d:MAPIC.rock.d,c:ORE_C[k]};
+function mapIcon(c,kind,x,y,size,ox,oy,sc){const ic=MAPIC[kind];if(!ic)return;const X=ox+(x+.5)*sc,Y=oy+(y+.5)*sc;c.save();c.fillStyle='rgba(8,10,12,.82)';c.beginPath();c.arc(X,Y,size*.64,0,7);c.fill();c.lineWidth=Math.max(1,size/13);c.strokeStyle=ic.c;c.stroke();
+  c.translate(X-size*.4,Y-size*.4);c.scale(size*.8/32,size*.8/32);const p2=new Path2D(ic.d);c.fillStyle=ic.c;c.fill(p2,'evenodd');c.restore()}
+function legendHtml(){const L=[['shop','Shop'],['anvil','Smithy'],['furnace','Furnace'],['bench','Workbench'],['altar','Altar'],['chest','Bank / chest'],['ore_iron','Mining'],['fish','Fishing'],['dungeon','Dungeon'],['portal','Portal / gate'],['skull','Boss'],['mug','Inn'],['door','Building'],['castle','Castle']];
+  return'<div class="leg" style="margin-top:8px">'+L.map(([k,n])=>'<span><svg viewBox="0 0 32 32" width="18" height="18" style="vertical-align:-4px;margin-right:4px"><path d="'+MAPIC[k].d+'" fill="'+MAPIC[k].c+'" fill-rule="evenodd"/></svg>'+n+'</span>').join('')+'<span><i style="background:rgba(80,220,130,.7);border-radius:3px"></i>Safe zone</span><span><i style="background:rgba(235,70,60,.7);border-radius:3px"></i>Multi-combat zone</span></div>'}
 function openMap(fresh){
   if(fresh===true){const ti=marks().findIndex(q=>q.key===S.track);mapSel=ti>=0?ti:0}
   const el=$('mapPanel'),Mp=M,size=Math.floor(Math.min(wrapEl.clientWidth-32,wrapEl.clientHeight-190,560)),px=size*2;
   el.innerHTML='<div class="in"><div class="row" style="border:0"><h1>'+(Mp===WORLD?'World map':Mp.name)+'</h1><button data-a="close">Close</button></div><canvas id="mapCv" width="'+px+'" height="'+px+'" style="width:'+size+'px;height:'+size+'px;border-radius:10px;display:block;margin:6px auto 0"></canvas>'+
     '<div class="mute" style="text-align:center;margin-top:8px">Tap the map to walk there. Tap a quest to preview its route. Track a quest to show the route in the world.</div>'+teleHtml()+'<div id="qlist" class="qlist"></div><div class="leg">'+(Mp===WORLD?'<span><i style="background:#ffd24a"></i>You</span><span><i style="background:#d9722a"></i>Copper</span><span><i style="background:#8fb2da"></i>Iron</span><span><i style="background:#e0524a"></i>Danger</span><span><i style="background:#ffffff"></i>Place</span><span><i style="background:#ffd24a"></i>Quest goal</span><span><i style="background:#f2c744"></i>! Quest available</span><span><i style="background:#5fd36a"></i>? Hand in</span>':'<span><i style="background:#ffd24a"></i>You</span><span><i style="background:#ffffff"></i>Stairs</span><span><i style="background:#ffd24a"></i>Quest goal</span><span><i style="background:#8fd3ff"></i>E Way out</span>')+'</div></div>';
   el.hidden=false;
+  el.querySelector('.in').insertAdjacentHTML('beforeend',legendHtml());
   const mcv=document.getElementById('mapCv'),c=mcv.getContext('2d'),sc=px/Math.max(Mp.W,Mp.H),ox=(px-Mp.W*sc)/2,oy=(px-Mp.H*sc)/2;
   mcv.addEventListener('click',e=>{const r=mcv.getBoundingClientRect(),tx=Math.floor(((e.clientX-r.left)/r.width*px-ox)/sc),ty=Math.floor(((e.clientY-r.top)/r.height*px-oy)/sc);walkTo(tx,ty)});
   c.fillStyle='#0b1013';c.fillRect(0,0,px,px);
-  for(let y=0;y<Mp.H;y++)for(let x=0;x<Mp.W;x++){const i=y*Mp.W+x;let col=MAPC[Mp.t[i]]||'#777';if(Mp.tree[i])col='#2f6a2c';if(Mp.wall[i])col='#6e7075';if(Mp.dark&&Mp.t[i]===7)continue;c.fillStyle=col;c.fillRect(ox+x*sc,oy+y*sc,sc+.6,sc+.6)}
+  for(let y=0;y<Mp.H;y++)for(let x=0;x<Mp.W;x++){const i=y*Mp.W+x;let col=(Mp.outdoor&&Mp.pal&&Mp.pal[Mp.t[i]])||MAPC[Mp.t[i]]||'#777';if(Mp.tree[i])col='#2f6a2c';if(Mp.wall[i])col='#6e7075';if(Mp.dark&&Mp.t[i]===7)continue;c.fillStyle=col;c.fillRect(ox+x*sc,oy+y*sc,sc+.6,sc+.6)}
   for(const pr of Mp.props||[])if(pr.w>0&&pr.k!=='lamp'&&pr.k!=='banner'){c.fillStyle=pr.k==='fountain'?'#4a8ab0':pr.k==='dock'?'#7a5a3a':(pr.k==='house'||pr.k==='hall'||pr.k==='store'||pr.k==='armory'||pr.k==='arcane'||pr.k==='home')?(pr.roof||'#8a6a4a'):'#8a6a4a';c.fillRect(ox+pr.x*sc,oy+pr.y*sc,pr.w*sc,pr.d*sc)}
-  if(Mp!==HOME)for(const z of SAFE.get(Mp)||[]){c.fillStyle='rgba(80,200,120,.16)';if(z.r!==undefined){c.beginPath();c.arc(ox+(z.cx+.5)*sc,oy+(z.cy+.5)*sc,z.r*sc,0,7);c.fill()}else c.fillRect(ox+z.x0*sc,oy+z.y0*sc,(z.x1-z.x0+1)*sc,(z.y1-z.y0+1)*sc)}
-  for(const z of Mp.zones||[]){c.fillStyle='rgba(224,82,74,.22)';if(z.r!==undefined){c.beginPath();c.arc(ox+(z.cx+.5)*sc,oy+(z.cy+.5)*sc,z.r*sc,0,7);c.fill()}else c.fillRect(ox+z.x0*sc,oy+z.y0*sc,(z.x1-z.x0+1)*sc,(z.y1-z.y0+1)*sc)}
+  if(Mp!==HOME){for(let y=0;y<Mp.H;y++)for(let x=0;x<Mp.W;x++){if(Mp.dark&&Mp.t[y*Mp.W+x]===7)continue;const sf=inSafe(Mp,x,y);if(sf){c.fillStyle='rgba(80,220,130,.22)';c.fillRect(ox+x*sc,oy+y*sc,sc+.6,sc+.6)}else if(isMulti(Mp,x,y)){c.fillStyle='rgba(235,70,60,.30)';c.fillRect(ox+x*sc,oy+y*sc,sc+.6,sc+.6)}}}
   const dot=(x,y,col,r)=>{c.fillStyle=col;c.beginPath();c.arc(ox+(x+.5)*sc,oy+(y+.5)*sc,r,0,7);c.fill()};
   const label=(x,y,t)=>{c.font='700 '+Math.round(px/38)+'px '+FONT;c.textAlign='center';c.lineWidth=4;c.strokeStyle='rgba(0,0,0,.8)';c.strokeText(t,ox+(x+.5)*sc,oy+(y+.5)*sc-px/60);c.fillStyle='#fff';c.fillText(t,ox+(x+.5)*sc,oy+(y+.5)*sc-px/60)};
   for(const e of Mp.objs||[]){if(e.o.k==='copper')dot(e.x,e.y,'#d9722a',Math.max(2,sc*.6));else if(e.o.k==='iron')dot(e.x,e.y,'#8fb2da',Math.max(2,sc*.6));else if(e.o.k==='sigil')dot(e.x,e.y,'#c08cff',Math.max(2,sc*.6));else if(e.o.k==='mythril')dot(e.x,e.y,'#7fe8f4',Math.max(2,sc*.6));else if(e.o.k==='silver')dot(e.x,e.y,'#e8f0ff',Math.max(2,sc*.6));else if(e.o.k==='gold')dot(e.x,e.y,'#ffd24a',Math.max(2,sc*.6));else if(e.o.k==='ember')dot(e.x,e.y,'#ff7a2a',Math.max(2,sc*.6));else if(e.o.k==='rift')dot(e.x,e.y,'#b58bff',Math.max(2,sc*.5));else if(e.o.k==='wastes')dot(e.x,e.y,'#ff7a2a',Math.max(3,sc*.9));else if(e.o.k==='voidgate')dot(e.x,e.y,'#b58bff',Math.max(3,sc*.9));else if(e.o.k==='marsh')dot(e.x,e.y,'#4ac8b8',Math.max(3,sc*.9));else if(e.o.k==='stairs'){dot(e.x,e.y,'#fff',px/90);label(e.x,e.y,'Stairs')}}
+  {const big=px/27,small=px/46;
+   const RI={shop:'shop',armourer:'anvil',arcanist:'magic',outfitter:'shop',spirekeeper:'magic',marketeer:'shop',apothecary:'flask',innkeeper:'mug',dockhand:'fish',provisioner:'shop',shopkeeper:'shop',banker:'chest',king:'castle'};
+   for(const n of Mp.npcs||[]){const ic=n.mic||RI[n.role];if(ic)mapIcon(c,ic,n.hx!==undefined?n.hx:n.x,n.hy!==undefined?n.hy:n.y,big,ox,oy,sc)}
+   const OI={furnace:'furnace',anvil:'anvil',bench:'bench',altar:'altar',cauldron:'flask',chest:'chest',bounty:'scroll',portal:'dungeon',crypt:'dungeon',marsh:'portal',wastes:'portal',voidgate:'portal',enter:'door',realm:'portal'};
+   for(const e of Mp.objs||[]){const k=e.o.k;if(OI[k]){mapIcon(c,e.o.mic||OI[k],e.x,e.y,big,ox,oy,sc)}else if(k==='fish')mapIcon(c,'fish',e.x,e.y,small,ox,oy,sc);else if(k==='rift')mapIcon(c,'rift',e.x,e.y,small,ox,oy,sc);else if(NEED[k]!==undefined)mapIcon(c,'ore_'+k,e.x,e.y,small,ox,oy,sc)}
+   for(const m of Mp.mobs||[])if(m.def.boss&&!m.dead)mapIcon(c,'skull',m.hx,m.hy,big,ox,oy,sc);
+   for(const l of Mp.links||[])mapIcon(c,'portal',l.x,l.y,big,ox,oy,sc)}
   let routeInfo='';
   {const qm0=marks();if(qm0.length){mapSel=Math.min(mapSel,qm0.length-1);const sel=qm0[mapSel],path=bfs(pl.x,pl.y,(x,y)=>Math.hypot(x-sel.x,y-sel.y)<=1.6);
       if(path&&path.length){c.save();c.lineJoin='round';c.lineCap='round';const pts=[[pl.x,pl.y],...path];const trace=()=>{c.beginPath();pts.forEach((q,i)=>{const X=ox+(q[0]+.5)*sc,Y=oy+(q[1]+.5)*sc;i?c.lineTo(X,Y):c.moveTo(X,Y)})};
         trace();c.strokeStyle='rgba(0,0,0,.85)';c.lineWidth=px/110;c.setLineDash([]);c.stroke();trace();c.strokeStyle='#ffd24a';c.lineWidth=px/190;c.setLineDash([px/60,px/90]);c.stroke();c.restore();
         routeInfo='Route to: '+sel.label+' · '+path.length+(path.length===1?' tile':' tiles')+', about '+Math.max(1,Math.round(Math.ceil(path.length/2)*.6))+' seconds'}
       else routeInfo=path?'You are already there.':'No walkable route to that goal.'}}
-  if(Mp===WORLD){const poi=[[Mp.spawn.x,Mp.spawn.y-4,'Village'],[Mp.keep.x,Mp.keep.y,'Greywatch Keep'],[Mp.cave.x,Mp.cave.y,'Rat Warrens'],[Mp.camp.x,Mp.camp.y,'Bandit camp'],[Mp.marsh.x,Mp.marsh.y,'To Mistfen'],[Mp.ember.x,Mp.ember.y,'To Emberwaste']];
-    for(const[x,y,t]of poi){dot(x,y,t==='Bandit camp'||t==='Rat Warrens'?'#e0524a':t==='To Mistfen'?'#4ac8b8':t==='To Emberwaste'?'#ff7a2a':'#fff',px/80);label(x,y,t)}}
+  if(Mp===WORLD){const poi=[[Mp.spawn.x,Mp.spawn.y-4,'Village'],[Mp.keep.x,Mp.keep.y,'Greywatch Keep'],[Mp.cave.x,Mp.cave.y,'Rat Warrens'],[Mp.camp.x,Mp.camp.y,'Bandit camp'],[Mp.marsh.x,Mp.marsh.y,'To Mistfen'],[Mp.ember.x,Mp.ember.y,'To Emberwaste'],[Mp.bridge.x+2,Mp.bridge.y,'To Kingsmarch']];
+    for(const[x,y,t]of poi){dot(x,y,t==='Bandit camp'||t==='Rat Warrens'?'#e0524a':t==='To Mistfen'?'#4ac8b8':t==='To Emberwaste'?'#ff7a2a':t==='To Kingsmarch'?'#ffd24a':'#fff',px/80);label(x,y,t)}}
   for(const[x,y,t]of Mp.poi||[]){dot(x,y,/Tyrant|Maw/.test(t)?'#e0524a':'#fff',px/80);label(x,y,t)}
   if(Mp===MARSH){for(const[x,y,t]of[[Mp.spawn.x,Mp.spawn.y,'Gate'],[38,20,'Mirewatch'],[Mp.mage.x,Mp.mage.y,'Veil Spire'],[Mp.sanctum.x,Mp.sanctum.y,'Sanctum'],[Mp.chapel.x,Mp.chapel.y,'Sunken chapel']]){dot(x,y,t==='Sanctum'||t==='Sunken chapel'?'#e0524a':'#fff',px/80);label(x,y,t)}}
   {const qm=marks(),r0=px/55;
@@ -2615,7 +3016,7 @@ function openMap(fresh){
   const a={down:Math.PI/2,up:-Math.PI/2,right:0,left:Math.PI}[pl.face]||0,X=ox+(pl.x+.5)*sc,Y=oy+(pl.y+.5)*sc,r=px/45;
   c.save();c.translate(X,Y);c.rotate(a);c.fillStyle='#ffd24a';c.strokeStyle='#000';c.lineWidth=3;c.beginPath();c.moveTo(r,0);c.lineTo(-r*.8,r*.7);c.lineTo(-r*.4,0);c.lineTo(-r*.8,-r*.7);c.closePath();c.stroke();c.fill();c.restore();
 }
-const POIS=()=>M.poi?M.poi.map(([x,y,t])=>[x,y,t]):M===MARSH?[[M.spawn.x,M.spawn.y,'the gate'],[38,26,'Mirewatch'],[19,47,'the Veil Spire'],[14,33,'the sanctum'],[M.chapel.x,M.chapel.y+5,'the sunken chapel']]:M===WORLD?[[M.marsh.x,M.marsh.y+1,'the path to Mistfen'],[M.ember.x,M.ember.y+1,'the path to Emberwaste'],[M.spawn.x,M.spawn.y,'the village'],[M.keep.x,M.keep.y+5,'Greywatch Keep'],[M.cave.x,M.cave.y,'the Rat Warrens'],[M.camp.x,M.camp.y,'the bandit camp']]:[];
+const POIS=()=>M.poi?M.poi.map(([x,y,t])=>[x,y,t]):M===MARSH?[[M.spawn.x,M.spawn.y,'the gate'],[38,26,'Mirewatch'],[19,47,'the Veil Spire'],[14,33,'the sanctum'],[M.chapel.x,M.chapel.y+5,'the sunken chapel']]:M===WORLD?[[M.marsh.x,M.marsh.y+1,'the path to Mistfen'],[M.ember.x,M.ember.y+1,'the path to Emberwaste'],[M.bridge.x+2,M.bridge.y,'the bridge to Kingsmarch'],[M.spawn.x,M.spawn.y,'the village'],[M.keep.x,M.keep.y+5,'Greywatch Keep'],[M.cave.x,M.cave.y,'the Rat Warrens'],[M.camp.x,M.camp.y,'the bandit camp']]:[];
 function walkTo(tx,ty){
   if(tx<0||ty<0||tx>=M.W||ty>=M.H)return;
   let near=null,bd=7;for(const[x,y,n]of POIS()){const d=Math.hypot(x-tx,y-ty);if(d<bd){bd=d;near={x,y,n}}}
@@ -2639,7 +3040,7 @@ $('mapPanel').addEventListener('pointerdown',e=>e.stopPropagation());
 pl.hp=pstats().hp;resize();updateHud();updateRoute();
 
 /* =============== accounts, online play, chat and mod menu =============== */
-const MAPS={world:WORLD,dun:DUN,crypt:CRYPT,home:HOME,marsh:MARSH,ember:EMBER,void:VOID};
+const MAPS=Object.assign({world:WORLD,dun:DUN,crypt:CRYPT,home:HOME,marsh:MARSH,ember:EMBER,void:VOID,realm:REALM},INTS);
 const mapId=m=>Object.keys(MAPS).find(k=>MAPS[k]===m)||'world';
 var NET={session:false,online:false,role:'player',name:'',ws:null,url:'',cred:null,players:new Map(),log:[],dirty:false,saveT:0,lastPos:'',lastSnap:0,modSel:null,modData:null,unread:0};
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -2666,6 +3067,7 @@ NET.applyMobs=l=>{const seen=new Set();const byId=new Map(M.mobs.map(m=>[m.id,m]
     m.respawn=tickN+e[6];m.chasing=!!(e[5]&1);m.tele=!!(e[5]&2);m.stun=(e[5]&4)?1:0;m.enraged=!!(e[5]&16);if(e[5]&8)m.swingT=performance.now()}
   for(const m of M.mobs)if(m.id>=1000&&!seen.has(m.id)){m.gone=true;m.dead=true;if(m._g)m._g.visible=false}};
 function netRel(from,ev){
+  if(ev.k==='catch'){if(!isHost())return;const m=M.mobs.find(q=>q.id===ev.id);if(m&&!m.dead&&m.def.prey){m.dead=true;m.respawn=tickN+45}return}
   if(ev.k==='hit'||ev.k==='fx'){if(!isHost())return;const pp=NETR.cache.get(from);if(!pp||pp.m!==mapId(M))return;const m=M.mobs.find(q=>q.id===ev.id);if(!m||m.dead)return;
     if(ev.k==='hit'){const d=Math.min(999,Math.max(0,ev.d|0));m.hp-=d;m.chasing=true;float(m.x,m.y,String(d),'#ffe27a',-1);if(m.hp<=0)killMob(m,from)}
     else{if(ev.stun)m.stun=Math.max(m.stun||0,Math.min(3,ev.stun|0));if(ev.mcd)m.mcd+=Math.min(4,ev.mcd|0);if(ev.bleed&&ev.bleed.n)m.bleed={n:Math.min(6,ev.bleed.n|0),d:Math.min(60,ev.bleed.d|0)}}}
@@ -2705,8 +3107,8 @@ function modMax(){for(const k of SKILLS)S.xp[k]=Math.max(S.xp[k]||0,MAXXP());S.t
 
 
 /* ---- version, patch notes, update banner, inactivity ---- */
-const BUILD='2026-10-14.2',PROTO=1;
-const CHANGES=[{v:'2026-10-14.2',title:'Soulrend update',lines:['Gems and pearls now have icons in your bag.','Axes: rusty, copper, iron and steel up to ember. Buy them at the Armoury or forge them at the anvil. Better axes chop faster and more often.','Settings tab in your Bag with controls, sound, graphics and log out.','Smoother XP bars.','You are logged out after 30 minutes without activity.','Close buttons in shops stay in view while you scroll.']}];
+const BUILD='2026-10-15.1',PROTO=1;
+const CHANGES=[{v:'2026-10-15.1',title:'Kingsmarch and more',lines:['KINGSMARCH: a whole new mainland. Walk east over the bridge from the island. Millbrook (farming), Saltgate Harbour and Highcrown, the walled capital with a castle, markets and shops you can walk into.','New training: birch, elm and redwood trees, coal and aurelite ore, tuna and sharks, pheasants and elk, crops to pick, and aurelite gear.','New monsters, three new bosses and rare treasure drops. Friendly animals only fight back if you attack them.','Safe zones and multi-combat areas are now clearly marked in the world and on the map. The map shows shops, smithies, mines, dungeons, bosses and more with icons and a legend.','The Skills tab has icons and a guide for every skill.','Gathering is no longer interrupted by monsters hitting you. Weaker monsters ignore you at high level.','Hunting is easier: game runs slower and you can catch it from two tiles.']},{v:'2026-10-14.2',title:'Soulrend update',lines:['Gems and pearls now have icons in your bag.','Axes: rusty, copper, iron and steel up to ember. Buy them at the Armoury or forge them at the anvil. Better axes chop faster and more often.','Settings tab in your Bag with controls, sound, graphics and log out.','Smoother XP bars.','You are logged out after 30 minutes without activity.','Close buttons in shops stay in view while you scroll.']}];
 function showNews(){const last=localStorage.getItem('soulrend-seen');if(last===BUILD)return;try{localStorage.setItem('soulrend-seen',BUILD)}catch(e){}
   if(!last&&!NET.session)return;const c=CHANGES[0];const d=document.createElement('div');d.id='news';d.innerHTML='<div class="in"><h2>'+esc(c.title)+'</h2><ul>'+c.lines.map(l=>'<li>'+esc(l)+'</li>').join('')+'</ul><button>Got it</button></div>';d.querySelector('button').onclick=()=>d.remove();$('wrap').appendChild(d)}
 window.__updateReady=()=>{if($('upd'))return;const b=document.createElement('button');b.id='upd';b.textContent='A new version is ready. Tap to update';b.onclick=()=>{NET.saveNow();save();setTimeout(()=>location.reload(),350)};$('wrap').appendChild(b);chatAdd({r:'sys',text:'A new version is ready. Tap the green bar at the top to update.'})};
@@ -2802,7 +3204,7 @@ const NETR={cache:new Map(),figs:new Map(),
   labels(){const cur=mapId(M);for(const[k,p]of this.cache){if(p.m!==cur||p.px===null||p.px===undefined)continue;const q=proj(p.px+.5,hAt(M,p.px+.5,p.py+.5)+2.3,p.py+.5);if(q)tag(q[0],q[1],(p.r==='mod'?'[Mod] ':'')+p.n,p.r==='mod'?'#ff9a6a':'#8fd0ff')}}};
 
 /* ---- mod menu ---- */
-const MODMAPS=[['Village','world'],['Mistfen','marsh'],['Emberwaste','ember'],['Voidreach','void'],['Rat Warrens','dun'],['Keep Crypts','crypt']];
+const MODMAPS=[['Kingsmarch','realm'],['Village','world'],['Mistfen','marsh'],['Emberwaste','ember'],['Voidreach','void'],['Rat Warrens','dun'],['Keep Crypts','crypt']];
 function modHandle(m){
   if(m.op==='players'){NET.modData=m.list;modRender()}
   else if(m.op==='view'){NET.modView=m;modRender()}
@@ -2853,7 +3255,7 @@ $('mod').addEventListener('pointerdown',e=>e.stopPropagation());
 window.addEventListener('beforeunload',()=>{if(NET.online&&NET.session)NET.saveNow()});
 
 {const sp=document.getElementById('splash');if(sp){const go=()=>{sp.classList.add('out');setTimeout(()=>sp.remove(),700);try{SND.unlock&&SND.unlock()}catch(e){}};if(navigator.webdriver)sp.remove();else sp.addEventListener('pointerdown',go)}}
-window.__game={S:()=>S,NET,NETR,beginSession:beginSession,applyCmd,FISHSP,COOK,treeSp,doEat,HEAL,EMBER,VOID,useSoul,tameTry,spellFx,lvlOf,attackMob,doSpec,specOf,SPECS,bp,SND,sfx,data:()=>JSON.parse(JSON.stringify({ITEMS,RECIPES,SHOPS,MOBS,NQ,BUILDS,SPELLS,TELES,SELL,SKN,SKILLS})),xpAt:xpFor,hazards,rollLoot,setPitch:v=>{pitch=T.MathUtils.degToRad(v)},openShop,treeObj,nearestTree,doEat,shots,pl,tick,get M(){return M},WORLD,DUN,CRYPT,HOME,MARSH,openBank,tickN:()=>tickN,pstats,giveItem,addXp,enterDungeon,talk,get dlg(){return dlg},cam,scene,renderer,setYaw:v=>{yaw=v},setDist:v=>{camDist=v},getDist:()=>camDist,getYaw:()=>yaw,DBG};
+window.__game={S:()=>S,REALM,INTS,walk,enterMap,goTo,NET,NETR,beginSession:beginSession,applyCmd,FISHSP,COOK,treeSp,doEat,HEAL,EMBER,VOID,useSoul,tameTry,spellFx,lvlOf,attackMob,doSpec,specOf,SPECS,bp,SND,sfx,data:()=>JSON.parse(JSON.stringify({ITEMS,RECIPES,SHOPS,MOBS,NQ,BUILDS,SPELLS,TELES,SELL,SKN,SKILLS})),xpAt:xpFor,hazards,rollLoot,setPitch:v=>{pitch=T.MathUtils.degToRad(v)},openShop,treeObj,nearestTree,doEat,shots,pl,tick,get M(){return M},WORLD,DUN,CRYPT,HOME,MARSH,openBank,tickN:()=>tickN,pstats,giveItem,addXp,enterDungeon,talk,get dlg(){return dlg},cam,scene,renderer,setYaw:v=>{yaw=v},setDist:v=>{camDist=v},getDist:()=>camDist,getYaw:()=>yaw,DBG};
 requestAnimationFrame(t=>{lastTick=t;lastNow=t;frame(t)});
 })();
 </script>
