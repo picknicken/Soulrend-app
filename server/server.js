@@ -10,6 +10,8 @@ const PORT = +process.env.PORT || 8080;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const MOD_NAME = process.env.MOD_NAME || 'Mod';
 const MOD_PASS = process.env.MOD_PASS || '';
+const PROTO_MIN = +process.env.PROTO_MIN || 0; // clients older than this must update (raise it for breaking changes)
+const IDLE_MS = 32 * 60 * 1000; // the client logs out at 30 minutes; the server is the backstop
 fs.mkdirSync(DATA_DIR, { recursive: true });
 const DB_FILE = path.join(DATA_DIR, 'accounts.json');
 
@@ -60,7 +62,7 @@ setInterval(() => {
   lastSig = sig;
   for (const c of online.values()) send(c.ws, { t: 'players', list: publicList(c) });
 }, 600);
-setInterval(() => { flush(); for (const c of online.values()) { if (c.alive === false) { c.ws.terminate(); continue; } c.alive = false; try { c.ws.ping(); } catch (e) {} } }, 15000);
+setInterval(() => { flush(); for (const c of online.values()) { if (Date.now() - c.lastAct > IDLE_MS) { send(c.ws, { t: 'error', m: 'Logged out after 30 minutes without activity.' }); c.ws.close(); continue; } if (c.alive === false) { c.ws.terminate(); continue; } c.alive = false; try { c.ws.ping(); } catch (e) {} } }, 15000);
 
 /* Shared world: the first player on a map simulates its monsters (the "host") and everyone else follows.
    The server only decides who the host is and relays messages; it does not run game rules. */
@@ -147,6 +149,7 @@ wss.on('connection', ws => {
     if (!c) {
       if (m.t !== 'login' && m.t !== 'register') return;
       if (!okName(m.name) || typeof m.pass !== 'string' || m.pass.length < 4 || m.pass.length > 64) return send(ws, { t: 'error', m: 'Name: 3-16 letters, numbers, space, - or _. Password: 4+ characters.' });
+      if ((m.proto | 0) < PROTO_MIN) return send(ws, { t: 'error', m: 'A new version of Soulrend is available. Close the app and open it again to update.' });
       const k = key(m.name);
       let acc = db[k];
       if (m.t === 'register') {
@@ -158,7 +161,7 @@ wss.on('connection', ws => {
         return send(ws, { t: 'error', m: 'Wrong name or password.' });
       }
       const old = online.get(k); if (old) { send(old.ws, { t: 'error', m: 'Logged in somewhere else.' }); old.ws.close(); }
-      c = { ws, name: acc.name, role: acc.role, pos: null, snap: null, lastChat: 0, alive: true };
+      c = { ws, name: acc.name, role: acc.role, pos: null, snap: null, lastChat: 0, alive: true, lastAct: Date.now(), build: String(m.build || '').slice(0, 20) };
       online.set(k, c); acc.last = Date.now(); touch();
       send(ws, { t: 'welcome', name: acc.name, role: acc.role, save: acc.save, online: online.size });
       broadcast({ t: 'chat', from: 'Server', r: 'sys', text: acc.name + ' joined.' });
@@ -171,6 +174,7 @@ wss.on('connection', ws => {
         if (typeof m.map !== 'string' || m.map.length > 12) return;
       {
         const prev = c.pos ? c.pos.map : null;
+        if (!c.pos || c.pos.x !== (m.x | 0) || c.pos.y !== (m.y | 0) || prev !== m.map) c.lastAct = Date.now(); // moving counts as activity (older clients)
         c.pos = { map: m.map, x: m.x | 0, y: m.y | 0, face: String(m.face || 'down').slice(0, 6), eq: m.eq && typeof m.eq === 'object' ? m.eq : {} };
         if (prev !== m.map) { c.mapSince = Date.now(); if (prev) reelect(prev); reelect(m.map); }
       }
@@ -189,11 +193,12 @@ wss.on('connection', ws => {
       case 'save':
         if (m.save && typeof m.save === 'object') { acc.save = m.save; touch(); }
         break;
+      case 'act': c.lastAct = Date.now(); break;
       case 'snap':
         if (m.snap && typeof m.snap === 'object') c.snap = m.snap;
         break;
       case 'chat': {
-        const now = Date.now(); if (now - c.lastChat < 350) return; c.lastChat = now;
+        const now = Date.now(); if (now - c.lastChat < 350) return; c.lastChat = now; c.lastAct = now;
         const text = String(m.text || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 160); if (!text) return;
         if (m.to) {
           const tc = online.get(key(m.to)); if (!tc) return send(ws, { t: 'chat', from: 'Server', r: 'sys', text: m.to + ' is not online.' });
@@ -212,5 +217,9 @@ wss.on('connection', ws => {
   ws.on('error', () => {});
 });
 
-process.on('SIGTERM', () => { dirty = true; flush(); setTimeout(() => process.exit(0), 400); });
+process.on('SIGTERM', () => {
+  // an update is rolling out: tell everyone, give clients a moment to push their latest save, then save and exit
+  broadcast({ t: 'restart', text: 'The server restarts for an update. Your progress is saved and you reconnect automatically.' });
+  setTimeout(() => { dirty = true; flush(); setTimeout(() => process.exit(0), 600); }, 3000);
+});
 server.listen(PORT, () => console.log('Soulrend server on :' + PORT));

@@ -32,3 +32,6 @@ Environment:
 
 ## Mod commands (mod account only)
 Spawn and remove items, give or remove XP and coins, set levels, max all skills, view inventory and chest, equipment and levels (live or from the last save), teleport to a player, bring a player, kick, announce.
+
+## Live deployment
+Railway project `soulrend`, service `soulrend-server`, volume `soulrend-data` on `/data`, public address `wss://soulrend-server-production.up.railway.app`. The code is deployed from the `server/` folder of the public `Soulrend-app` repo (copy changes there and redeploy). The mod password lives only in the Railway variable `MOD_PASS`.
