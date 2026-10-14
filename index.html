@@ -265,6 +265,16 @@ body{background:#14110c}
 #mod .res div{padding:7px 10px;border-bottom:1px solid var(--line);cursor:pointer}#mod .res div.sel{background:#3a2a20}
 #mod .view{font-size:14px;line-height:1.5;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#0b0f12}
 #mod .view span{display:inline-block;margin:2px 8px 2px 0;padding:1px 8px;border-radius:10px;background:#1c242a}
+/* HUD rework: one tidy column on the left, minimap with the clock on the right, chat and XP at the bottom */
+#hint{max-width:calc(100vw - 150px)!important;font-size:14px;line-height:1.25;padding:6px 10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#zone,#tutchip{display:inline-block;vertical-align:top;margin:6px 6px 0 0;font:700 12px var(--font-b);padding:3px 9px;border-radius:12px}
+#zone:empty{display:none}#tutchip[hidden]{display:none}
+#msg{max-width:calc(100vw - 150px)!important;font-size:14px!important}#chatlog{max-width:calc(100vw - 150px)}
+#mm{top:calc(62px + env(safe-area-inset-top,0px))}
+#clock{top:calc(62px + 108px + 4px + env(safe-area-inset-top,0px))!important;right:calc(12px + env(safe-area-inset-right,0px))!important;width:108px;text-align:center;font-size:12px;padding:2px 0;border-radius:10px}
+#tools{position:absolute;left:calc(12px + env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));margin:0;z-index:3}
+#tools button{min-height:42px;min-width:42px;padding:0 12px}
+#xpfeed{bottom:calc(64px + env(safe-area-inset-bottom,0px))!important}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="icfx" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius=".6" result="d"/><feFlood flood-color="#120d06" result="k"/><feComposite in="k" in2="d" operator="in" result="ol"/><feGaussianBlur in="SourceAlpha" stdDeviation=".9" result="b"/><feSpecularLighting in="b" surfaceScale="2.2" specularConstant=".8" specularExponent="14" lighting-color="#fff" result="sp"><feDistantLight azimuth="235" elevation="52"/></feSpecularLighting><feComposite in="sp" in2="SourceAlpha" operator="in" result="hl"/><feDiffuseLighting in="b" surfaceScale="2.4" diffuseConstant="1.15" lighting-color="#fff" result="df"><feDistantLight azimuth="235" elevation="58"/></feDiffuseLighting><feComposite in="df" in2="SourceAlpha" operator="in" result="dfc"/><feBlend in="SourceGraphic" in2="dfc" mode="multiply" result="sh"/><feComposite in="sh" in2="SourceAlpha" operator="in" result="shc"/><feComposite in="hl" in2="shc" operator="arithmetic" k1="0" k2=".55" k3="1" k4="0" result="lit"/><feMerge><feMergeNode in="ol"/><feMergeNode in="lit"/></feMerge></filter></defs></svg>
@@ -501,7 +511,7 @@ const MOBS={
   wisp:{n:'Veil wisp',art:'wraith',hp:36,acc:44,def:30,max:7,spd:4,coins:[8,20],drops:[['ectoplasm',2],['sigil_ore',5],['spark_rune',3],['frost_rune',6],['gale_rune',14],['herb',6]],uniques:[['veil_hood',45],['veil_orb',55],['veil_staff',90]],aggro:6,leash:14,sz:.9},
   golem:{n:'Rune golem',art:'golem',hp:80,acc:42,def:52,max:10,spd:5,coins:[12,30],drops:[['sigil_ore',3],['ectoplasm',3],['iron_bar',10],['gale_rune',9],['void_rune',30]],uniques:[['veil_robe',50],['veil_staff',80],['void_tome',140]],aggro:4,leash:11,sz:1.3},
   veyra:{n:'Veyra, the Hollow Archmage',art:'veyra',hp:520,acc:66,def:54,max:13,spd:5,heavy:[32,44],heavyEvery:3,boss:true,mech:[{type:'orb',every:5,range:6,dmg:[9,14]},{type:'aoe',every:9,delay:3,r:1.6,dmg:[16,26]},{type:'summon',kind:'wisp',n:3,at:.5}],coins:[300,500],drops:[],loot:{always:[['void_rune',10,20],['arcane_cloth',3,5]],rolls:4,main:[['gale_rune',8,16,3],['frost_rune',10,20,3],['sigil_ore',4,8,3],['potion',2,4,3],['steel_bar',2,4,2]]},uniques:[['veyra_crystal',12]],sz:1.15,respawn:100},
-  toad:{n:'Bog toad',art:'rat',hp:14,acc:24,def:12,max:3,spd:4,coins:[2,7],drops:[['raw_meat',3],['marsh_hide',3]],aggro:3,leash:10,col:'#5a8a3a',sz:.62},
+  toad:{n:'Bog toad',art:'toad',hp:14,acc:24,def:12,max:3,spd:4,coins:[2,7],drops:[['raw_meat',3],['marsh_hide',3]],aggro:3,leash:10,col:'#5a8a3a',sz:.62},
   hound:{n:'Marsh hound',art:'wolf',hp:36,acc:38,def:26,max:6,spd:4,coins:[5,14],drops:[['wolf_pelt',2],['marsh_hide',2],['raw_meat',2]],uniques:[['marsh_buckler',60],['fenhunter_vest',130]],aggro:5,leash:14,col:'#5d7468',sz:.66},
   lurker:{n:'Bog lurker',art:'lurker',hp:50,acc:44,def:36,max:8,spd:4,coins:[10,26],drops:[['mythril_ore',10],['herb',5],['potion',9],['steel_bar',24]],uniques:[['marsh_vest',45],['marsh_hood',45],['warden_helm',100],['fenhunter_hood',120],['warden_shield',130]],aggro:5,leash:13,sz:1.0},
   drowned:{n:'The Drowned King',art:'drowned',hp:480,acc:62,def:56,max:12,spd:5,heavy:[30,42],heavyEvery:3,boss:true,mech:[{type:'aoe',every:8,delay:3,r:2,dmg:[16,26]},{type:'summon',kind:'lurker',n:2,at:.55}],coins:[200,400],drops:[],loot:{always:[['mythril_bar',1,2],['drowned_scale',2,3]],rolls:4,main:[['mythril_ore',3,6,3],['steel_bar',2,4,3],['potion',2,4,3],['cooked_fish',4,8,3],['sigil_ore',3,6,2]]},uniques:[['mist_staff',12],['drowned_crown',10],['trident_head',9],['fen_longbow',10],['fenhunter_hood',14],['warden_plate',14]],sz:1.15,respawn:90},
@@ -803,7 +813,7 @@ Object.assign(ITEMS,{
  soulstone_phoenix:{n:'Phoenix soulstone',soul:{k:'phoenix',v:1,t:1000,n:'Phoenix soul'},note:'Use: if you would die in the next 10 minutes, you rise at half health instead (once).'},
  soulstone_reaver:{n:'Reaver soulstone',soul:{k:'leech',v:.2,t:150,n:'Reaver soul'},note:'Use: heal for 20% of your damage for 90 seconds.'},
  pet_tyrant:{n:'Pet: Cinder wisp',pet:true,note:'a tiny follower'},pet_maw:{n:'Pet: Maw shard',pet:true,note:'a tiny follower'}});
-const TAME={rat:{lv:1,p:0,art:'rat',col:'#8a7a6a'},wolf:{lv:12,p:1,art:'wolf',col:'#8d9096'},toad:{lv:20,p:1,art:'rat',col:'#5a8a3a'},hound:{lv:28,p:2,art:'wolf',col:'#5d7468'},cinderfox:{lv:36,p:3,art:'fox',col:'#e0602a'},ashhound:{lv:46,p:5,art:'wolf',col:'#5a4a4a'},stalker:{lv:56,p:7,art:'wolf',col:'#6a3aa0'}};
+const TAME={rat:{lv:1,p:0,art:'rat',col:'#8a7a6a'},wolf:{lv:12,p:1,art:'wolf',col:'#8d9096'},toad:{lv:20,p:1,art:'toad',col:'#5a8a3a'},hound:{lv:28,p:2,art:'wolf',col:'#5d7468'},cinderfox:{lv:36,p:3,art:'fox',col:'#e0602a'},ashhound:{lv:46,p:5,art:'wolf',col:'#5a4a4a'},stalker:{lv:56,p:7,art:'wolf',col:'#6a3aa0'}};
 const MOBN={rat:'Cave rat',wolf:'Wolf',toad:'Bog toad',hound:'Marsh hound',cinderfox:'Cinder fox',ashhound:'Ash hound',stalker:'Void stalker'};
 for(const k in TAME)ITEMS['beast_'+k]={n:'Companion: '+MOBN[k],pet:true,beast:TAME[k].p,note:'Fights beside you: up to +'+(2+TAME[k].p)+' damage every 3 ticks, more as Beastbond grows.'};
 Object.assign(SELL,{ember_ore:30,ember_bar:90,ash_hide:22,ember_core:60,tyrant_heart:900,void_shard:70,soul_shard:12,beast_treat:2,ember_rune:12,ashhide_hood:160,ashhide_vest:360,ashhide_buckler:190,cinder_bow:900,cinder_hat:320,cinder_robe:700,cinder_staff:880,voidtouched_hat:640,voidtouched_robe:1500,rift_staff:1900,umbral_bow:1900,voidreaver:2200});
@@ -921,9 +931,9 @@ RECIPES.bench.push(
  {id:'oak_longbow',kind:'craft',skill:'woodcutting',lv:20,xp:140,t:5,in:{oak_logs:5}},{id:'willow_bow',kind:'craft',skill:'woodcutting',lv:30,xp:220,t:5,in:{willow_logs:5}},{id:'maple_bow',kind:'craft',skill:'woodcutting',lv:40,xp:340,t:6,in:{maple_logs:5}},{id:'yew_bow',kind:'craft',skill:'woodcutting',lv:50,xp:520,t:6,in:{yew_logs:5}});
 Object.assign(MOBS,{
  hare:{n:'Hare',art:'rabbit',hp:6,prey:true,lv:12,xp:30,meat:2,fear:4,col:'#b08a5a',sz:.42,hide:1},
- deer:{n:'Deer',art:'fox',hp:12,prey:true,lv:24,xp:70,meat:4,fear:5,col:'#a8743a',sz:.9,hide:2},
+ deer:{n:'Deer',art:'deer',hp:12,prey:true,lv:24,xp:70,meat:4,fear:5,col:'#a8743a',sz:.9,hide:2},
  ashhare:{n:'Ash hare',art:'rabbit',hp:8,prey:true,lv:36,xp:110,meat:3,fear:5,col:'#6a4a3a',sz:.44,hide:2},
- lavagecko:{n:'Lava gecko',art:'rat',hp:14,prey:true,lv:46,xp:150,meat:4,fear:5,col:'#e0502a',sz:.6,hide:3}});
+ lavagecko:{n:'Lava gecko',art:'gecko',hp:14,prey:true,lv:46,xp:150,meat:4,fear:5,col:'#e0502a',sz:.6,hide:3}});
 
 /* =============== Kingsmarch: the mainland (data) =============== */
 Object.assign(ITEMS,{
@@ -958,24 +968,24 @@ COOK.unshift(['raw_shark','cooked_shark',62,170],['raw_tuna','cooked_tuna',45,10
 TREESPECS.realm=[{n:'Birch',lv:20,xp:48,item:'birch_logs',n0:[3,5],dep:60,col:0xcfe0a0},{n:'Elm',lv:42,xp:102,item:'elm_logs',n0:[3,6],dep:90,col:0x3f7a3a},{n:'Redwood',lv:68,xp:230,item:'redwood_logs',n0:[3,6],dep:130,col:0x9a4a2a}];
 const RARES=[['ancient_coin',170,12],['jade_figurine',340,24],['silver_idol',560,32],['gold_idol',950,42],['royal_signet',1900,44]];
 Object.assign(MOBS,{
- cow:{n:'Cow',art:'wolf',hp:14,acc:10,def:5,max:2,spd:5,coins:[0,3],drops:[['raw_meat',1],['hide',2],['egg',9]],aggro:0,leash:8,col:'#e8e2d4',sz:.9,lv:2,respawn:30},
- sheep:{n:'Sheep',art:'wolf',hp:12,acc:10,def:5,max:2,spd:5,coins:[0,3],drops:[['raw_meat',1],['wool',1]],aggro:0,leash:8,col:'#f4f0e6',sz:.72,lv:3,respawn:30},
- chicken:{n:'Chicken',art:'rabbit',hp:5,acc:6,def:2,max:1,spd:5,coins:[0,2],drops:[['feather',1],['egg',2],['raw_meat',3]],aggro:0,leash:6,col:'#f4f0e6',sz:.3,lv:1,respawn:24},
- boar:{n:'Wild boar',art:'wolf',hp:34,acc:28,def:18,max:5,spd:4,coins:[2,8],drops:[['raw_meat',1],['hide',2]],aggro:0,leash:10,col:'#6a4a3a',sz:.78,lv:14,tame:0},
- bull:{n:'Highland bull',art:'wolf',hp:64,acc:40,def:30,max:9,spd:5,coins:[6,16],drops:[['raw_meat',1],['hide',1]],aggro:0,leash:10,col:'#4a3a32',sz:1.1,lv:22},
- bear:{n:'Brown bear',art:'wolf',hp:96,acc:50,def:38,max:12,spd:5,coins:[10,26],drops:[['hide',1],['raw_meat',1],['bear_claw',3]],aggro:0,leash:12,col:'#5a4030',sz:1.25,lv:28},
+ cow:{n:'Cow',art:'cow',hp:14,acc:10,def:5,max:2,spd:5,coins:[0,3],drops:[['raw_meat',1],['hide',2],['egg',9]],aggro:0,leash:8,col:'#e8e2d4',sz:.9,lv:2,respawn:30},
+ sheep:{n:'Sheep',art:'sheep',hp:12,acc:10,def:5,max:2,spd:5,coins:[0,3],drops:[['raw_meat',1],['wool',1]],aggro:0,leash:8,col:'#f4f0e6',sz:.72,lv:3,respawn:30},
+ chicken:{n:'Chicken',art:'chicken',hp:5,acc:6,def:2,max:1,spd:5,coins:[0,2],drops:[['feather',1],['egg',2],['raw_meat',3]],aggro:0,leash:6,col:'#f4f0e6',sz:.3,lv:1,respawn:24},
+ boar:{n:'Wild boar',art:'boar',hp:34,acc:28,def:18,max:5,spd:4,coins:[2,8],drops:[['raw_meat',1],['hide',2]],aggro:0,leash:10,col:'#6a4a3a',sz:.78,lv:14,tame:0},
+ bull:{n:'Highland bull',art:'bull',hp:64,acc:40,def:30,max:9,spd:5,coins:[6,16],drops:[['raw_meat',1],['hide',1]],aggro:0,leash:10,col:'#4a3a32',sz:1.1,lv:22},
+ bear:{n:'Brown bear',art:'bear',hp:96,acc:50,def:38,max:12,spd:5,coins:[10,26],drops:[['hide',1],['raw_meat',1],['bear_claw',3]],aggro:0,leash:12,col:'#5a4030',sz:1.25,lv:28},
  direwolf:{n:'Dire wolf',art:'wolf',hp:88,acc:56,def:44,max:11,spd:4,coins:[8,22],drops:[['wolf_pelt',1],['raw_meat',1],['potion',14]],uniques:[['aurelite_dagger',300]],aggro:6,leash:15,col:'#4a4e5a',sz:.98,lv:34},
  thornling:{n:'Thornling',art:'thornling',hp:72,acc:60,def:46,max:11,spd:4,coins:[12,32],drops:[['briar_thorn',2],['herb',4],['potion',16]],uniques:[['briar_hood',180],['briar_buckler',200]],aggro:5,leash:13,sz:.95,lv:40},
  highwayman:{n:'Highwayman',art:'bandit',hp:80,acc:54,def:40,max:10,spd:4,coins:[20,52],drops:[['steel_bar',12],['potion',9],['coal_ore',6]],uniques:[['aurelite_sword',260],['garrick_blade',700],['aurelite_helm',320]],aggro:6,leash:14,sz:1,lv:32},
  cutthroat:{n:'Cutthroat',art:'rook',hp:92,acc:60,def:44,max:12,spd:4,coins:[28,64],drops:[['gold_ore',12],['potion',9],['coal_ore',5]],uniques:[['aurelite_dagger',240],['aurelite_shield',320],['garrick_blade',700]],aggro:6,leash:14,sz:1,lv:38},
  hillogre:{n:'Hill ogre',art:'ogre',hp:170,acc:62,def:72,max:16,spd:5,coins:[30,80],drops:[['coal_ore',3],['aurelite_ore',7],['gold_ore',9],['potion',8]],uniques:[['aurelite_helm',130],['aurelite_shield',140],['aurelite_armour',190],['aurelite_mace',210]],aggro:4,leash:12,sz:1.55,lv:44},
- sandcrab:{n:'Sand crab',art:'rat',hp:40,acc:34,def:40,max:5,spd:4,coins:[4,12],drops:[['crab_claw',2],['raw_tuna',12]],uniques:[['pearl',60]],aggro:4,leash:9,col:'#e0804a',sz:.74,lv:20},
+ sandcrab:{n:'Sand crab',art:'crab',hp:40,acc:34,def:40,max:5,spd:4,coins:[4,12],drops:[['crab_claw',2],['raw_tuna',12]],uniques:[['pearl',60]],aggro:4,leash:9,col:'#e0804a',sz:.74,lv:20},
  sailor:{n:'Drowned sailor',art:'sailor',hp:78,acc:56,def:42,max:10,spd:4,coins:[16,40],drops:[['pearl',40],['raw_shark',16],['potion',9]],uniques:[['gold_ring',90],['tide_hat',300]],aggro:5,leash:12,sz:1,lv:36},
  garrick:{n:'Garrick, the Bandit King',art:'garrick',hp:1100,acc:76,def:66,max:16,spd:5,heavy:[34,48],heavyEvery:3,boss:true,mech:[{type:'summon',kind:'highwayman',n:3,at:.6},{type:'steal',every:3},{type:'aoe',every:8,delay:3,r:2,dmg:[20,30]}],coins:[600,900],drops:[],loot:{always:[['bandit_seal',1,1],['gold_bar',1,2]],rolls:4,main:[['coal_ore',4,8,3],['steel_bar',2,5,3],['potion',2,5,3],['aurelite_ore',1,3,2],['cooked_tuna',4,8,2]]},uniques:[['garrick_blade',12],['aurelite_helm',14],['aurelite_armour',16],['aurelite_sword',16],['royal_signet',30]],sz:1.25,respawn:120,lv:48},
  briarmother:{n:'The Briarmother',art:'briarmother',hp:1250,acc:78,def:70,max:16,spd:5,heavy:[36,50],heavyEvery:3,boss:true,mech:[{type:'summon',kind:'thornling',n:3,at:.65},{type:'drain',every:3},{type:'aoe',every:7,delay:3,r:2.2,dmg:[22,32]},{type:'orb',every:6,range:6,dmg:[12,18]}],coins:[500,800],drops:[],loot:{always:[['briar_heart',1,1],['elm_logs',6,12]],rolls:4,main:[['herb',5,10,3],['potion',2,5,3],['birch_logs',8,16,2],['redwood_logs',2,5,2]]},uniques:[['briar_bow',12],['briar_hood',10],['briar_vest',12],['briar_buckler',12],['gold_idol',40]],sz:1.6,respawn:120,lv:54},
  reefqueen:{n:'The Reef Queen',art:'reefqueen',hp:1400,acc:82,def:74,max:17,spd:5,heavy:[38,54],heavyEvery:3,boss:true,mech:[{type:'summon',kind:'sandcrab',n:3,at:.6},{type:'orb',every:5,range:6,dmg:[12,20]},{type:'aoe',every:7,delay:3,r:2.2,dmg:[24,36]}],coins:[600,950],drops:[],loot:{always:[['pearl',2,4],['raw_shark',2,4]],rolls:4,main:[['raw_tuna',4,8,3],['potion',3,6,3],['gold_ore',2,5,2],['crab_claw',4,8,2]]},uniques:[['tide_staff',12],['tide_hat',10],['tide_robe',12],['reef_trident',12],['silver_idol',30]],sz:1.3,respawn:130,lv:58},
- pheasant:{n:'Pheasant',art:'rabbit',hp:4,prey:true,lv:18,xp:44,meat:2,fear:4,col:'#a8743a',sz:.38,hide:0},
- elk:{n:'Elk',art:'fox',hp:16,prey:true,lv:50,xp:130,meat:5,fear:5,col:'#8a6a4a',sz:1.05,hide:3}});
+ pheasant:{n:'Pheasant',art:'pheasant',hp:4,prey:true,lv:18,xp:44,meat:2,fear:4,col:'#a8743a',sz:.38,hide:0},
+ elk:{n:'Elk',art:'elk',hp:16,prey:true,lv:50,xp:130,meat:5,fear:5,col:'#8a6a4a',sz:1.05,hide:3}});
 SELL.ancient_coin=400;
 /* ---- shops spread over Kingsmarch ---- */
 {const byTier=(t,kinds)=>kinds.map(k=>t+'_'+k).filter(id=>ITEMS[id]),meleeAll=['copper','iron','steel','mythril','ember','aurelite'].flatMap(t=>byTier(t,['dagger','sword','mace','helm','shield','armour'])),
@@ -2080,19 +2090,78 @@ function animFigure(F,now,moving,o){
   sm(R.sh.rotation,'x',shR,dt,k);sm(R.el.rotation,'x',elR,dt,k);sm(L.sh.rotation,'x',shL,dt,k);sm(L.el.rotation,'x',elL,dt,k);sm(L.sh.rotation,'z',lz,dt,k);
   sm(F.body.rotation,'x',tx,dt,12);
 }
+const CREF={wolf:.62,fox:.46,deer:.9,elk:1.05,cow:.9,bull:1.1,sheep:.72,boar:.78,bear:1.25,chicken:.3,pheasant:.38,toad:.62,crab:.74,gecko:.6};
+const CRITTERS=new Set(['rat','rabbit','fox','wolf','deer','elk','cow','bull','sheep','boar','bear','chicken','pheasant','toad','crab','gecko']);
+const shadeLum=c=>{const k=new T.Color(c);return(k.r+k.g+k.b)/3};
+const shade=(c,f)=>{const k=new T.Color(c);k.lerp(new T.Color(f>0?'#ffffff':'#000000'),Math.abs(f));return '#'+k.getHexString()};
 function makeCritter(def){
-  const root=new T.Group(),g=new T.Group();root.add(g);const legs=[];let tail=null,hop=false;
-  const col=def.col||'#8a7a6a',mm=LM(col),dk=LM('#1a1512'),w=LM('#f4f0e6');
-  const ico=(r,sx,sy,sz,m,x,y,z)=>ms(new T.IcosahedronGeometry(r,1),m,x,y,z,g,sx,sy,sz);
-  const leg=(x,top,len,z,m)=>{const pv=new T.Group();pv.position.set(x,top,z);ms(cylG(.03,.025,len,5),m,0,-len/2,0,pv);root.add(pv);legs.push(pv)};
-  if(def.art==='rabbit'){hop=true;ico(.2,1,.85,1.3,mm,0,.2,0);ico(.12,1,1,1,mm,0,.3,.22);ms(new T.BoxGeometry(.045,.26,.03),mm,-.05,.52,.2,g).rotation.x=-.2;ms(new T.BoxGeometry(.045,.26,.03),mm,.05,.52,.2,g).rotation.x=-.2;tail=ico(.07,1,1,1,w,0,.22,-.26);ico(.03,1,1,1,dk,.05,.34,.32);ico(.03,1,1,1,dk,-.05,.34,.32)}
-  else if(def.art==='fox'||def.art==='wolf'){ico(.22,.9,.75,1.9,mm,0,.3,0);const h=ms(new T.ConeGeometry(.13,.3,5),mm,0,.38,.5,g);h.rotation.x=Math.PI/2;
-    for(const s of[-1,1])ms(new T.ConeGeometry(.05,.14,4),mm,s*.07,.54,.38,g);
-    ico(.14,.7,.7,2.2,mm,0,.34,-.5);tail=ico(.1,.7,.7,1,w,0,.34,-.8);for(const[x,z]of[[-.1,.25],[.1,.25],[-.1,-.2],[.1,-.2]])leg(x,.22,.2,z,dk)}
+  const root=new T.Group(),g=new T.Group();root.add(g);const legs=[];let tail=null,hop=false,top=.7;const art=def.art;
+  const col=def.col||'#8a7a6a',mm=LM(col),M0=mm,Md=LM(shade(col,-.3)),Ml=LM(shade(col,.45)),dk=LM('#1a1512'),w=LM('#f4f0e6'),pk=LM('#d9a09a');
+  const ico=(r,sx,sy,sz,m,x,y,z,det)=>ms(new T.IcosahedronGeometry(r,det===undefined?1:det),m,x,y,z,g,sx,sy,sz);
+  const box=(bw,bh,bd,m,x,y,z)=>ms(new T.BoxGeometry(bw,bh,bd),m,x,y,z,g);
+  const cone=(r,h,m,x,y,z,rx,rz,seg)=>{const c=ms(new T.ConeGeometry(r,h,seg||5),m,x,y,z,g);c.rotation.x=rx||0;c.rotation.z=rz||0;return c};
+  const cyl=(rt,rb,h,m,x,y,z,rx,rz)=>{const c=ms(cylG(rt,rb,h,6),m,x,y,z,g);c.rotation.x=rx||0;c.rotation.z=rz||0;return c};
+  const leg=(x,tp,len,z,m,th,hoof)=>{th=th||.03;const pv=new T.Group();pv.position.set(x,tp,z);ms(cylG(th,th*.75,len,6),m,0,-len/2,0,pv);if(hoof)ms(new T.BoxGeometry(th*1.8,th*1.1,th*2.4),hoof,0,-len+th*.4,th*.4,pv);root.add(pv);legs.push(pv)};
+  const four=(xo,zf,zb,tp,len,th,m,hoof)=>{for(const[x,z]of[[-xo,zf],[xo,zf],[-xo,zb],[xo,zb]])leg(x,tp,len,z,m,th,hoof)};
+  const eyes=(x,y,z,r,m)=>{for(const s of[-1,1])ico(r,1,1,1,m||dk,s*x,y,z,0)};
+  const antler=(s,big)=>{const k=big?1.5:1,a=LM('#cdbf9c');for(const sd of[-1,1]){cyl(.02*k,.014*k,.42*k,a,sd*.09,1.5,.62,-.2,sd*.5);cyl(.014*k,.01*k,.24*k,a,sd*.17*k,1.6,.58,-.5,sd*.9);cyl(.014*k,.01*k,.2*k,a,sd*.15*k,1.66,.66,-.9,sd*.4);if(big)cyl(.012,.008,.2,a,sd*.28,1.68,.6,-.2,sd*1.2)}};
+    if(art==='rabbit'){hop=true;ico(.2,1,.85,1.3,mm,0,.2,0);ico(.12,1,1,1,mm,0,.3,.22);ms(new T.BoxGeometry(.045,.26,.03),mm,-.05,.52,.2,g).rotation.x=-.2;ms(new T.BoxGeometry(.045,.26,.03),mm,.05,.52,.2,g).rotation.x=-.2;tail=ico(.07,1,1,1,w,0,.22,-.26);ico(.03,1,1,1,dk,.05,.34,.32);ico(.03,1,1,1,dk,-.05,.34,.32);top=.7}
+  else if(art==='wolf'||art==='fox'){const fx=art==='fox',lt=fx?LM('#f4efe4'):Ml;
+    ico(.3,.62,.7,1.5,M0,0,.52,-.02);ico(.24,.72,.82,.9,M0,0,.56,.3);ico(.22,.72,.7,.8,Md,0,.55,-.34);ico(.17,.7,.6,1.1,lt,0,.4,.14);
+    ico(.14,.75,1,1.4,M0,0,.68,.5);ico(.15,.8,.74,1.05,M0,0,.72,.68);
+    cone(fx?.07:.08,fx?.34:.3,lt,0,.67,.9,Math.PI/2,0,6);ico(.03,1,1,1,dk,0,.68,1.06,0);
+    for(const s of[-1,1]){cone(fx?.07:.055,fx?.2:.16,M0,s*.08,.9,.62,-.15,s*.18,4);cone(.02,.07,dk,s*.08,.9,.64,-.15,s*.18,4)}
+    eyes(.07,.74,.79,.024,fx?dk:LM('#e8c050'));
+    tail=ico(fx?.12:.1,.7,.7,2.4,fx?M0:Md,0,.52,-.64);tail.rotation.x=.55;if(fx){const tip=ico(.09,.7,.7,1.2,w,0,.35,-.9);tail.userData.tip=tip}
+    four(.1,.34,-.34,.42,.4,.055,M0,dk);top=1.05}
+  else if(art==='cow'||art==='bull'){const bl=art==='bull',sp=!bl&&shadeLum(col)>.6;
+    ico(.36,.78,.8,1.5,M0,0,.84,0);ico(.3,.85,.9,1,M0,0,.86,.4);ico(.3,.8,.85,.9,Md,0,.84,-.4);if(bl)ico(.26,.9,.7,1.1,M0,0,1.14,.3);
+    ico(.2,.8,1,1.3,M0,0,.92,.7);box(bl?.34:.3,.3,.4,M0,0,.9,.98);box(.22,.16,.14,pk,0,.82,1.2);eyes(.12,.96,1.04,.025);
+    for(const s of[-1,1]){ico(.06,1.7,.35,.7,Md,s*.2,.98,.9,0);cone(bl?.045:.03,bl?.3:.2,LM('#e8dcc0'),s*.15,1.14,.96,0,-s*(bl?.7:.9),5)}
+    if(sp){for(const[x,y,z,r]of[[.2,.9,.1,.13],[-.18,.78,-.3,.12],[.12,.6,.4,.1],[-.2,.95,.45,.1]])ico(r,.5,1,1,LM('#33261f'),x>0?x+.1:x-.1,y,z,0)}
+    ico(.12,1,.9,1.1,pk,0,.5,-.3);four(.17,.55,-.55,.55,.55,.085,M0,dk);
+    tail=cyl(.022,.02,.55,Md,0,.72,-.9,.15,0);ico(.06,1,1.6,1,dk,0,.42,-.91,0);top=1.4}
+  else if(art==='sheep'){const wl=LM(shade(col,-.05));
+    for(const[x,y,z,r]of[[0,.62,0,.3],[.14,.7,.22,.2],[-.14,.7,.22,.2],[.15,.66,-.22,.22],[-.15,.66,-.22,.22],[0,.78,.0,.2],[0,.56,-.32,.2],[0,.62,.34,.18]])ico(r,1,.9,1,wl,x,y,z,1);
+    ico(.1,.9,1,1.2,LM('#3a312c'),0,.68,.55);for(const s of[-1,1])ico(.05,1.7,.4,.7,LM('#3a312c'),s*.12,.72,.5,0);eyes(.05,.72,.62,.018,w);
+    four(.14,.22,-.24,.38,.34,.032,LM('#3a312c'),dk);tail=ico(.07,1,1,1,wl,0,.58,-.52);top=.95}
+  else if(art==='boar'){ico(.3,.8,.82,1.4,M0,0,.5,0);ico(.27,.9,.9,.9,M0,0,.56,.28);ico(.25,.85,.8,.8,Md,0,.5,-.3);
+    for(let i=0;i<7;i++)cone(.04,.13,Md,0,.8-Math.abs(i-3)*.02,-.36+i*.12,0,0,4);
+    ico(.19,.85,.85,1,M0,0,.5,.56);box(.15,.13,.2,pk,0,.44,.8);ico(.025,1,1,1,dk,.04,.44,.91,0);ico(.025,1,1,1,dk,-.04,.44,.91,0);
+    for(const s of[-1,1]){cone(.022,.15,LM('#e8dcc0'),s*.085,.42,.78,-.5,-s*.35,4);ico(.05,1,1.3,.4,M0,s*.13,.7,.5,0)}eyes(.09,.6,.66,.02,LM('#ffd070'));
+    four(.13,.3,-.3,.3,.3,.055,Md,dk);tail=cone(.015,.14,Md,0,.58,-.64,.9,0,4);top=.9}
+  else if(art==='bear'){const tn=LM('#b89a78');
+    ico(.46,.8,.82,1.25,M0,0,.8,-.05);ico(.33,.95,.9,.9,M0,0,.98,.3);ico(.36,.85,.8,.9,Md,0,.76,-.4);
+    ico(.22,.9,.9,1,M0,0,.88,.62);ico(.11,.9,.8,1.3,tn,0,.8,.84);ico(.035,1,1,1,dk,0,.84,.97,0);eyes(.1,.94,.78,.02);
+    for(const s of[-1,1])ico(.07,1,1,.5,Md,s*.14,1.1,.55,0);
+    four(.24,.38,-.4,.58,.58,.11,M0,Md);for(const s of[-1,1])for(const z of[.42,-.4])for(const i of[-1,0,1])cone(.012,.07,LM('#e8dcc0'),s*.24+i*.03,.03,z+.12,Math.PI/2,0,4);
+    tail=ico(.07,1,1,1,Md,0,.78,-.68);top=1.5}
+  else if(art==='deer'||art==='elk'){const el=art==='elk',lt=LM('#efe6d4');
+    ico(.22,.62,.68,1.7,M0,0,.86,-.02);ico(.19,.7,.8,.9,M0,0,.88,.3);ico(.19,.7,.7,.8,Md,0,.84,-.35);ico(.16,.6,.5,1.4,lt,0,.7,0);
+    cyl(.07,.1,.5,M0,0,1.12,.45,-.5,0);ico(.1,.85,.9,1.3,M0,0,1.36,.62);ico(.05,1,.9,1.4,lt,0,1.3,.78,0);ico(.022,1,1,1,dk,0,1.32,.88,0);eyes(.07,1.42,.7,.02);
+    for(const s of[-1,1])ico(.05,.8,1.7,.6,M0,s*.11,1.48,.55,0);
+    if(el||def.n==='Deer')antler(0,el);
+    four(.09,.38,-.4,.5,.52,.04,Md,dk);tail=ico(.06,1,1,1,lt,0,.92,-.58);top=1.8}
+  else if(art==='chicken'||art==='pheasant'){const ph=art==='pheasant',hd=ph?LM('#2a6a5a'):w;
+    ico(.15,.85,.9,1.25,M0,0,.32,0);ico(.1,1,1,1,ph?LM('#c05a2a'):w,0,.34,.14);cyl(.04,.05,.18,M0,0,.5,.18,-.3,0);ico(.065,1,1,1.1,hd,0,.6,.22);
+    cone(.022,.07,LM('#e0a030'),0,.58,.31,Math.PI/2,0,4);ico(.018,1,1,1,dk,.04,.62,.26,0);ico(.018,1,1,1,dk,-.04,.62,.26,0);
+    if(!ph){cone(.03,.07,LM('#d33'),0,.69,.2,0,0,4);ico(.03,1,1.4,.8,LM('#d33'),0,.54,.3,0)}else ico(.04,1,1,.5,LM('#d33'),0,.6,.27,0);
+    tail=cone(ph?.07:.08,ph?.5:.22,ph?LM('#8a5a2a'):w,0,ph?.34:.4,ph?-.36:-.18,-1.25,0,5);
+    for(const s of[-1,1])ico(.08,.4,.8,1.3,Md,s*.14,.34,0,0);
+    leg(-.05,.2,.2,0,LM('#d9a030'),.014);leg(.05,.2,.2,0,LM('#d9a030'),.014);top=.9}
+  else if(art==='toad'){hop=true;ico(.22,1.15,.78,1,M0,0,.16,0);ico(.17,1.2,.7,1,Ml,0,.1,.08);
+    for(const s of[-1,1]){ico(.065,1,1,1,LM('#e8d060'),s*.11,.33,.16,0);ico(.03,1,1,1,dk,s*.11,.35,.2,0);ico(.1,.6,.55,1.4,Md,s*.2,.1,-.1);ico(.06,1,.6,1.4,M0,s*.14,.04,.22)}
+    for(const[x,z]of[[.05,-.05],[-.1,.08],[.12,.1],[-.04,.14]])ico(.03,1,.6,1,Ml,x,.3,z,0);cyl(.012,.012,.28,dk,0,.2,.25,0,Math.PI/2);top=.55}
+  else if(art==='crab'){const sh=LM(shade(col,-.1));ico(.24,1.35,.5,1,sh,0,.14,0);ico(.2,1.2,.3,.9,Ml,0,.2,0);
+    for(const s of[-1,1]){cyl(.02,.02,.2,sh,s*.3,.16,.18,.5,s*.9);ico(.09,1,.7,1.2,sh,s*.36,.2,.3,0);cone(.04,.12,sh,s*.33,.2,.42,Math.PI/2,0,4);cyl(.01,.01,.12,dk,s*.07,.3,.2,0,0);ico(.022,1,1,1,dk,s*.07,.37,.2,0);
+      for(let i=0;i<3;i++)cyl(.012,.01,.26,sh,s*.3,.06,-.08+i*.1,0,s*1.1)}top=.5}
+  else if(art==='gecko'){ico(.1,.75,.5,2.3,M0,0,.1,0);ico(.075,.95,.6,1.1,M0,0,.1,.27);ico(.02,1,1,1,dk,.04,.15,.34,0);ico(.02,1,1,1,dk,-.04,.15,.34,0);
+    tail=cone(.06,.5,Md,0,.08,-.5,-Math.PI/2,0,5);for(const[x,z]of[[.12,.1],[-.12,.1],[.12,-.1],[-.12,-.1]])leg(x,.1,.1,z,Md,.02);
+    for(const[x,z]of[[.04,-.05],[-.04,.05],[.03,.12]])ico(.025,1,.6,1,LM('#ffb060'),x,.17,z,0);top=.35}
   else{ico(.2,.9,.7,1.5,mm,0,.2,0);const h=ms(new T.ConeGeometry(.11,.26,5),LM('#a89280'),0,.22,.34,g);h.rotation.x=Math.PI/2;
     for(const s of[-1,1])ico(.06,1,1,.3,LM('#c79a8a'),s*.08,.36,.2);ico(.025,1,1,1,LM('#d33'),.04,.27,.46);ico(.025,1,1,1,LM('#d33'),-.04,.27,.46);
-    tail=ms(cylG(.02,.012,.55,4),LM('#b88a80'),0,.2,-.4,g);tail.rotation.x=Math.PI/2.4;for(const[x,z]of[[-.1,.15],[.1,.15],[-.1,-.15],[.1,-.15]])leg(x,.1,.1,z,dk)}
-  const s=(def.art==='rat'?(def.sz>.9?2.4:1.15):def.art==='wolf'?1.7:1.25);root.scale.setScalar(s);root.userData={body:g,legs,tail,hop,seed:Math.random()*6};return root;
+    tail=ms(cylG(.02,.012,.55,4),LM('#b88a80'),0,.2,-.4,g);tail.rotation.x=Math.PI/2.4;for(const[x,z]of[[-.1,.15],[.1,.15],[-.1,-.15],[.1,-.15]])leg(x,.1,.1,z,dk);top=.55}
+  const ref=CREF[art],s=ref?(def.sz?def.sz/ref:1):(art==='rat'?(def.sz>.9?2.4:1.15):1.25);root.scale.setScalar(s);root.userData={body:g,legs,tail,hop,top:top*s,seed:Math.random()*6};return root;
 }
 function animCritter(root,now,moving,dt){const u=root.userData;if(!u.body)return;dt=dt||.016;u.mv=(u.mv||0)+((moving?1:0)-(u.mv||0))*Math.min(1,dt*10);const mv=u.mv,ph=now/(u.hop?150:80)+u.seed;
   u.legs.forEach((l,i)=>{l.rotation.x=Math.sin(ph+(i%2?Math.PI:0)+(i>1?Math.PI*.5:0))*.95*mv});
@@ -2330,7 +2399,7 @@ function buildObj(o,x,y,Mp){
 function mkEntity(parent,kind,e){
   let F=null,g;
   if(kind==='mob'){const d=e.def;
-    if(d.art==='rat'||d.art==='rabbit'||d.art==='fox'||d.art==='wolf'){g=makeCritter(d);const hit=new T.Mesh(new T.SphereGeometry(.7,6,4),new T.MeshBasicMaterial({visible:false}));hit.position.y=.5;g.add(hit)}
+    if(CRITTERS.has(d.art)){g=makeCritter(d);const hit=new T.Mesh(new T.SphereGeometry(.7,6,4),new T.MeshBasicMaterial({visible:false}));hit.position.y=.5;g.add(hit)}
     else{F=makeFigure();F.applyPal(PAL[d.art]);F.setTool(d.art==='rook'?'dagger':'sword',d.art==='aldric'?'#aab4c6':d.art==='skeleton'?'#b9b29c':d.art==='bandit'||d.art==='rook'?'#a0a8ae':'#b4bdc6');g=new T.Group();g.add(F.g);g.scale.setScalar((d.sz||1)*FS)}
     g.add(blob(.5*(d.sz||1)+.15));g.userData.pick={type:'mob',m:e}}
   else{F=makeFigure();F.applyPal(PAL[e.pal||e.role]);F.setTool(e.role==='cityguard'?null:null);g=new T.Group();g.add(F.g);g.scale.setScalar(FS);g.add(blob(.5));g.userData.pick={type:'npc',n:e}}
@@ -2405,18 +2474,18 @@ function updShots(now){for(let k=shots.length-1;k>=0;k--){const s=shots[k],q=(no
   const x=s.fx+(s.tx-s.fx)*q+.5,z=s.fy+(s.ty-s.fy)*q+.5,y=hAt(M,x,z)+1.0+Math.sin(q*Math.PI)*.5;
   const x2=s.fx+(s.tx-s.fx)*Math.min(1,q+.05)+.5,z2=s.fy+(s.ty-s.fy)*Math.min(1,q+.05)+.5;
   s.g.position.set(x,y,z);s.g.lookAt(x2,hAt(M,x2,z2)+1.0+Math.sin(Math.min(1,q+.05)*Math.PI)*.5,z2)}}
-const PETS={pet_rat:{art:'rat',col:'#5d5249'},pet_gnaw:{art:'rat',col:'#8a6045'},pet_toad:{art:'rat',col:'#5a8a3a'},pet_hound:{art:'wolf',col:'#5d7468'},pet_wisp:{orb:'#8ad8ff'},pet_golem:{cube:'#8a8a98'},pet_drowned:{orb:'#7fe8f4'},pet_veyra:{orb:'#c08cff'},pet_aldric:{orb:'#e8c14a'}};
+const PETS={pet_rat:{art:'rat',col:'#5d5249'},pet_gnaw:{art:'rat',col:'#8a6045'},pet_toad:{art:'toad',col:'#5a8a3a'},pet_hound:{art:'wolf',col:'#5d7468'},pet_wisp:{orb:'#8ad8ff'},pet_golem:{cube:'#8a8a98'},pet_drowned:{orb:'#7fe8f4'},pet_veyra:{orb:'#c08cff'},pet_aldric:{orb:'#e8c14a'}};
 let petG=null,petId=null,petPos=null;
 Object.assign(NEED,{ember:32,silver:25,gold:40,coal:30,aurelite:52});Object.assign(MXP,{ember:22,silver:16,gold:30,coal:18,aurelite:40});Object.assign(HEAL,{carrot:9,cooked_tuna:46,cooked_shark:64,baked_potato:16,cabbage:6,cooked_trout:22,cooked_salmon:30,cooked_lobster:40,cooked_swordfish:52,cooked_eel:44,cooked_voidfin:60});
 Object.assign(PETDROP,{tyrant:['pet_tyrant',40],maw:['pet_maw',40],garrick:['pet_garrick',40],briarmother:['pet_briar',40],reefqueen:['pet_reef',40]});
-Object.assign(PETS,{pet_tyrant:{orb:'#ff7a2a'},pet_maw:{orb:'#a070f0'},pet_briar:{orb:'#6acb4a'},pet_garrick:{art:'wolf',col:'#3a3a44'},pet_reef:{art:'rat',col:'#e0804a'}});
+Object.assign(PETS,{pet_tyrant:{orb:'#ff7a2a'},pet_maw:{orb:'#a070f0'},pet_briar:{orb:'#6acb4a'},pet_garrick:{art:'wolf',col:'#3a3a44'},pet_reef:{art:'crab',col:'#e0804a'}});
 for(const k in TAME)PETS['beast_'+k]={art:TAME[k].art,col:TAME[k].col};
 function updPet(now,dt){
   if(!S.pet||!PETS[S.pet]){if(petG)petG.visible=false;return}
   if(petId!==S.pet){if(petG)scene.remove(petG);petId=S.pet;const d=PETS[S.pet];petG=new T.Group();
     if(d.orb){const m=ms(new T.IcosahedronGeometry(.16,1),EM(d.orb,d.orb),0,.45,0,petG);m.castShadow=false;const r=ms(new T.TorusGeometry(.26,.02,4,14),EM(d.orb,d.orb),0,.45,0,petG);r.rotation.x=Math.PI/2.4;r.castShadow=false}
     else if(d.cube){ms(new T.DodecahedronGeometry(.18,0),LM(d.cube),0,.22,0,petG);ms(new T.OctahedronGeometry(.06),EM('#a8c8ff','#5a7ad0'),0,.26,.14,petG)}
-    else{const c=makeCritter({art:d.art,col:d.col,sz:.5});c.scale.multiplyScalar(.42);petG.add(c);petG.userData.crit=c}
+    else{const c=makeCritter({art:d.art,col:d.col});c.scale.multiplyScalar(.42);petG.add(c);petG.userData.crit=c}
     scene.add(petG);petPos=null}
   petG.visible=true;const hx=heroF.g.position.x,hz=heroF.g.position.z,a=heroF._ang||0,tx=hx-Math.sin(a)*1.1+Math.cos(a)*.7,tz=hz-Math.cos(a)*1.1-Math.sin(a)*.7;
   if(!petPos||Math.hypot(petPos.x-hx,petPos.z-hz)>6)petPos={x:tx,z:tz,a:0};
@@ -2435,7 +2504,7 @@ function applyTime(){const di=dayInfo();lastDay=di;const e=M.env?ENV[M.env]:ENV.
   sun.color.copy(SUN_D).lerp(SUN_N,k).lerp(SUN_W,w*.65);sun.intensity=e.sun*(.22+.78*(1-k))*(1+.15*w);
   const el=Math.max(.14,Math.sin(ang));sunOff=[-Math.cos(ang)*20,4+el*18,9];
   WINMAT.emissiveIntensity=.08+.95*k;
-  const ck=document.getElementById('clock');if(ck){const hh=Math.floor(di.h),mm=Math.floor((di.h-hh)*60/10)*10;setT(ck,String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+' · '+Math.round(1000/Math.max(1,fAvg))+' fps');const cn=k>.5?'n':'';if(ck.className!==cn)ck.className=cn}}
+  const ck=document.getElementById('clock');if(ck){const hh=Math.floor(di.h),mm=Math.floor((di.h-hh)*60/10)*10;setT(ck,String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+(/[?&]fps/.test(location.search)?' · '+Math.round(1000/Math.max(1,fAvg))+' fps':''));const cn=k>.5?'n':'';if(ck.className!==cn)ck.className=cn}}
 function updFlies(now,dt){if(!M.outdoor&&M!==WORLD){if(flies)flies.visible=false;return}
   if(!flies){flies=new T.Group();scene.add(flies);const cols=[0xf2c14e,0xe86a8a,0xf4efe0,0x8fb8ff];for(let q=0;q<14;q++){const f=new T.Group(),mt=new T.MeshBasicMaterial({color:cols[q%4],side:T.DoubleSide});const wg=new T.BufferGeometry();wg.setAttribute('position',new T.BufferAttribute(new Float32Array([0,0,0,.09,0,.05,.09,0,-.05]),3));
     const w1=new T.Mesh(wg,mt),w2=new T.Mesh(wg,mt);w2.scale.x=-1;f.add(w1,w2);f.userData={w1,w2,mt,col:cols[q%4],a:Math.random()*6.28,r:1+Math.random()*5,sp:.4+Math.random()*.5,off:Math.random()*10,ph:Math.random()*6.28};flies.add(f)}}
@@ -2550,7 +2619,7 @@ function drawOverlay(now,dt){
   {const near=[];for(const m of M.mobs){if(m.dead||m.gone||!m._g)continue;const d=Math.max(Math.abs(m.x-pl.x),Math.abs(m.y-pl.y));if(d<=(m.def.boss?16:10))near.push([d,m])}
    near.sort((a,b)=>a[0]-b[0]);
    for(const[,m]of near.slice(0,12)){const hurt=!m.def.prey&&(m.hp<m.def.hp||m.chasing||m.def.boss),sc=m.def.art==='rat'?(m.def.sz>.9?1.3:.55):(m.def.sz||1);
-    const gp=m._g.position,top=gp.y+(m.def.art==='rat'?.9*sc+.3:2.15*(m.def.sz||1)*FS+.1),p=proj(gp.x,top,gp.z);if(!p)continue;const bw=Math.max(40,44*(m.def.sz||1));let ty=p[1]-3;
+    const gp=m._g.position,top=gp.y+(m._g.userData&&m._g.userData.top?m._g.userData.top+.25:(m.def.art==='rat'?.9*sc+.3:2.15*(m.def.sz||1)*FS+.1)),p=proj(gp.x,top,gp.z);if(!p)continue;const bw=Math.max(40,44*(m.def.sz||1));let ty=p[1]-3;
     if(hurt){octx.fillStyle='rgba(0,0,0,.65)';octx.fillRect(p[0]-bw/2,p[1]-5,bw,6);octx.fillStyle='#d9604b';octx.fillRect(p[0]-bw/2,p[1]-5,bw*Math.max(0,m.hp)/m.def.hp,6);ty=p[1]-10}
     const lv=m.def.lv||1,diff=lvlOf(S.xp.combat)-lv,col=m.def.prey?'#d8f0c0':m.def.boss?'#ff9a7a':diff>=5?'#8fe08f':diff>=-2?'#ffe58a':'#ff8a76',t=m.def.n+(m.def.prey?'':' · Lv '+lv);
     octx.lineWidth=3;octx.strokeStyle='rgba(0,0,0,.85)';octx.strokeText(t,p[0],ty);octx.fillStyle=col;octx.fillText(t,p[0],ty)}}
@@ -3365,8 +3434,8 @@ function modMax(){for(const k of SKILLS)S.xp[k]=Math.max(S.xp[k]||0,MAXXP());S.t
 
 
 /* ---- version, patch notes, update banner, inactivity ---- */
-const BUILD='2026-10-17.4',PROTO=1;
-const CHANGES=[{v:'2026-10-17.4',title:'Farming, milestones and settings',lines:['New skill: Farming. The Millbrook fields now have six crops (potato, wheat, cabbage, carrot, onion, pumpkin) with level requirements, and harvesting trains Farming instead of Alchemy.','Milestones: a reward and pop-up when you reach level 10, 25, 50 and 80 in any skill.','Daily bounties now use Kingsmarch resources and monsters at your level (specific fish, logs, ores). There is a bounty board in Highcrown.','Settings: separate volume sliders for sound effects and music, and a button size option.']},{v:'2026-10-17.3',title:'Trading and shared boss loot',lines:['Trade with other players: tap a player standing close to you and choose Trade. Both of you offer items and coins, both confirm, then the exchange happens. Any change resets the confirmations.','Boss loot is shared: everyone who did at least 10% of a boss\'s health gets their own loot roll, XP and kill credit, not only the player who lands the last hit.']},{v:'2026-10-17.2',title:'Minimap and quest rewards',lines:['Minimap in the top right: your position, shops, doors, bosses, quest markers and an arrow to your tracked quest. Tap it for the big map. Turn it off in Settings.','Quest complete pop-up when you hand in a quest, with everything you received.','Monster names and levels are now shown above every monster nearby.']},{v:'2026-10-17.1',title:'Boss fights, balance and loading',lines:['Bosses now target the player who did the most damage, and ground attacks and orbs reach everyone in a shared fight, not just the host.','Woodcutting and fishing balanced against mining: high-level trees give less XP per log, fish give more.','Faster start: areas are built the first time you enter them. Expect a short loading moment when you enter Kingsmarch, Mistfen and other areas.','New icons: pets, companions, boss drops, fish species and more.','Codex regions fold open and closed. Tracking a quest in another region now points you to the next door, gate or bridge.']},{v:'2026-10-16.3',title:'Armour types',lines:['Armour now looks different per type: heavy plate, light leather (vests, hoods, bucklers) and cloth for mages (robes, hats, tomes). The item description names the type.']},{v:'2026-10-16.2',title:'Better icons',lines:['Item icons in the Bag have outlines, shading and highlights. Helmets, armour, shields and pickaxes are redrawn.','The XP bars now show the skill icon.']},{v:'2026-10-16.1',title:'Journal, map legend and icons',lines:['Quests tab rebuilt: every quest in the game (also Mistfen and Kingsmarch) with progress bars, rewards, where to find the giver and a Track button. Filter on Active, Available, Done.','Codex rebuilt: a bestiary per region with kill counts and a collection log of rare drops, gems and pets.','The map legend now shows only what is really on the map you are looking at, with the same icons.','New, more realistic and distinct skill icons.','Quest markers now also work in Mistfen and Kingsmarch. The tutorial no longer shows up for experienced characters.']},{v:'2026-10-15.1',title:'Kingsmarch and more',lines:['KINGSMARCH: a whole new mainland. Walk east over the bridge from the island. Millbrook (farming), Saltgate Harbour and Highcrown, the walled capital with a castle, markets and shops you can walk into.','New training: birch, elm and redwood trees, coal and aurelite ore, tuna and sharks, pheasants and elk, crops to pick, and aurelite gear.','New monsters, three new bosses and rare treasure drops. Friendly animals only fight back if you attack them.','Safe zones and multi-combat areas are now clearly marked in the world and on the map. The map shows shops, smithies, mines, dungeons, bosses and more with icons and a legend.','The Skills tab has icons and a guide for every skill.','Gathering is no longer interrupted by monsters hitting you. Weaker monsters ignore you at high level.','Hunting is easier: game runs slower and you can catch it from two tiles.']},{v:'2026-10-14.2',title:'Soulrend update',lines:['Gems and pearls now have icons in your bag.','Axes: rusty, copper, iron and steel up to ember. Buy them at the Armoury or forge them at the anvil. Better axes chop faster and more often.','Settings tab in your Bag with controls, sound, graphics and log out.','Smoother XP bars.','You are logged out after 30 minutes without activity.','Close buttons in shops stay in view while you scroll.']}];
+const BUILD='2026-10-17.5',PROTO=1;
+const CHANGES=[{v:'2026-10-17.5',title:'Tidier screen and real animals',lines:['The top of the screen is cleaner: the hint is shorter, the clock sits under the minimap, the Chat button moved to the bottom left and the FPS counter is gone.','Animals have new models: wolves, foxes, deer and elk with antlers, cows, bulls, sheep, wild boar, bears, chickens, pheasants, toads, crabs and geckos. Names float at the right height above each one.']},{v:'2026-10-17.4',title:'Farming, milestones and settings',lines:['New skill: Farming. The Millbrook fields now have six crops (potato, wheat, cabbage, carrot, onion, pumpkin) with level requirements, and harvesting trains Farming instead of Alchemy.','Milestones: a reward and pop-up when you reach level 10, 25, 50 and 80 in any skill.','Daily bounties now use Kingsmarch resources and monsters at your level (specific fish, logs, ores). There is a bounty board in Highcrown.','Settings: separate volume sliders for sound effects and music, and a button size option.']},{v:'2026-10-17.3',title:'Trading and shared boss loot',lines:['Trade with other players: tap a player standing close to you and choose Trade. Both of you offer items and coins, both confirm, then the exchange happens. Any change resets the confirmations.','Boss loot is shared: everyone who did at least 10% of a boss\'s health gets their own loot roll, XP and kill credit, not only the player who lands the last hit.']},{v:'2026-10-17.2',title:'Minimap and quest rewards',lines:['Minimap in the top right: your position, shops, doors, bosses, quest markers and an arrow to your tracked quest. Tap it for the big map. Turn it off in Settings.','Quest complete pop-up when you hand in a quest, with everything you received.','Monster names and levels are now shown above every monster nearby.']},{v:'2026-10-17.1',title:'Boss fights, balance and loading',lines:['Bosses now target the player who did the most damage, and ground attacks and orbs reach everyone in a shared fight, not just the host.','Woodcutting and fishing balanced against mining: high-level trees give less XP per log, fish give more.','Faster start: areas are built the first time you enter them. Expect a short loading moment when you enter Kingsmarch, Mistfen and other areas.','New icons: pets, companions, boss drops, fish species and more.','Codex regions fold open and closed. Tracking a quest in another region now points you to the next door, gate or bridge.']},{v:'2026-10-16.3',title:'Armour types',lines:['Armour now looks different per type: heavy plate, light leather (vests, hoods, bucklers) and cloth for mages (robes, hats, tomes). The item description names the type.']},{v:'2026-10-16.2',title:'Better icons',lines:['Item icons in the Bag have outlines, shading and highlights. Helmets, armour, shields and pickaxes are redrawn.','The XP bars now show the skill icon.']},{v:'2026-10-16.1',title:'Journal, map legend and icons',lines:['Quests tab rebuilt: every quest in the game (also Mistfen and Kingsmarch) with progress bars, rewards, where to find the giver and a Track button. Filter on Active, Available, Done.','Codex rebuilt: a bestiary per region with kill counts and a collection log of rare drops, gems and pets.','The map legend now shows only what is really on the map you are looking at, with the same icons.','New, more realistic and distinct skill icons.','Quest markers now also work in Mistfen and Kingsmarch. The tutorial no longer shows up for experienced characters.']},{v:'2026-10-15.1',title:'Kingsmarch and more',lines:['KINGSMARCH: a whole new mainland. Walk east over the bridge from the island. Millbrook (farming), Saltgate Harbour and Highcrown, the walled capital with a castle, markets and shops you can walk into.','New training: birch, elm and redwood trees, coal and aurelite ore, tuna and sharks, pheasants and elk, crops to pick, and aurelite gear.','New monsters, three new bosses and rare treasure drops. Friendly animals only fight back if you attack them.','Safe zones and multi-combat areas are now clearly marked in the world and on the map. The map shows shops, smithies, mines, dungeons, bosses and more with icons and a legend.','The Skills tab has icons and a guide for every skill.','Gathering is no longer interrupted by monsters hitting you. Weaker monsters ignore you at high level.','Hunting is easier: game runs slower and you can catch it from two tiles.']},{v:'2026-10-14.2',title:'Soulrend update',lines:['Gems and pearls now have icons in your bag.','Axes: rusty, copper, iron and steel up to ember. Buy them at the Armoury or forge them at the anvil. Better axes chop faster and more often.','Settings tab in your Bag with controls, sound, graphics and log out.','Smoother XP bars.','You are logged out after 30 minutes without activity.','Close buttons in shops stay in view while you scroll.']}];
 function showNews(){const last=localStorage.getItem('soulrend-seen');if(last===BUILD)return;try{localStorage.setItem('soulrend-seen',BUILD)}catch(e){}
   if(!last&&!NET.session)return;const c=CHANGES[0];const d=document.createElement('div');d.id='news';d.innerHTML='<div class="in"><h2>'+esc(c.title)+'</h2><ul>'+c.lines.map(l=>'<li>'+esc(l)+'</li>').join('')+'</ul><button>Got it</button></div>';d.querySelector('button').onclick=()=>d.remove();$('wrap').appendChild(d)}
 window.__updateReady=()=>{if($('upd'))return;const b=document.createElement('button');b.id='upd';b.textContent='A new version is ready. Tap to update';b.onclick=()=>{NET.saveNow();save();setTimeout(()=>location.reload(),350)};$('wrap').appendChild(b);chatAdd({r:'sys',text:'A new version is ready. Tap the green bar at the top to update.'})};
@@ -3513,7 +3582,7 @@ $('mod').addEventListener('pointerdown',e=>e.stopPropagation());
 window.addEventListener('beforeunload',()=>{if(NET.online&&NET.session)NET.saveNow()});
 
 {const sp=document.getElementById('splash');if(sp){const go=()=>{sp.classList.add('out');setTimeout(()=>sp.remove(),700);try{SND.unlock&&SND.unlock()}catch(e){}};if(navigator.webdriver)sp.remove();else sp.addEventListener('pointerdown',go)}}
-window.__game={ensureBounties,TR,trRequest,trConfirm,trRender,questPopup,marks,icon,TREESPECS,MXP,NEED,S:()=>S,REALM,INTS,walk,enterMap,goTo,NET,NETR,beginSession:beginSession,applyCmd,FISHSP,COOK,treeSp,doEat,HEAL,EMBER,VOID,useSoul,tameTry,spellFx,lvlOf,attackMob,doSpec,specOf,SPECS,bp,SND,sfx,data:()=>JSON.parse(JSON.stringify({ITEMS,RECIPES,SHOPS,MOBS,NQ,BUILDS,SPELLS,TELES,SELL,SKN,SKILLS})),xpAt:xpFor,hazards,rollLoot,setPitch:v=>{pitch=T.MathUtils.degToRad(v)},openShop,treeObj,nearestTree,doEat,shots,pl,tick,get M(){return M},WORLD,DUN,CRYPT,HOME,MARSH,openBank,tickN:()=>tickN,pstats,giveItem,addXp,enterDungeon,talk,get dlg(){return dlg},cam,scene,renderer,setYaw:v=>{yaw=v},setDist:v=>{camDist=v},getDist:()=>camDist,getYaw:()=>yaw,DBG};
+window.__game={makeCritter,CREF,ensureBounties,TR,trRequest,trConfirm,trRender,questPopup,marks,icon,TREESPECS,MXP,NEED,S:()=>S,REALM,INTS,walk,enterMap,goTo,NET,NETR,beginSession:beginSession,applyCmd,FISHSP,COOK,treeSp,doEat,HEAL,EMBER,VOID,useSoul,tameTry,spellFx,lvlOf,attackMob,doSpec,specOf,SPECS,bp,SND,sfx,data:()=>JSON.parse(JSON.stringify({ITEMS,RECIPES,SHOPS,MOBS,NQ,BUILDS,SPELLS,TELES,SELL,SKN,SKILLS})),xpAt:xpFor,hazards,rollLoot,setPitch:v=>{pitch=T.MathUtils.degToRad(v)},openShop,treeObj,nearestTree,doEat,shots,pl,tick,get M(){return M},WORLD,DUN,CRYPT,HOME,MARSH,openBank,tickN:()=>tickN,pstats,giveItem,addXp,enterDungeon,talk,get dlg(){return dlg},cam,scene,renderer,setYaw:v=>{yaw=v},setDist:v=>{camDist=v},getDist:()=>camDist,getYaw:()=>yaw,DBG};
 requestAnimationFrame(t=>{lastTick=t;lastNow=t;frame(t)});
 })();
 </script>
