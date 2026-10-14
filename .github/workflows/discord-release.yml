@@ -1,0 +1,39 @@
+name: Release naar Discord
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      titel:
+        description: Titel van het testbericht
+        default: Testbericht
+      tekst:
+        description: Tekst van het testbericht
+        default: De Discord-koppeling werkt.
+
+jobs:
+  discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bericht naar Discord sturen
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPO_NAAM: ${{ github.event.repository.name }}
+          TITEL: ${{ github.event.release.name || github.event.release.tag_name || inputs.titel }}
+          TAG: ${{ github.event.release.tag_name }}
+          TEKST: ${{ github.event.release.body || inputs.tekst }}
+          URL: ${{ github.event.release.html_url || github.event.repository.html_url }}
+        run: |
+          if [ -z "$WEBHOOK_URL" ]; then
+            echo "Secret DISCORD_WEBHOOK_URL ontbreekt" >&2
+            exit 1
+          fi
+          # Discord staat maximaal 4096 tekens in een embed toe.
+          payload=$(jq -n \
+            --arg naam "$REPO_NAAM" \
+            --arg titel "${TITEL:-$TAG}" \
+            --arg tekst "${TEKST:0:3500}" \
+            --arg url "$URL" \
+            '{username: $naam, embeds: [{title: ("🚀 " + $titel), url: $url, description: $tekst, color: 5814783}]}')
+          curl -sS --fail -H "Content-Type: application/json" -d "$payload" "$WEBHOOK_URL"
