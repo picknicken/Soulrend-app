@@ -54,5 +54,5 @@ jobs:
             --arg titel "${TITEL:-$TAG}" \
             --arg tekst "${TEKST:0:3500}" \
             --arg url "$URL" \
-            '{username: $naam, embeds: [{title: ("🚀 " + $titel), url: $url, description: $tekst, color: 5814783}]}')
+            '{username: "SYD", embeds: [{title: ("🚀 " + $titel), url: $url, description: $tekst, color: 5814783}]}')
           curl -sS --fail -H "Content-Type: application/json" -d "$payload" "$WEBHOOK_URL"
