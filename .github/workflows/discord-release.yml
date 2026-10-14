@@ -3,6 +3,8 @@ name: Release naar Discord
 on:
   release:
     types: [published]
+  push:
+    tags: ['v*']
   workflow_dispatch:
     inputs:
       titel:
@@ -15,14 +17,31 @@ on:
 jobs:
   discord:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
+      # Een release maakt ook een tag aan. Die tag-run slaan we over, zodat
+      # er maar één bericht komt: de release-run heeft de releasenotes.
+      - name: Bepalen of er al een release bij de tag hoort
+        id: check
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          sleep 15
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Bericht naar Discord sturen
+        if: steps.check.outputs.skip != 'true'
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           REPO_NAAM: ${{ github.event.repository.name }}
           TITEL: ${{ github.event.release.name || github.event.release.tag_name || inputs.titel }}
-          TAG: ${{ github.event.release.tag_name }}
-          TEKST: ${{ github.event.release.body || inputs.tekst }}
+          TAG: ${{ github.event.release.tag_name || (github.ref_type == 'tag' && github.ref_name) || '' }}
+          TEKST: ${{ github.event.release.body || inputs.tekst || github.event.head_commit.message }}
           URL: ${{ github.event.release.html_url || github.event.repository.html_url }}
         run: |
           if [ -z "$WEBHOOK_URL" ]; then
