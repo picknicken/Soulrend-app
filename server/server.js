@@ -79,6 +79,14 @@ function reelect(map) {
   const name = h ? online.get(h).name : null;
   for (const [, c] of here) send(c.ws, { t: 'host', map, host: name });
 }
+const TLOG_FILE = path.join(DATA_DIR, 'trades.json');
+let tlog = []; try { tlog = JSON.parse(fs.readFileSync(TLOG_FILE, 'utf8')); } catch (e) { tlog = []; }
+function addTrade(c, m) {
+  const clean = o => ({ items: Object.fromEntries(Object.entries((o && o.items) || {}).filter(([k, n]) => okItem(k) && Number.isFinite(n)).slice(0, 40).map(([k, n]) => [k, Math.trunc(n)])), coins: Math.max(0, Math.trunc(+(o && o.coins) || 0)) });
+  tlog.push({ t: Date.now(), who: c.name, with: String(m.w || '').slice(0, 24), gave: clean(m.gave), got: clean(m.got) });
+  if (tlog.length > 500) tlog = tlog.slice(-500);
+  fs.writeFile(TLOG_FILE, JSON.stringify(tlog), () => {});
+}
 function logMod(c, what) { console.log(`[mod] ${c.name}: ${what}`); }
 
 function applyOffline(acc, op, m) {
@@ -101,6 +109,11 @@ function handleMod(c, m) {
   const target = m.name ? db[key(m.name)] : null;
   const tc = target ? online.get(key(m.name)) : null;
   switch (m.op) {
+    case 'tlog': {
+      const nm = m.name ? String(m.name).toLowerCase() : null;
+      const list = tlog.filter(e => !nm || e.who.toLowerCase() === nm || e.with.toLowerCase() === nm).slice(-60).reverse();
+      return send(c.ws, { t: 'mod', op: 'tlog', list });
+    }
     case 'players': {
       const list = Object.values(db).map(a => { const o = online.get(key(a.name)); return { name: a.name, role: a.role, online: !!o, map: o && o.pos ? o.pos.map : null, x: o && o.pos ? o.pos.x : null, y: o && o.pos ? o.pos.y : null, last: a.last || 0 }; });
       return send(c.ws, { t: 'mod', op: 'players', list });
@@ -208,6 +221,7 @@ wss.on('connection', ws => {
         broadcast({ t: 'chat', from: c.name, r: c.role, text });
         break;
       }
+      case 'tlog': if (c.name) addTrade(c, m); break;
       case 'mod': handleMod(c, m); break;
     }
   });
