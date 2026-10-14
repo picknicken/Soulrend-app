@@ -178,6 +178,7 @@ wss.on('connection', ws => {
       online.set(k, c); acc.last = Date.now(); touch();
       send(ws, { t: 'welcome', name: acc.name, role: acc.role, save: acc.save, online: online.size });
       broadcast({ t: 'chat', from: 'Server', r: 'sys', text: acc.name + ' joined.' });
+      broadcast({ t: 'count', n: online.size });
       console.log('login', acc.name, acc.role);
       return;
     }
@@ -226,7 +227,7 @@ wss.on('connection', ws => {
     }
   });
   ws.on('close', () => {
-    if (c && online.get(key(c.name)) === c) { online.delete(key(c.name)); if (c.pos) reelect(c.pos.map); broadcast({ t: 'chat', from: 'Server', r: 'sys', text: c.name + ' left.' }); }
+    if (c && online.get(key(c.name)) === c) { online.delete(key(c.name)); if (c.pos) reelect(c.pos.map); broadcast({ t: 'chat', from: 'Server', r: 'sys', text: c.name + ' left.' }); broadcast({ t: 'count', n: online.size }); }
   });
   ws.on('error', () => {});
 });
