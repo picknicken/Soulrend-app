@@ -1,5 +1,5 @@
 /* Soulrend service worker: offline play. Bump by rebuilding (version changes with content). */
-const VERSION = '63320ba679-sw2';
+const VERSION = '6184b23e9a-sw2';
 const CORE = ['./', 'index.html', 'three.min.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 /* Always fetch the files fresh (bypass the browser HTTP cache) when installing, otherwise an old index.html can be cached again. */
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => Promise.all(CORE.map(u => fetch(u, {cache: 'reload'}).then(res => { if (!res.ok) throw new Error(u); return c.put(u, res); })))).then(() => self.skipWaiting())); });
